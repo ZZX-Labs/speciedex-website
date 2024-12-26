@@ -8,7 +8,7 @@ Speciedex is a decentralized network leveraging Bitcoin and the Lightning Networ
 ## Setup
 1. Clone the repository:
 ```
-git clone https://github.com/YOUR-USERNAME/speciedex.org.git
+git clone https://github.com/ZZX-Labs/speciedex-website.git
 ```
 
 2. Serve the site locally using Python or Node.js:
