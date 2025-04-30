@@ -1,1 +1,63 @@
+@font-face {
+    font-family: 'AdultSwim';
+    src: url('assets/fonts/Adult-Swim-Font.ttf') format('truetype');
+}
 
+body {
+    margin: 0;
+    font-family: 'IBM Plex Mono', 'AdultSwim', monospace;
+    background-color: #000000;
+    color: #C0D674;
+    text-align: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: #121212;
+}
+
+.logo img {
+    height: 60px;
+}
+
+nav a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #C0D674;
+    font-size: 16px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+.hero {
+    margin-top: 100px;
+}
+
+.cta {
+    display: inline-block;
+    padding: 15px 30px;
+    margin-top: 30px;
+    background-color: #C0D674;
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.section {
+    padding: 50px;
+    margin: 50px auto;
+    max-width: 800px;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+}
+
+footer {
+    padding: 20px;
+    background-color: #121212;
+}
