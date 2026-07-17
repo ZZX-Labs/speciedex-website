@@ -1,0 +1,372 @@
+/*
+========================================================================
+Speciedex.org
+print.css
+Print Stylesheet
+========================================================================
+*/
+
+@media print {
+
+    /*
+    ========================================================================
+    Page
+    ========================================================================
+    */
+
+    @page {
+
+        margin: 1.5cm;
+    }
+
+    html {
+
+        font-size: 11pt;
+    }
+
+    body {
+
+        color: #000;
+
+        background: #fff;
+
+        font-family: serif;
+
+        line-height: 1.5;
+    }
+
+    /*
+    ========================================================================
+    Global Reset
+    ========================================================================
+    */
+
+    *,
+
+    *::before,
+
+    *::after {
+
+        color: inherit !important;
+
+        background: transparent !important;
+
+        box-shadow: none !important;
+
+        text-shadow: none !important;
+
+        filter: none !important;
+
+        animation: none !important;
+
+        transition: none !important;
+    }
+
+    /*
+    ========================================================================
+    Hide Interactive Elements
+    ========================================================================
+    */
+
+    .site-header,
+
+    .site-nav,
+
+    .menu-toggle,
+
+    .nav-toggle,
+
+    .header-actions,
+
+    .hero-actions,
+
+    .button,
+
+    .btn,
+
+    .cta,
+
+    .pagination,
+
+    .footer-social,
+
+    .video,
+
+    video,
+
+    audio,
+
+    iframe,
+
+    canvas,
+
+    .tooltip,
+
+    .accordion-header,
+
+    .callout-actions,
+
+    .no-print {
+
+        display: none !important;
+    }
+
+    /*
+    ========================================================================
+    Layout
+    ========================================================================
+    */
+
+    .container,
+
+    .content-container,
+
+    .article-container,
+
+    .section-inner,
+
+    .article-section {
+
+        width: 100% !important;
+
+        max-width: none !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+    }
+
+    .section {
+
+        padding: 0;
+
+        margin: 0 0 1.25cm;
+    }
+
+    /*
+    ========================================================================
+    Typography
+    ========================================================================
+    */
+
+    h1,
+
+    h2,
+
+    h3,
+
+    h4,
+
+    h5,
+
+    h6 {
+
+        page-break-after: avoid;
+
+        break-after: avoid;
+
+        color: #000 !important;
+    }
+
+    p,
+
+    li,
+
+    table,
+
+    pre,
+
+    blockquote {
+
+        orphans: 3;
+
+        widows: 3;
+    }
+
+    /*
+    ========================================================================
+    Links
+    ========================================================================
+    */
+
+    a,
+
+    a:visited {
+
+        color: #000 !important;
+
+        text-decoration: underline;
+    }
+
+    a[href^="http"]::after {
+
+        content: " (" attr(href) ")";
+
+        font-size: 90%;
+
+        word-break: break-all;
+    }
+
+    a[href^="#"]::after,
+
+    a[href^="mailto:"]::after,
+
+    a[href^="tel:"]::after {
+
+        content: "";
+    }
+
+    /*
+    ========================================================================
+    Images
+    ========================================================================
+    */
+
+    img,
+
+    svg {
+
+        max-width: 100% !important;
+
+        page-break-inside: avoid;
+
+        break-inside: avoid;
+    }
+
+    figure {
+
+        page-break-inside: avoid;
+
+        break-inside: avoid;
+    }
+
+    /*
+    ========================================================================
+    Cards
+    ========================================================================
+    */
+
+    .card,
+
+    .feature-card,
+
+    .project-card,
+
+    .resource-card,
+
+    .status-card,
+
+    .metric-card,
+
+    .release-card,
+
+    .statement-card,
+
+    .callout {
+
+        border: 1px solid #000 !important;
+
+        page-break-inside: avoid;
+
+        break-inside: avoid;
+
+        margin-bottom: .75cm;
+    }
+
+    /*
+    ========================================================================
+    Tables
+    ========================================================================
+    */
+
+    table {
+
+        width: 100%;
+
+        border-collapse: collapse;
+    }
+
+    thead {
+
+        display: table-header-group;
+    }
+
+    tr,
+
+    img,
+
+    pre,
+
+    blockquote {
+
+        page-break-inside: avoid;
+
+        break-inside: avoid;
+    }
+
+    th,
+
+    td {
+
+        border: 1px solid #000;
+
+        padding: .4rem;
+    }
+
+    /*
+    ========================================================================
+    Code
+    ========================================================================
+    */
+
+    pre,
+
+    code {
+
+        border: 1px solid #888 !important;
+
+        white-space: pre-wrap;
+
+        word-break: break-word;
+    }
+
+    /*
+    ========================================================================
+    Footer
+    ========================================================================
+    */
+
+    .site-footer {
+
+        margin-top: 1.5cm;
+
+        border-top: 1px solid #000;
+    }
+
+    .footer-grid {
+
+        display: block;
+    }
+
+    .footer-column {
+
+        margin-bottom: .75cm;
+    }
+
+    /*
+    ========================================================================
+    Utilities
+    ========================================================================
+    */
+
+    .print-only {
+
+        display: block !important;
+    }
+
+    .screen-only {
+
+        display: none !important;
+    }
+
+}
