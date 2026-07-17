@@ -14,7 +14,6 @@ Loaded only by:
 
 Responsible for:
 
-    • Loading internal JavaScript modules
     • Waiting for DOM readiness
     • Loading HTML partials
     • Initializing modules
@@ -35,234 +34,6 @@ Contains NO page-specific logic.
     }
 
     Speciedex.siteBootstrapLoaded = true;
-
-    /*
-    --------------------------------------------------------------------------
-    Internal modules.
-
-    Order matters:
-
-        data.js
-            Shared data and JSON utilities.
-
-        includes.js
-            Loads reusable HTML partials.
-
-        header.js
-        splash.js
-        nav.js
-        footer.js
-            Depend on included markup.
-
-        statistics.js
-            Depends on data.js.
-    --------------------------------------------------------------------------
-    */
-
-    const modules = [
-        "data.js",
-        "includes.js",
-        "header.js",
-        "splash.js",
-        "nav.js",
-        "footer.js",
-        "statistics.js"
-    ];
-
-    /*
-    --------------------------------------------------------------------------
-    Resolve the current /static/js/ directory.
-
-    Current file:
-
-        /static/js/script.js
-
-    Module files:
-
-        /static/js/data.js
-        /static/js/includes.js
-        ...
-    --------------------------------------------------------------------------
-    */
-
-    function getModuleRoot() {
-        if (
-            Speciedex.moduleRootURL
-            instanceof URL
-        ) {
-            return Speciedex.moduleRootURL;
-        }
-
-        const currentScript =
-            document.currentScript;
-
-        if (currentScript?.src) {
-            Speciedex.moduleRootURL =
-                new URL(
-                    "./",
-                    currentScript.src
-                );
-
-            return Speciedex.moduleRootURL;
-        }
-
-        Speciedex.moduleRootURL =
-            new URL(
-                "/static/js/",
-                window.location.origin
-            );
-
-        return Speciedex.moduleRootURL;
-    }
-
-    /*
-    --------------------------------------------------------------------------
-    Resolve one module URL.
-    --------------------------------------------------------------------------
-    */
-
-    function getModuleURL(filename) {
-        return new URL(
-            filename,
-            getModuleRoot()
-        ).href;
-    }
-
-    /*
-    --------------------------------------------------------------------------
-    Locate an existing script element.
-    --------------------------------------------------------------------------
-    */
-
-    function findExistingScript(url) {
-        return Array.from(
-            document.scripts
-        ).find((script) => {
-            return script.src === url;
-        });
-    }
-
-    /*
-    --------------------------------------------------------------------------
-    Load one module.
-    --------------------------------------------------------------------------
-    */
-
-    function loadModule(filename) {
-        const url =
-            getModuleURL(filename);
-
-        const existing =
-            findExistingScript(url);
-
-        if (existing) {
-            if (
-                existing.dataset
-                    .speciedexLoaded ===
-                "true"
-            ) {
-                return Promise.resolve(
-                    existing
-                );
-            }
-
-            return new Promise(
-                (resolve, reject) => {
-                    existing.addEventListener(
-                        "load",
-                        () => {
-                            existing.dataset
-                                .speciedexLoaded =
-                                "true";
-
-                            resolve(existing);
-                        },
-                        {
-                            once: true
-                        }
-                    );
-
-                    existing.addEventListener(
-                        "error",
-                        () => {
-                            reject(
-                                new Error(
-                                    `Unable to load module: ${url}`
-                                )
-                            );
-                        },
-                        {
-                            once: true
-                        }
-                    );
-                }
-            );
-        }
-
-        return new Promise(
-            (resolve, reject) => {
-                const script =
-                    document.createElement(
-                        "script"
-                    );
-
-                script.src = url;
-                script.defer = true;
-
-                script.dataset
-                    .speciedexModule =
-                    filename;
-
-                script.addEventListener(
-                    "load",
-                    () => {
-                        script.dataset
-                            .speciedexLoaded =
-                            "true";
-
-                        resolve(script);
-                    },
-                    {
-                        once: true
-                    }
-                );
-
-                script.addEventListener(
-                    "error",
-                    () => {
-                        script.remove();
-
-                        reject(
-                            new Error(
-                                `Unable to load module: ${url}`
-                            )
-                        );
-                    },
-                    {
-                        once: true
-                    }
-                );
-
-                document.head.appendChild(
-                    script
-                );
-            }
-        );
-    }
-
-    /*
-    --------------------------------------------------------------------------
-    Load all modules sequentially.
-
-    Sequential loading preserves dependency order.
-    --------------------------------------------------------------------------
-    */
-
-    async function loadModules() {
-        for (const filename of modules) {
-            await loadModule(filename);
-        }
-    }
 
     /*
     --------------------------------------------------------------------------
@@ -288,7 +59,7 @@ Contains NO page-specific logic.
 
     /*
     --------------------------------------------------------------------------
-    Initialize the site.
+    Initialize the complete site.
     --------------------------------------------------------------------------
     */
 
@@ -301,26 +72,24 @@ Contains NO page-specific logic.
 
         try {
             /*
-            --------------------------------------------------------------
+            ------------------------------------------------------------------
             Load HTML partials first.
-            --------------------------------------------------------------
+            ------------------------------------------------------------------
             */
 
             if (
-                typeof Speciedex
-                    .loadIncludes ===
+                typeof Speciedex.loadIncludes ===
                 "function"
             ) {
-                await Speciedex
-                    .loadIncludes(
-                        document
-                    );
+                await Speciedex.loadIncludes(
+                    document
+                );
             }
 
             /*
-            --------------------------------------------------------------
+            ------------------------------------------------------------------
             Initialize modules.
-            --------------------------------------------------------------
+            ------------------------------------------------------------------
             */
 
             await initializeModule(
@@ -364,9 +133,9 @@ Contains NO page-specific logic.
             );
 
             /*
-            --------------------------------------------------------------
+            ------------------------------------------------------------------
             Site ready.
-            --------------------------------------------------------------
+            ------------------------------------------------------------------
             */
 
             document.dispatchEvent(
@@ -384,7 +153,7 @@ Contains NO page-specific logic.
                 false;
 
             console.error(
-                "Speciedex initialization failed:",
+                "Speciedex site initialization failed:",
                 error
             );
 
@@ -406,50 +175,23 @@ Contains NO page-specific logic.
 
     /*
     --------------------------------------------------------------------------
-    Start the bootstrap process.
+    Wait for DOM readiness.
     --------------------------------------------------------------------------
     */
 
-    async function bootstrap() {
-        try {
-            await loadModules();
-
-            if (
-                document.readyState ===
-                "loading"
-            ) {
-                document.addEventListener(
-                    "DOMContentLoaded",
-                    initializeSite,
-                    {
-                        once: true
-                    }
-                );
-
-                return;
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            initializeSite,
+            {
+                once: true
             }
-
-            await initializeSite();
-        } catch (error) {
-            console.error(
-                "Speciedex module loading failed:",
-                error
-            );
-
-            document.dispatchEvent(
-                new CustomEvent(
-                    "speciedex:error",
-                    {
-                        detail: {
-                            phase:
-                                "module-loading",
-
-                            error
-                        }
-                    }
-                )
-            );
-        }
+        );
+    } else {
+        initializeSite();
     }
 
     /*
@@ -458,20 +200,9 @@ Contains NO page-specific logic.
     --------------------------------------------------------------------------
     */
 
-    Speciedex.getModuleRoot =
-        getModuleRoot;
-
-    Speciedex.getModuleURL =
-        getModuleURL;
-
-    Speciedex.loadModule =
-        loadModule;
-
-    Speciedex.loadModules =
-        loadModules;
+    Speciedex.initializeModule =
+        initializeModule;
 
     Speciedex.initializeSite =
         initializeSite;
-
-    bootstrap();
 })();
