@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadIncludes(document);
     initializeNavigation();
     initializeCurrentYear();
+    await initializeStatistics();
 });
 
 async function loadIncludes(root) {
@@ -44,7 +45,7 @@ async function loadIncludes(root) {
 
             element.innerHTML = `
                 <div class="include-error" role="alert">
-                    Unable to load ${name}.
+                    Unable to load ${escapeHTML(name)}.
                 </div>
             `;
 
@@ -73,6 +74,8 @@ function initializeNavigation() {
     );
 
     if (menuToggle && menu) {
+        menuToggle.setAttribute("aria-expanded", "false");
+
         menuToggle.addEventListener("click", () => {
             const open = menu.classList.toggle("open");
 
@@ -95,6 +98,8 @@ function initializeNavigation() {
         if (!dropdown) {
             return;
         }
+
+        toggle.setAttribute("aria-expanded", "false");
 
         toggle.addEventListener("click", (event) => {
             event.preventDefault();
@@ -122,6 +127,13 @@ function initializeNavigation() {
 
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
+            closeDropdowns(nav);
+            closeMenu(menu, menuToggle);
+        }
+    });
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 860) {
             closeDropdowns(nav);
             closeMenu(menu, menuToggle);
         }
@@ -207,4 +219,207 @@ function initializeCurrentYear() {
     ).forEach((element) => {
         element.textContent = year;
     });
+}
+
+async function initializeStatistics() {
+    const elements = {
+        species: findElement([
+            "[data-stat='species']",
+            "[data-stat='known-species']",
+            "#known-species",
+            "#species-count"
+        ]),
+
+        kingdoms: findElement([
+            "[data-stat='kingdoms']",
+            "#kingdoms-count",
+            "#kingdom-count"
+        ]),
+
+        genera: findElement([
+            "[data-stat='genera']",
+            "#genera-count",
+            "#genus-count"
+        ]),
+
+        families: findElement([
+            "[data-stat='families']",
+            "#families-count",
+            "#family-count"
+        ]),
+
+        updated: findElement([
+            "[data-stat='updated']",
+            "[data-stat='last-updated']",
+            "#last-updated"
+        ])
+    };
+
+    if (!Object.values(elements).some(Boolean)) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            "/data/statistics.json",
+            {
+                cache: "no-store",
+                credentials: "same-origin",
+                headers: {
+                    Accept: "application/json"
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        setStatistic(
+            elements.species,
+            firstDefined(
+                data.known_species,
+                data.species,
+                data.species_count,
+                data.total_species
+            )
+        );
+
+        setStatistic(
+            elements.kingdoms,
+            firstDefined(
+                data.kingdoms,
+                data.kingdom_count,
+                data.total_kingdoms
+            )
+        );
+
+        setStatistic(
+            elements.genera,
+            firstDefined(
+                data.genera,
+                data.genus_count,
+                data.genera_count,
+                data.total_genera
+            )
+        );
+
+        setStatistic(
+            elements.families,
+            firstDefined(
+                data.families,
+                data.family_count,
+                data.families_count,
+                data.total_families
+            )
+        );
+
+        setStatistic(
+            elements.updated,
+            formatDate(
+                firstDefined(
+                    data.last_updated,
+                    data.updated,
+                    data.updated_at,
+                    data.generated_at
+                )
+            ),
+            false
+        );
+    } catch (error) {
+        console.error(
+            "Unable to load Speciedex statistics:",
+            error
+        );
+
+        Object.values(elements).forEach((element) => {
+            if (
+                element &&
+                element.textContent.trim().toLowerCase()
+                    .startsWith("loading")
+            ) {
+                element.textContent = "Unavailable";
+            }
+        });
+    }
+}
+
+function findElement(selectors) {
+    for (const selector of selectors) {
+        const element = document.querySelector(selector);
+
+        if (element) {
+            return element;
+        }
+    }
+
+    return null;
+}
+
+function firstDefined(...values) {
+    return values.find(
+        (value) =>
+            value !== undefined &&
+            value !== null &&
+            value !== ""
+    );
+}
+
+function setStatistic(element, value, formatNumber = true) {
+    if (!element) {
+        return;
+    }
+
+    if (
+        value === undefined ||
+        value === null ||
+        value === ""
+    ) {
+        element.textContent = "Unavailable";
+        return;
+    }
+
+    if (
+        formatNumber &&
+        !Number.isNaN(Number(value))
+    ) {
+        element.textContent = Number(value)
+            .toLocaleString("en-US");
+
+        return;
+    }
+
+    element.textContent = String(value);
+}
+
+function formatDate(value) {
+    if (!value) {
+        return "Unavailable";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return String(value);
+    }
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        }
+    );
+}
+
+function escapeHTML(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }
