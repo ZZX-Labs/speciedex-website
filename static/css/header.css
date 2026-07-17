@@ -1,0 +1,259 @@
+/*
+========================================================================
+Speciedex.org
+header.css
+Site Header
+========================================================================
+*/
+
+/*
+========================================================================
+Site Header
+========================================================================
+*/
+
+.site-header,
+.header {
+
+    position: relative;
+
+    z-index: var(--z-header);
+
+    width: 100%;
+
+    background: rgba(8,11,9,.96);
+
+    border-bottom: 1px solid var(--color-border);
+
+    backdrop-filter: blur(14px);
+
+    box-shadow: var(--shadow-header);
+}
+
+/*
+========================================================================
+Header Layout
+========================================================================
+*/
+
+.site-header-inner,
+.header-inner {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: var(--space-6);
+
+    width: min(calc(100% - 2rem), var(--container-width));
+
+    min-height: var(--header-height);
+
+    margin-inline: auto;
+
+    padding-block: var(--space-3);
+}
+
+/*
+========================================================================
+Logo
+========================================================================
+*/
+
+.site-logo,
+.logo {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: var(--space-3);
+
+    flex-shrink: 0;
+
+    color: var(--color-primary);
+
+    text-decoration: none;
+}
+
+.site-logo:hover,
+.logo:hover {
+
+    text-decoration: none;
+}
+
+.site-logo img,
+.logo img {
+
+    display: block;
+
+    width: auto;
+
+    height: 56px;
+
+    object-fit: contain;
+}
+
+.site-title,
+.logo-text {
+
+    font-family: var(--font-heading);
+
+    font-size: var(--font-size-lg);
+
+    font-weight: var(--font-weight-bold);
+
+    letter-spacing: var(--letter-spacing-wide);
+
+    color: var(--color-primary);
+}
+
+/*
+========================================================================
+Branding
+========================================================================
+*/
+
+.site-branding {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+.site-tagline {
+
+    margin-top: .20rem;
+
+    font-size: var(--font-size-sm);
+
+    color: var(--color-text-muted);
+}
+
+/*
+========================================================================
+Header Banner
+========================================================================
+*/
+
+.site-banner,
+.header-banner {
+
+    position: relative;
+
+    overflow: hidden;
+
+    width: 100%;
+
+    border-bottom: 1px solid var(--color-border);
+}
+
+.site-banner img,
+.header-banner img {
+
+    display: block;
+
+    width: 100%;
+
+    max-height: var(--banner-height);
+
+    object-fit: cover;
+}
+
+/*
+========================================================================
+Announcement Banner
+========================================================================
+*/
+
+.header-notice {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: .65rem 1rem;
+
+    background: rgba(192,214,116,.06);
+
+    border-bottom: 1px solid var(--color-border);
+
+    color: var(--color-primary-light);
+
+    font-size: var(--font-size-sm);
+
+    text-align: center;
+}
+
+/*
+========================================================================
+Breadcrumb Placeholder
+========================================================================
+*/
+
+.header-breadcrumbs {
+
+    width: min(calc(100% - 2rem), var(--container-width));
+
+    margin-inline: auto;
+
+    padding-block: .75rem;
+}
+
+/*
+========================================================================
+Header Actions
+========================================================================
+*/
+
+.header-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: var(--space-3);
+
+    margin-left: auto;
+}
+
+/*
+========================================================================
+Search Placeholder
+========================================================================
+*/
+
+.header-search {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: var(--space-2);
+}
+
+/*
+========================================================================
+Header Utilities
+========================================================================
+*/
+
+.header-spacer {
+
+    flex: 1;
+}
+
+.header-divider {
+
+    width: 1px;
+
+    align-self: stretch;
+
+    background: var(--color-border);
+}
