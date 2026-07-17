@@ -1,0 +1,565 @@
+/*
+========================================================================
+Speciedex.org
+responsive.css
+Responsive Layout
+========================================================================
+*/
+
+/*
+========================================================================
+Large Desktop
+≤ 1400px
+========================================================================
+*/
+
+@media (max-width: 1400px) {
+
+    .container,
+    .content-container,
+    .article-container,
+    .section-inner {
+
+        width: min(calc(100% - 2rem), 92%);
+    }
+
+}
+
+/*
+========================================================================
+Desktop
+≤ 1200px
+========================================================================
+*/
+
+@media (max-width: 1200px) {
+
+    .card-grid-4 {
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-4 {
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .metrics-section-inner {
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .section-split {
+
+        gap: var(--space-6);
+    }
+
+}
+
+/*
+========================================================================
+Tablet Landscape
+≤ 1024px
+========================================================================
+*/
+
+@media (max-width: 1024px) {
+
+    /*
+    --------------------------------------------------------------------
+    Header
+    --------------------------------------------------------------------
+    */
+
+    .site-header-inner,
+    .header-inner {
+
+        gap: var(--space-4);
+    }
+
+    /*
+    --------------------------------------------------------------------
+    Navigation
+    --------------------------------------------------------------------
+    */
+
+    .menu-toggle,
+    .nav-toggle {
+
+        display: inline-flex;
+    }
+
+    .site-nav {
+
+        position: absolute;
+
+        top: 100%;
+
+        left: 0;
+
+        right: 0;
+
+        display: none;
+
+        background: var(--color-background-alt);
+
+        border-top: 1px solid var(--color-border);
+
+        box-shadow: var(--shadow-large);
+    }
+
+    .site-nav.open {
+
+        display: block;
+    }
+
+    .nav-links,
+    .nav-menu {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 0;
+
+        padding: var(--space-3);
+    }
+
+    .nav-links > li,
+    .nav-menu > li {
+
+        width: 100%;
+    }
+
+    .nav-links a,
+    .nav-menu a {
+
+        width: 100%;
+    }
+
+    /*
+    --------------------------------------------------------------------
+    Dropdowns
+    --------------------------------------------------------------------
+    */
+
+    .dropdown-menu,
+    .submenu {
+
+        position: static;
+
+        display: none;
+
+        margin-top: .25rem;
+
+        box-shadow: none;
+
+        border-radius: var(--radius-medium);
+    }
+
+    .dropdown.open > .dropdown-menu,
+    .dropdown.open > .submenu {
+
+        display: block;
+    }
+
+    /*
+    --------------------------------------------------------------------
+    Hero
+    --------------------------------------------------------------------
+    */
+
+    .hero {
+
+        padding: var(--space-7) 0;
+    }
+
+    .hero-highlights {
+
+        gap: var(--space-4);
+    }
+
+    /*
+    --------------------------------------------------------------------
+    Sections
+    --------------------------------------------------------------------
+    */
+
+    .section-split {
+
+        grid-template-columns: 1fr;
+    }
+
+    .docs-section {
+
+        grid-template-columns: 1fr;
+    }
+
+    .docs-sidebar {
+
+        position: static;
+    }
+
+    /*
+    --------------------------------------------------------------------
+    Cards
+    --------------------------------------------------------------------
+    */
+
+    .card-horizontal {
+
+        grid-template-columns: 1fr;
+    }
+
+    .card-horizontal .card-media {
+
+        border-radius:
+
+            var(--radius-large)
+
+            var(--radius-large)
+
+            0
+
+            0;
+    }
+
+    .card-horizontal .card-body {
+
+        padding: var(--space-5);
+    }
+
+}
+
+/*
+========================================================================
+Tablet Portrait
+≤ 768px
+========================================================================
+*/
+
+@media (max-width: 768px) {
+
+    /*
+    --------------------------------------------------------------------
+    Typography
+    --------------------------------------------------------------------
+    */
+
+    h1 {
+
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    h2 {
+
+        font-size: clamp(1.6rem, 6vw, 2.4rem);
+    }
+
+    /*
+    --------------------------------------------------------------------
+    Header
+    --------------------------------------------------------------------
+    */
+
+    .site-header-inner,
+    .header-inner {
+
+        flex-wrap: wrap;
+    }
+
+    .site-logo img {
+
+        height: 48px;
+    }
+
+    /*
+    --------------------------------------------------------------------
+    Footer
+    --------------------------------------------------------------------
+    */
+
+    .footer-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .footer-bottom {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    /*
+    --------------------------------------------------------------------
+    Buttons
+    --------------------------------------------------------------------
+    */
+
+    .button-group {
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .button,
+
+    .btn,
+
+    .cta {
+
+        width: 100%;
+    }
+
+    /*
+    --------------------------------------------------------------------
+    Forms
+    --------------------------------------------------------------------
+    */
+
+    .form-grid-2 {
+
+        grid-template-columns: 1fr;
+    }
+
+    /*
+    --------------------------------------------------------------------
+    Metrics
+    --------------------------------------------------------------------
+    */
+
+    .metrics-section-inner {
+
+        grid-template-columns: 1fr;
+    }
+
+    /*
+    --------------------------------------------------------------------
+    Card Grids
+    --------------------------------------------------------------------
+    */
+
+    .card-grid-2,
+    .card-grid-3,
+    .card-grid-4,
+
+    .card-grid,
+
+    .feature-grid,
+
+    .project-grid,
+
+    .resource-grid,
+
+    .status-grid,
+
+    .metric-grid,
+
+    .release-grid,
+
+    .quick-link-grid,
+
+    .ecosystem-grid,
+
+    .roadmap-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/*
+========================================================================
+Mobile
+≤ 640px
+========================================================================
+*/
+
+@media (max-width: 640px) {
+
+    html {
+
+        font-size: 15px;
+    }
+
+    .section {
+
+        padding-block: var(--space-6);
+    }
+
+    .card,
+
+    .feature-card,
+
+    .project-card,
+
+    .statement-card,
+
+    .callout {
+
+        padding: var(--space-4);
+    }
+
+    .hero {
+
+        padding: var(--space-6) 0;
+    }
+
+    .hero-actions {
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .hero-highlights {
+
+        flex-direction: column;
+    }
+
+    .callout {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .callout-actions {
+
+        width: 100%;
+    }
+
+    .pagination {
+
+        flex-wrap: wrap;
+    }
+
+}
+
+/*
+========================================================================
+Small Mobile
+≤ 480px
+========================================================================
+*/
+
+@media (max-width: 480px) {
+
+    .container,
+    .content-container,
+    .article-container,
+    .section-inner {
+
+        width: calc(100% - 1.25rem);
+    }
+
+    .site-title {
+
+        font-size: var(--font-size-base);
+    }
+
+    .site-tagline {
+
+        display: none;
+    }
+
+    .badge {
+
+        font-size: .70rem;
+    }
+
+    .table-responsive {
+
+        overflow-x: auto;
+    }
+
+}
+
+/*
+========================================================================
+Landscape Phones
+========================================================================
+*/
+
+@media (max-height: 540px) and (orientation: landscape) {
+
+    .hero {
+
+        min-height: auto;
+
+        padding: var(--space-5) 0;
+    }
+
+}
+
+/*
+========================================================================
+Reduced Motion
+========================================================================
+*/
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+
+    *::before,
+
+    *::after {
+
+        animation-duration: .01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: .01ms !important;
+
+        scroll-behavior: auto !important;
+    }
+
+}
+
+/*
+========================================================================
+High Contrast
+========================================================================
+*/
+
+@media (prefers-contrast: more) {
+
+    * {
+
+        box-shadow: none !important;
+    }
+
+    .button,
+
+    .btn,
+
+    .card,
+
+    .alert,
+
+    input,
+
+    textarea,
+
+    select {
+
+        border-width: 2px;
+    }
+
+}
+
+/*
+========================================================================
+Dark Mode
+(Placeholder for future alternate themes)
+========================================================================
+*/
+
+@media (prefers-color-scheme: dark) {
+
+    /* Default Speciedex theme is already dark. */
+
+}
