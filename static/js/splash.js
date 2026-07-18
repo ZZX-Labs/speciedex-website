@@ -10,12 +10,14 @@ Loaded by:
 
     /static/js/script.js
 
-Responsibilities
+Responsibilities:
 
-    • Initialize the splash/hero section
-    • Support scroll indicator
-    • Support fade/visibility effects
-    • Keep implementation isolated from other modules
+    • Initialize splash / hero sections
+    • Support scroll-down controls
+    • Track splash visibility
+    • Respect reduced-motion preferences
+    • Keep splash behavior isolated from other modules
+
 ==============================================================================
 */
 
@@ -30,8 +32,14 @@ Responsibilities
 
     Speciedex.splashModuleLoaded = true;
 
+    /*
+    ==========================================================================
+    Selectors / Classes
+    ==========================================================================
+    */
+
     const SPLASH_SELECTOR =
-        "[data-site-splash], .site-splash";
+        "[data-site-splash], .site-splash, .splash";
 
     const SCROLL_BUTTON_SELECTOR =
         "[data-scroll-down]";
@@ -42,27 +50,49 @@ Responsibilities
     const SCROLLED_CLASS =
         "is-scrolled";
 
+    /*
+    ==========================================================================
+    Internal State
+    ==========================================================================
+    */
+
     let splash = null;
-    let initialized = false;
+    let scrollButton = null;
     let observer = null;
+    let initialized = false;
 
     /*
-    --------------------------------------------------------------------------
-    Initialize splash.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Reduced Motion
+    ==========================================================================
+    */
+
+    function prefersReducedMotion() {
+        return (
+            window.matchMedia &&
+            window.matchMedia(
+                "(prefers-reduced-motion: reduce)"
+            ).matches
+        );
+    }
+
+    /*
+    ==========================================================================
+    Initialize Splash
+    ==========================================================================
     */
 
     function initializeSplash() {
-
-        splash = document.querySelector(
-            SPLASH_SELECTOR
-        );
-
-        if (!splash) {
+        if (initialized) {
             return;
         }
 
-        if (initialized) {
+        splash =
+            document.querySelector(
+                SPLASH_SELECTOR
+            );
+
+        if (!splash) {
             return;
         }
 
@@ -73,41 +103,54 @@ Responsibilities
         );
 
         initializeScrollButton();
-
         initializeObserver();
+
+        document.dispatchEvent(
+            new CustomEvent(
+                "speciedex:splash-ready",
+                {
+                    detail: {
+                        splash
+                    }
+                }
+            )
+        );
     }
 
     /*
-    --------------------------------------------------------------------------
-    Scroll button.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Scroll Button
+    ==========================================================================
     */
 
     function initializeScrollButton() {
-
-        const button =
+        scrollButton =
             splash.querySelector(
                 SCROLL_BUTTON_SELECTOR
             );
 
-        if (!button) {
+        if (!scrollButton) {
             return;
         }
 
-        button.addEventListener(
+        scrollButton.removeEventListener(
             "click",
-            handleScrollButton,
-            {
-                passive: false
-            }
+            handleScrollButton
+        );
+
+        scrollButton.addEventListener(
+            "click",
+            handleScrollButton
         );
     }
 
     function handleScrollButton(event) {
-
         event.preventDefault();
 
         const target =
+            document.querySelector(
+                "#main-content"
+            ) ||
             document.querySelector(
                 "main"
             );
@@ -117,18 +160,37 @@ Responsibilities
         }
 
         target.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
+            behavior:
+                prefersReducedMotion()
+                    ? "auto"
+                    : "smooth",
+
+            block:
+                "start"
         });
+
+        if (
+            typeof target.focus ===
+            "function" &&
+            target.hasAttribute(
+                "tabindex"
+            )
+        ) {
+            target.focus({
+                preventScroll: true
+            });
+        }
     }
 
     /*
-    --------------------------------------------------------------------------
-    Observe splash visibility.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Intersection Observer
+    ==========================================================================
     */
 
     function initializeObserver() {
+        observer?.disconnect();
+        observer = null;
 
         if (
             typeof IntersectionObserver !==
@@ -136,8 +198,6 @@ Responsibilities
         ) {
             return;
         }
-
-        observer?.disconnect();
 
         observer =
             new IntersectionObserver(
@@ -147,47 +207,88 @@ Responsibilities
                 }
             );
 
-        observer.observe(splash);
+        observer.observe(
+            splash
+        );
     }
 
     function handleIntersection(entries) {
+        const entry =
+            entries[0];
 
-        const entry = entries[0];
-
-        if (!entry) {
+        if (
+            !entry ||
+            !splash
+        ) {
             return;
         }
 
+        const scrolled =
+            !entry.isIntersecting;
+
         splash.classList.toggle(
             SCROLLED_CLASS,
-            !entry.isIntersecting
+            scrolled
         );
 
         document.body.classList.toggle(
             "splash-scrolled",
-            !entry.isIntersecting
+            scrolled
+        );
+
+        document.dispatchEvent(
+            new CustomEvent(
+                "speciedex:splash-visibility",
+                {
+                    detail: {
+                        splash,
+                        visible:
+                            entry.isIntersecting,
+                        ratio:
+                            entry.intersectionRatio
+                    }
+                }
+            )
         );
     }
 
     /*
-    --------------------------------------------------------------------------
-    Cleanup.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Destroy Splash
+    ==========================================================================
     */
 
     function destroySplash() {
-
         observer?.disconnect();
-
         observer = null;
+
+        if (scrollButton) {
+            scrollButton.removeEventListener(
+                "click",
+                handleScrollButton
+            );
+        }
+
+        if (splash) {
+            splash.classList.remove(
+                VISIBLE_CLASS,
+                SCROLLED_CLASS
+            );
+        }
+
+        document.body.classList.remove(
+            "splash-scrolled"
+        );
+
+        scrollButton = null;
         splash = null;
         initialized = false;
     }
 
     /*
-    --------------------------------------------------------------------------
-    Public API.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Public API
+    ==========================================================================
     */
 
     Speciedex.initializeSplash =
@@ -195,5 +296,4 @@ Responsibilities
 
     Speciedex.destroySplash =
         destroySplash;
-
 })();
