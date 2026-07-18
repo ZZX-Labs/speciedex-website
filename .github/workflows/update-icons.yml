@@ -236,6 +236,8 @@ jobs:
             --image-root "$ICON_ROOT"
 
       - name: Write build report
+        env:
+          ICON_SIZE: ${{ steps.mode.outputs.icon_size }}
         run: |
           set -Eeuo pipefail
 
@@ -243,6 +245,7 @@ jobs:
           from __future__ import annotations
 
           import json
+          import os
           from pathlib import Path
 
           manifest_path = Path("static/data/icons/icon-manifest.json")
@@ -281,7 +284,7 @@ jobs:
               summary.write(f"- Reused: {report['reused']}\n")
               summary.write(f"- Failed: {report['failed']}\n")
               summary.write(f"- Generator version: {report['generator_version']}\n")
-              summary.write(f"- Master size: ${{{{ steps.mode.outputs.icon_size }}}} px\n\n")
+              summary.write(f"- Master size: {os.environ['ICON_SIZE']} px\n\n")
               summary.write("## Icons by rank\n\n")
               summary.write("| Rank | Count |\n")
               summary.write("|---|---:|\n")
