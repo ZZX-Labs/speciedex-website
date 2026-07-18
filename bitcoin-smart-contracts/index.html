@@ -1,2523 +1,1298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-    <meta
-        name="robots"
-        content="index,follow">
-
-    <meta
-        name="description"
-        content="Learn how Bitcoin smart contracts work through Script, multisignature policies, timelocks, hashlocks, Lightning payment channels, Taproot, Miniscript, Discreet Log Contracts, and other programmable Bitcoin systems.">
-
-    <title>
-        Bitcoin Smart Contracts | Speciedex.org
-    </title>
-
-    <link
-        rel="icon"
-        href="../static/icons/favicon.ico"
-        type="image/x-icon">
-
-    <link
-        rel="stylesheet"
-        href="../static/styles.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="Learn how Bitcoin smart contracts work through Script, multisignature policies, timelocks, hashlocks, Lightning payment channels, Taproot, Miniscript, Discreet Log Contracts, and other programmable Bitcoin systems.">
+    <meta name="author" content="[0xdeadbeef]">
+    <meta name="theme-color" content="#0b140f">
+    <title>Bitcoin Smart Contracts | Speciedex.org</title>
+    <link rel="canonical" href="https://speciedex.org/bitcoin-smart-contracts/">
+    <link rel="icon" href="../static/logos/speciedex/logo.png" type="image/speciedex-icon">
+    <link rel="stylesheet" href="../static/styles.css">
 </head>
-
-<body>
-
-<a
-    class="skip-link"
-    href="#main-content">
-    Skip to main content
-</a>
-
-<div data-include="header"></div>
-
-<div data-include="splash"></div>
-
-<main
-    id="main-content"
-    class="site-main">
-
-    <!--
-    ========================================================================
-    Page Header
-    ========================================================================
-    -->
-
-    <section
-        class="page-header"
-        aria-labelledby="smart-contracts-page-title">
-
-        <div class="container">
-
-            <p class="eyebrow">
-                Programmable Bitcoin
-            </p>
-
-            <h1 id="smart-contracts-page-title">
-                Bitcoin Smart Contracts
-            </h1>
-
-            <p class="page-introduction">
-
-                Bitcoin smart contracts are programmable spending conditions
-                enforced by the Bitcoin network.
-
-            </p>
-
-            <p class="page-introduction">
-
-                Rather than executing arbitrary application code on every
-                node, Bitcoin uses a deliberately constrained scripting
-                system to define when, how, and by whom a transaction output
-                may be spent.
-
-            </p>
-
-            <p class="page-introduction">
-
-                These mechanisms support multisignature custody, inheritance,
-                escrow, payment channels, timelocked recovery, atomic swaps,
-                vaults, Lightning Network payments, Discreet Log Contracts,
-                and other financial systems built directly upon Bitcoin.
-
-            </p>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Overview
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="smart-contracts-overview-title">
-
-        <div class="container">
-
-            <div class="content-grid content-grid-two-column">
-
-                <article class="content-card">
-
-                    <h2 id="smart-contracts-overview-title">
-                        What a Bitcoin Smart Contract Is
-                    </h2>
-
-                    <p>
-
-                        A Bitcoin smart contract is a set of cryptographic and
-                        logical conditions attached to bitcoin.
-
-                    </p>
-
-                    <p>
-
-                        These conditions determine what evidence must be
-                        provided before the funds can be spent. That evidence
-                        may include a valid digital signature, multiple
-                        signatures, the passage of time, knowledge of a secret,
-                        or satisfaction of a more complex spending policy.
-
-                    </p>
-
-                    <p>
-
-                        Once a transaction is broadcast, full nodes evaluate
-                        the relevant conditions. Transactions that fail those
-                        conditions are rejected.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h2>
-                        Bitcoin Script
-                    </h2>
-
-                    <p>
-
-                        Bitcoin smart contracts are primarily expressed using
-                        Bitcoin Script, a stack-based scripting language
-                        designed for transaction validation.
-
-                    </p>
-
-                    <p>
-
-                        Script is intentionally limited. It is not designed as
-                        a general-purpose programming language and does not
-                        include unrestricted loops or arbitrary persistent
-                        computation.
-
-                    </p>
-
-                    <p>
-
-                        This conservative design reduces complexity, limits
-                        resource consumption, improves predictability, and
-                        helps make validation consistent across the network.
-
-                    </p>
-
-                </article>
-
+<body class="page page-bitcoin-smart-contracts">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div data-include="header"></div>
+    <div data-include="splash"></div>
+    <main id="main-content" class="site-main" tabindex="-1">
+        <!--
+        ========================================================================
+        Bitcoin Smart Contracts
+        ========================================================================
+        -->
+        <section class="page-header" aria-labelledby="smart-contracts-page-title">
+            <div class="container">
+                <p class="eyebrow">Programmable Bitcoin</p>
+                <h1 id="smart-contracts-page-title">Bitcoin Smart Contracts</h1>
+                <p class="page-introduction">
+                    Bitcoin smart contracts are programmable spending conditions
+                    enforced by the Bitcoin network.
+                </p>
+                <p class="page-introduction">
+                    Rather than executing arbitrary application code on every
+                    node, Bitcoin uses a deliberately constrained scripting
+                    system to define when, how, and by whom a transaction output
+                    may be spent.
+                </p>
+                <p class="page-introduction">
+                    These mechanisms support multisignature custody, inheritance,
+                    escrow, payment channels, timelocked recovery, atomic swaps,
+                    vaults, Lightning Network payments, Discreet Log Contracts,
+                    and other financial systems built directly upon Bitcoin.
+                </p>
             </div>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Why Limited
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="limited-language-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Design Philosophy
-                </p>
-
-                <h2 id="limited-language-title">
-                    Why Bitcoin Uses a Constrained Language
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    Every fully validating Bitcoin node must be able to
-                    evaluate transaction conditions consistently.
-
-                </p>
-
-                <p>
-
-                    A highly expressive execution environment can introduce
-                    unpredictable computation, denial-of-service risk,
-                    software ambiguity, complex state management, and a
-                    larger attack surface.
-
-                </p>
-
-                <p>
-
-                    Bitcoin instead favors narrowly defined conditions whose
-                    meaning can be reviewed and verified before funds are
-                    committed.
-
-                </p>
-
-                <p>
-
-                    The result is a smart-contract model focused less on
-                    running large applications inside the blockchain and more
-                    on securely coordinating ownership, authorization, time,
-                    secrets, payments, and settlement.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Core Building Blocks
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="building-blocks-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Contract Components
-                </p>
-
-                <h2 id="building-blocks-title">
-                    Core Smart-Contract Building Blocks
-                </h2>
-
-            </div>
-
-            <div class="card-grid card-grid-four">
-
-                <article class="content-card">
-
-                    <h3>
-                        Digital Signatures
-                    </h3>
-
-                    <p>
-
-                        Signatures prove that a transaction was authorized by
-                        the holder of a corresponding private key.
-
-                    </p>
-
-                    <p>
-
-                        Most Bitcoin spending conditions require one or more
-                        valid signatures.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Multisignature
-                    </h3>
-
-                    <p>
-
-                        Multisignature policies require more than one key to
-                        authorize a transaction.
-
-                    </p>
-
-                    <p>
-
-                        Common forms include two-of-three, three-of-five, and
-                        other threshold arrangements.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Timelocks
-                    </h3>
-
-                    <p>
-
-                        Timelocks prevent funds from being spent until a
-                        specified block height, time, or relative delay has
-                        passed.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Hashlocks
-                    </h3>
-
-                    <p>
-
-                        Hashlocks require a spender to reveal a secret whose
-                        hash matches a value committed to in advance.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Threshold Policies
-                    </h3>
-
-                    <p>
-
-                        Threshold policies allow one of several approved
-                        combinations of conditions to authorize spending.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Recovery Paths
-                    </h3>
-
-                    <p>
-
-                        Contracts can include alternate spending paths that
-                        become available after a delay or under emergency
-                        conditions.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Commitments
-                    </h3>
-
-                    <p>
-
-                        Cryptographic commitments allow parties to prove that
-                        specific data or terms existed without revealing all
-                        information immediately.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Transaction Chains
-                    </h3>
-
-                    <p>
-
-                        Multiple transactions can be constructed together so
-                        that later actions depend upon earlier signed states.
-
-                    </p>
-
-                </article>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Multisignature
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="multisignature-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Shared Authorization
-                </p>
-
-                <h2 id="multisignature-title">
-                    Multisignature Contracts
-                </h2>
-
-            </div>
-
-            <div class="content-grid content-grid-two-column">
-
-                <article class="content-card">
-
-                    <h3>
-                        Shared Custody
-                    </h3>
-
-                    <p>
-
-                        A multisignature contract can require approval from
-                        several independent keys before bitcoin may be spent.
-
-                    </p>
-
-                    <p>
-
-                        A two-of-three arrangement, for example, permits any
-                        two authorized keys to approve a transaction while
-                        preventing a single compromised key from moving the
-                        funds.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Organizational Treasury
-                    </h3>
-
-                    <p>
-
-                        Businesses, research organizations, nonprofits, and
-                        collaborative projects may use threshold signatures
-                        to distribute financial authority across multiple
-                        people or devices.
-
-                    </p>
-
-                    <p>
-
-                        This can reduce dependence upon a single employee,
-                        administrator, machine, office, or physical location.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Personal Security
-                    </h3>
-
-                    <p>
-
-                        Individuals may store separate keys on different
-                        hardware wallets, in different locations, or with
-                        carefully chosen recovery participants.
-
-                    </p>
-
-                    <p>
-
-                        A properly designed threshold policy can make theft
-                        more difficult while preserving recovery options.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Collaborative Custody
-                    </h3>
-
-                    <p>
-
-                        Collaborative custody can divide authority between a
-                        user and one or more service providers without giving
-                        any single provider unilateral control.
-
-                    </p>
-
-                    <p>
-
-                        The exact security model depends upon the contract,
-                        wallet software, backup procedures, and distribution
-                        of keys.
-
-                    </p>
-
-                </article>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Timelocks
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="timelocks-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Time-Based Conditions
-                </p>
-
-                <h2 id="timelocks-title">
-                    Timelocks
-                </h2>
-
-            </div>
-
-            <div class="content-grid content-grid-two-column">
-
-                <article class="content-card">
-
-                    <h3>
-                        Absolute Timelocks
-                    </h3>
-
-                    <p>
-
-                        Absolute timelocks prevent a transaction or spending
-                        path from becoming valid before a specified block
-                        height or time.
-
-                    </p>
-
-                    <p>
-
-                        They can be used for delayed distributions, scheduled
-                        recovery, long-term savings, inheritance planning, or
-                        contract deadlines.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Relative Timelocks
-                    </h3>
-
-                    <p>
-
-                        Relative timelocks require a specified delay after a
-                        previous transaction output has been confirmed.
-
-                    </p>
-
-                    <p>
-
-                        These delays are important in payment channels, vault
-                        designs, revocation systems, and staged recovery
-                        arrangements.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Delayed Recovery
-                    </h3>
-
-                    <p>
-
-                        A contract may allow an ordinary spending path with
-                        one key while permitting a separate recovery key to
-                        act only after a delay.
-
-                    </p>
-
-                    <p>
-
-                        This can provide time to detect unauthorized activity
-                        and respond before final settlement.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Inheritance
-                    </h3>
-
-                    <p>
-
-                        Timelocked recovery paths can support inheritance
-                        arrangements in which designated keys gain authority
-                        only after a long period of inactivity or according to
-                        an established succession plan.
-
-                    </p>
-
-                    <p>
-
-                        Any inheritance design should be reviewed carefully
-                        for legal, operational, privacy, and security risks.
-
-                    </p>
-
-                </article>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Hashlocks
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="hashlocks-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Secret-Based Conditions
-                </p>
-
-                <h2 id="hashlocks-title">
-                    Hashlocks
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    A hashlock requires the spender to reveal a secret value,
-                    commonly called a preimage, whose cryptographic hash
-                    matches a value specified by the contract.
-
-                </p>
-
-                <p>
-
-                    Before the secret is revealed, parties can verify the
-                    committed hash without knowing the underlying value.
-
-                </p>
-
-                <p>
-
-                    When the correct preimage is published in a valid
-                    transaction, the secret becomes visible and may unlock a
-                    related contract elsewhere.
-
-                </p>
-
-                <p>
-
-                    Hashlocks are important in Lightning Network payments,
-                    atomic swaps, cross-system settlement, and contracts in
-                    which one disclosure triggers several coordinated
-                    outcomes.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    HTLC
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="htlc-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Hash and Time
-                </p>
-
-                <h2 id="htlc-title">
-                    Hashed Timelock Contracts
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    A Hashed Timelock Contract combines a hashlock with a
-                    timelock.
-
-                </p>
-
-                <p>
-
-                    One party may claim the funds by revealing the correct
-                    secret before a deadline. If that does not happen, an
-                    alternate party may recover the funds after the timeout.
-
-                </p>
-
-                <p>
-
-                    This creates a conditional payment that either succeeds
-                    through disclosure of the required preimage or safely
-                    expires through a refund path.
-
-                </p>
-
-                <p>
-
-                    Hashed Timelock Contracts historically formed a major
-                    component of routed Lightning Network payments and remain
-                    a foundational concept in Bitcoin contract design.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Lightning
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="lightning-contracts-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Payment Channels
-                </p>
-
-                <h2 id="lightning-contracts-title">
-                    Lightning Network Smart Contracts
-                </h2>
-
-            </div>
-
-            <div class="content-grid content-grid-two-column">
-
-                <article class="content-card">
-
-                    <h3>
-                        Channel Funding
-                    </h3>
-
-                    <p>
-
-                        A Lightning channel begins when bitcoin is committed
-                        to an on-chain funding output governed by a shared
-                        contract.
-
-                    </p>
-
-                    <p>
-
-                        The participants then exchange signed state updates
-                        representing changes in channel ownership without
-                        publishing every update to the blockchain.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Commitment Transactions
-                    </h3>
-
-                    <p>
-
-                        Each participant holds a transaction capable of
-                        settling the current channel state on-chain.
-
-                    </p>
-
-                    <p>
-
-                        Contract conditions and revocation mechanisms
-                        discourage publication of obsolete states.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Routed Payments
-                    </h3>
-
-                    <p>
-
-                        Conditional payments can pass through several
-                        Lightning nodes.
-
-                    </p>
-
-                    <p>
-
-                        Each routing participant forwards value only when the
-                        linked conditions are satisfied, allowing the payment
-                        to complete atomically across the route.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Cooperative Settlement
-                    </h3>
-
-                    <p>
-
-                        Participants may cooperatively close a channel by
-                        agreeing upon the final allocation of funds and
-                        publishing a settlement transaction.
-
-                    </p>
-
-                    <p>
-
-                        Unilateral recovery paths remain available when a
-                        counterparty is unavailable or uncooperative.
-
-                    </p>
-
-                </article>
-
-            </div>
-
-            <div class="button-group">
-
-                <a
-                    class="button"
-                    href="../lightning/">
-                    Explore Lightning
-                </a>
-
-                <a
-                    class="button button-secondary"
-                    href="../bitcoin/">
-                    Return to Bitcoin
-                </a>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Escrow
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="escrow-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Conditional Settlement
-                </p>
-
-                <h2 id="escrow-title">
-                    Escrow and Dispute Resolution
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    Bitcoin contracts can support escrow arrangements in
-                    which funds require authorization from a buyer, seller,
-                    mediator, or threshold combination of participants.
-
-                </p>
-
-                <p>
-
-                    A common two-of-three arrangement gives the buyer and
-                    seller the ability to complete a transaction
-                    cooperatively while allowing a neutral third party to
-                    assist if a dispute occurs.
-
-                </p>
-
-                <p>
-
-                    Unlike ordinary custodial escrow, the mediator does not
-                    necessarily need unilateral control over the funds.
-
-                </p>
-
-                <p>
-
-                    Contract design cannot determine whether physical goods
-                    were delivered, whether work met a subjective standard,
-                    or whether a legal obligation was fulfilled. Human
-                    judgment, documentation, trusted evidence, or external
-                    dispute-resolution processes may still be required.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Atomic Swaps
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="atomic-swaps-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Coordinated Exchange
-                </p>
-
-                <h2 id="atomic-swaps-title">
-                    Atomic Swaps
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    Atomic swaps allow two parties to exchange assets across
-                    compatible systems without requiring one party to send
-                    irrevocably first.
-
-                </p>
-
-                <p>
-
-                    Hashlocks and timelocks can coordinate the exchange so
-                    that either both sides complete or both sides eventually
-                    recover their original funds.
-
-                </p>
-
-                <p>
-
-                    When one party claims the asset on one system, the
-                    revealed secret permits the other party to claim the
-                    corresponding asset on the second system.
-
-                </p>
-
-                <p>
-
-                    Atomic swaps require compatible cryptographic primitives,
-                    carefully coordinated timeouts, reliable transaction
-                    monitoring, sufficient fees, and correct implementation.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Taproot
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="taproot-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Modern Bitcoin Contracts
-                </p>
-
-                <h2 id="taproot-title">
-                    Taproot
-                </h2>
-
-            </div>
-
-            <div class="content-grid content-grid-two-column">
-
-                <article class="content-card">
-
-                    <h3>
-                        Key-Path Spending
-                    </h3>
-
-                    <p>
-
-                        Taproot allows participants to aggregate cooperative
-                        authorization into a spending path that resembles a
-                        single public key and signature.
-
-                    </p>
-
-                    <p>
-
-                        When all required parties agree, complex arrangements
-                        may settle efficiently without revealing every
-                        possible contract branch.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Script-Path Spending
-                    </h3>
-
-                    <p>
-
-                        Taproot can commit to multiple alternative scripts
-                        while revealing only the branch actually used.
-
-                    </p>
-
-                    <p>
-
-                        Unused conditions remain undisclosed, improving
-                        privacy and reducing the amount of contract data
-                        placed on-chain.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Schnorr Signatures
-                    </h3>
-
-                    <p>
-
-                        Taproot uses Schnorr signatures, which support
-                        efficient signature aggregation and cleaner
-                        construction of collaborative signing schemes.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Improved Contract Design
-                    </h3>
-
-                    <p>
-
-                        Taproot enables more private and efficient
-                        multisignature policies, payment channels, vault
-                        structures, recovery paths, and advanced signing
-                        arrangements.
-
-                    </p>
-
-                </article>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Miniscript
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="miniscript-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Structured Policy Design
-                </p>
-
-                <h2 id="miniscript-title">
-                    Miniscript
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    Miniscript is a structured language and framework for
-                    expressing Bitcoin spending policies in a form that can
-                    be analyzed, composed, and compiled into Bitcoin Script.
-
-                </p>
-
-                <p>
-
-                    It helps wallet developers reason about which keys,
-                    timelocks, and threshold conditions can satisfy a
-                    contract.
-
-                </p>
-
-                <p>
-
-                    Miniscript can also assist with fee estimation,
-                    satisfiability analysis, recovery planning, wallet
-                    interoperability, and construction of complex policies
-                    without manually assembling low-level script operations.
-
-                </p>
-
-                <p>
-
-                    A policy may describe a primary spending path, one or more
-                    recovery paths, delayed emergency authority, and
-                    alternative combinations of keys.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Descriptors
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="descriptors-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Wallet Interoperability
-                </p>
-
-                <h2 id="descriptors-title">
-                    Output Script Descriptors
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    Output script descriptors provide a standardized way to
-                    describe how wallet addresses and spending scripts are
-                    derived.
-
-                </p>
-
-                <p>
-
-                    A descriptor can identify the script type, public keys,
-                    derivation paths, multisignature threshold, checksum, and
-                    other information needed to reconstruct a wallet policy.
-
-                </p>
-
-                <p>
-
-                    Descriptors improve backup quality and interoperability
-                    because they preserve more information than a collection
-                    of addresses alone.
-
-                </p>
-
-                <p>
-
-                    A watch-only system may use public descriptors to monitor
-                    balances and generate addresses without holding the
-                    private keys required to spend.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    DLC
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="dlc-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    External Events
-                </p>
-
-                <h2 id="dlc-title">
-                    Discreet Log Contracts
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    Discreet Log Contracts allow parties to create Bitcoin
-                    contracts whose settlement depends upon an event attested
-                    to by an external oracle.
-
-                </p>
-
-                <p>
-
-                    The oracle publishes cryptographic information associated
-                    with an outcome, such as a price, measurement, election
-                    result, weather observation, or other verifiable event.
-
-                </p>
-
-                <p>
-
-                    The oracle does not necessarily take custody of funds and
-                    may not know the identities or exact contract terms of the
-                    participants.
-
-                </p>
-
-                <p>
-
-                    Discreet Log Contracts can support conditional payouts,
-                    financial agreements, insurance-like arrangements,
-                    hedging, research incentives, and prediction-based
-                    settlement.
-
-                </p>
-
-                <p>
-
-                    Participants remain exposed to oracle failure,
-                    misreporting, collusion, ambiguous outcomes, software
-                    defects, regulatory obligations, and counterparty risk.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Oracles
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="oracles-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    External Information
-                </p>
-
-                <h2 id="oracles-title">
-                    Oracles and Real-World Data
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    Bitcoin nodes can verify signatures, transaction history,
-                    block conditions, hashes, and other information available
-                    within the protocol.
-
-                </p>
-
-                <p>
-
-                    They cannot independently determine whether a shipment
-                    arrived, whether rain fell in a specific location,
-                    whether a species was observed, whether a sporting event
-                    occurred, or whether a published market price is correct.
-
-                </p>
-
-                <p>
-
-                    An oracle provides a cryptographically signed statement
-                    about an external event.
-
-                </p>
-
-                <p>
-
-                    Oracle-based systems must consider source reliability,
-                    measurement standards, publication timing, data
-                    availability, conflicting reports, compromise,
-                    jurisdiction, and dispute resolution.
-
-                </p>
-
-                <p>
-
-                    Multiple independent oracles and threshold attestation can
-                    reduce dependence upon a single data provider, but they do
-                    not eliminate the need for trust in external information.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Vaults
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="vaults-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Defensive Custody
-                </p>
-
-                <h2 id="vaults-title">
-                    Bitcoin Vaults
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    A Bitcoin vault is a custody design intended to restrict
-                    or delay how funds can be moved.
-
-                </p>
-
-                <p>
-
-                    Vault systems may separate ordinary spending authority
-                    from emergency recovery authority, require waiting
-                    periods, limit destination addresses, or provide time to
-                    detect and respond to an unauthorized transaction.
-
-                </p>
-
-                <p>
-
-                    Some vault designs can be approximated using existing
-                    multisignature, timelock, pre-signed transaction, and
-                    wallet-policy techniques.
-
-                </p>
-
-                <p>
-
-                    More advanced vault proposals may depend upon future
-                    consensus changes or additional transaction constraints.
-
-                </p>
-
-                <p>
-
-                    Vaults can improve security against certain threats while
-                    introducing additional complexity, backup requirements,
-                    monitoring obligations, fee considerations, and recovery
-                    failure modes.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Inheritance
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="inheritance-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Long-Term Recovery
-                </p>
-
-                <h2 id="inheritance-title">
-                    Inheritance and Succession Contracts
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    Bitcoin inheritance requires both technical and legal
-                    planning.
-
-                </p>
-
-                <p>
-
-                    A smart-contract policy may include delayed recovery keys,
-                    distributed family authorization, professional
-                    executors, multisignature trustees, or prearranged
-                    succession paths.
-
-                </p>
-
-                <p>
-
-                    The contract must be designed so that heirs can recover
-                    the funds when appropriate without gaining premature
-                    access or exposing sensitive information while the owner
-                    is alive.
-
-                </p>
-
-                <p>
-
-                    Plans should account for lost devices, forgotten
-                    passphrases, obsolete wallet software, changing family
-                    circumstances, unavailable cosigners, legal disputes, and
-                    long periods between testing.
-
-                </p>
-
-                <p>
-
-                    Any inheritance arrangement should be documented,
-                    periodically tested, and reviewed with qualified legal
-                    and financial professionals where appropriate.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Research Applications
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="research-applications-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Scientific and Public Infrastructure
-                </p>
-
-                <h2 id="research-applications-title">
-                    Research and Conservation Applications
-                </h2>
-
-            </div>
-
-            <div class="content-grid content-grid-two-column">
-
-                <article class="content-card">
-
-                    <h3>
-                        Research Grants
-                    </h3>
-
-                    <p>
-
-                        Multisignature and milestone-based contracts may help
-                        coordinate research grants, field-expedition funding,
-                        equipment procurement, and staged project support.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Conservation Bounties
-                    </h3>
-
-                    <p>
-
-                        Conditional payouts may support verified habitat
-                        restoration, species observations, invasive-species
-                        removal, cleanup programs, or independently audited
-                        conservation outcomes.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Data Publication
-                    </h3>
-
-                    <p>
-
-                        Cryptographic commitments and timestamped
-                        transactions may help establish that a dataset,
-                        research record, image, or document existed before a
-                        particular point in time.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Distributed Governance
-                    </h3>
-
-                    <p>
-
-                        Threshold authorization can help distribute control
-                        of shared project funds across institutions,
-                        researchers, trustees, or regional conservation
-                        partners.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Emergency Funds
-                    </h3>
-
-                    <p>
-
-                        Timelocked and multisignature arrangements may help
-                        secure emergency response funds while preserving
-                        access during disasters, infrastructure failures, or
-                        organizational disruption.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Provenance
-                    </h3>
-
-                    <p>
-
-                        Signed records can help establish the origin,
-                        authorship, approval history, and integrity of
-                        scientific or conservation documentation.
-
-                    </p>
-
-                </article>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Speciedex Use
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="speciedex-contracts-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Speciedex Infrastructure
-                </p>
-
-                <h2 id="speciedex-contracts-title">
-                    Smart Contracts and Speciedex
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    Speciedex may research Bitcoin smart contracts for
-                    transparent project funding, multisignature treasury
-                    management, Lightning payments, public bounties,
-                    contributor compensation, archival timestamping, data
-                    provenance, infrastructure procurement, and conservation
-                    financing.
-
-                </p>
-
-                <p>
-
-                    Any production implementation should prioritize
-                    simplicity, independent verification, open documentation,
-                    recoverability, privacy, and minimal dependence upon
-                    custodial intermediaries.
-
-                </p>
-
-                <p>
-
-                    Speciedex does not require a proprietary token, private
-                    blockchain, speculative asset, or unrelated digital
-                    currency to implement programmable financial agreements.
-
-                </p>
-
-                <p>
-
-                    Where smart-contract functionality is appropriate, the
-                    project prefers established Bitcoin primitives and
-                    independently verifiable open-source infrastructure.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    What Contracts Cannot Do
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="limitations-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Limitations
-                </p>
-
-                <h2 id="limitations-title">
-                    What Smart Contracts Cannot Determine
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    A smart contract can enforce only the conditions visible
-                    to its validation environment.
-
-                </p>
-
-                <p>
-
-                    It cannot independently determine whether a biological
-                    specimen was correctly identified, whether a conservation
-                    project succeeded, whether a shipment contained the
-                    promised equipment, whether a person acted ethically, or
-                    whether a legal agreement was fair.
-
-                </p>
-
-                <p>
-
-                    External facts require trusted data, human judgment,
-                    sensors, signed attestations, legal processes, oracles,
-                    inspectors, auditors, or scientific review.
-
-                </p>
-
-                <p>
-
-                    Smart contracts reduce certain forms of counterparty risk,
-                    but they do not eliminate fraud, coercion, bad data,
-                    operational mistakes, legal disputes, software defects,
-                    or physical-world uncertainty.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Security Risks
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="security-risks-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Security
-                </p>
-
-                <h2 id="security-risks-title">
-                    Smart-Contract Risks
-                </h2>
-
-            </div>
-
-            <div class="content-grid content-grid-two-column">
-
-                <article class="content-card">
-
-                    <h3>
-                        Incorrect Policy
-                    </h3>
-
-                    <p>
-
-                        A contract may faithfully enforce conditions that do
-                        not match the user's actual intent.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Lost Keys
-                    </h3>
-
-                    <p>
-
-                        If required keys are lost and no recovery path exists,
-                        the funds may become permanently unspendable.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Compromised Keys
-                    </h3>
-
-                    <p>
-
-                        Attackers who obtain enough authorized keys may be
-                        able to satisfy the contract and transfer the funds.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Backup Failure
-                    </h3>
-
-                    <p>
-
-                        Incomplete descriptors, missing derivation details,
-                        lost channel state, or damaged recovery records may
-                        prevent restoration.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Software Defects
-                    </h3>
-
-                    <p>
-
-                        Wallets, signing devices, contract compilers, node
-                        software, and interfaces may contain implementation
-                        errors.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Fee Conditions
-                    </h3>
-
-                    <p>
-
-                        A contract may become expensive or difficult to
-                        execute if transaction fees rise unexpectedly.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Privacy Leakage
-                    </h3>
-
-                    <p>
-
-                        Contract structures, public keys, timing, transaction
-                        relationships, and revealed scripts may expose
-                        information about participants.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Oracle Failure
-                    </h3>
-
-                    <p>
-
-                        Contracts based upon external events may fail if an
-                        oracle disappears, reports incorrectly, or becomes
-                        compromised.
-
-                    </p>
-
-                </article>
-
-            </div>
-
-            <div class="notice notice-warning">
-
-                <h3>
-                    Test Before Funding
-                </h3>
-
-                <p>
-
-                    Complex Bitcoin contracts should be reviewed, tested on
-                    appropriate development networks, independently verified,
-                    backed up, and exercised through recovery procedures
-                    before substantial funds are committed.
-
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Best Practices
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="best-practices-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Responsible Engineering
-                </p>
-
-                <h2 id="best-practices-title">
-                    Contract Design Principles
-                </h2>
-
-            </div>
-
-            <article class="content-card">
-
-                <p>
-
-                    Use the simplest policy that satisfies the actual
-                    security requirement.
-
-                </p>
-
-                <p>
-
-                    Prefer widely reviewed standards, mature wallet software,
-                    documented descriptors, reproducible builds, and
-                    independently verifiable open-source implementations.
-
-                </p>
-
-                <p>
-
-                    Separate signing devices, distribute critical keys,
-                    document recovery procedures, protect metadata, verify
-                    receiving addresses, and test every recovery path.
-
-                </p>
-
-                <p>
-
-                    Avoid relying upon a single developer, service provider,
-                    hardware device, oracle, geographic location, or
-                    undocumented custom script.
-
-                </p>
-
-                <p>
-
-                    Preserve clear human-readable documentation explaining
-                    who can spend, under what conditions, after what delay,
-                    and how recovery is performed.
-
-                </p>
-
-            </article>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Development Tools
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="development-tools-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Development
-                </p>
-
-                <h2 id="development-tools-title">
-                    Bitcoin Contract Development
-                </h2>
-
-            </div>
-
-            <div class="content-grid content-grid-two-column">
-
-                <article class="content-card">
-
-                    <h3>
-                        Regtest
-                    </h3>
-
-                    <p>
-
-                        Bitcoin Core's regression-test mode provides a private
-                        local blockchain where developers can create blocks,
-                        test wallets, construct transactions, and inspect
-                        contract behavior without using real bitcoin.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Signet
-                    </h3>
-
-                    <p>
-
-                        Signet provides a public testing environment with more
-                        predictable block production than traditional
-                        proof-of-work test networks.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        PSBT
-                    </h3>
-
-                    <p>
-
-                        Partially Signed Bitcoin Transactions allow multiple
-                        wallets and devices to exchange transaction
-                        information and signatures without exposing private
-                        keys.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Hardware Wallets
-                    </h3>
-
-                    <p>
-
-                        Hardware signing devices can isolate private keys and
-                        display transaction details before authorization.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Watch-Only Wallets
-                    </h3>
-
-                    <p>
-
-                        Watch-only systems can monitor contract balances and
-                        prepare transactions without holding spending keys.
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Independent Verification
-                    </h3>
-
-                    <p>
-
-                        Full nodes, separate wallet software, policy analysis,
-                        transaction decoders, and reproducible test vectors
-                        can help verify contract behavior.
-
-                    </p>
-
-                </article>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Resources
-    ========================================================================
-    -->
-
-    <section
-        class="content-section"
-        aria-labelledby="resources-title">
-
-        <div class="container">
-
-            <div class="section-heading">
-
-                <p class="eyebrow">
-                    Further Study
-                </p>
-
-                <h2 id="resources-title">
-                    Smart-Contract Resources
-                </h2>
-
-            </div>
-
-            <div class="card-grid card-grid-four">
-
-                <article class="content-card">
-
-                    <h3>
-                        Bitcoin Developer Documentation
-                    </h3>
-
-                    <p>
-
-                        Technical documentation concerning Bitcoin
-                        transactions, scripts, wallets, nodes, and network
-                        behavior.
-
-                    </p>
-
-                    <p>
-
-                        <a
-                            class="text-link"
-                            href="https://developer.bitcoin.org/"
-                            target="_blank"
-                            rel="noopener noreferrer">
-
-                            Visit Developer Documentation
-                            <span aria-hidden="true">↗</span>
-
-                        </a>
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Bitcoin Core
-                    </h3>
-
-                    <p>
-
-                        Full-node software, wallet tools, transaction
-                        interfaces, descriptors, and development resources.
-
-                    </p>
-
-                    <p>
-
-                        <a
-                            class="text-link"
-                            href="https://bitcoincore.org/"
-                            target="_blank"
-                            rel="noopener noreferrer">
-
-                            Visit Bitcoin Core
-                            <span aria-hidden="true">↗</span>
-
-                        </a>
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Bitcoin Optech
-                    </h3>
-
-                    <p>
-
-                        Technical information about Bitcoin protocol
-                        development, wallets, scaling, Script, Lightning, and
-                        implementation practices.
-
-                    </p>
-
-                    <p>
-
-                        <a
-                            class="text-link"
-                            href="https://bitcoinops.org/"
-                            target="_blank"
-                            rel="noopener noreferrer">
-
-                            Visit Bitcoin Optech
-                            <span aria-hidden="true">↗</span>
-
-                        </a>
-
-                    </p>
-
-                </article>
-
-                <article class="content-card">
-
-                    <h3>
-                        Lightning Engineering
-                    </h3>
-
-                    <p>
-
-                        Resources concerning Lightning Network software,
-                        payment channels, node operation, LND, and
-                        development.
-
-                    </p>
-
-                    <p>
-
-                        <a
-                            class="text-link"
-                            href="https://lightning.engineering/"
-                            target="_blank"
-                            rel="noopener noreferrer">
-
-                            Visit Lightning Engineering
-                            <span aria-hidden="true">↗</span>
-
-                        </a>
-
-                    </p>
-
-                </article>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Disclaimer
-    ========================================================================
-    -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="smart-contract-disclaimer-title">
-
-        <div class="container container-narrow">
-
-            <h2 id="smart-contract-disclaimer-title">
-                Technical and Legal Notice
-            </h2>
-
-            <p>
-
-                This page is provided for general educational and research
-                purposes.
-
-            </p>
-
-            <p>
-
-                It does not provide financial, legal, tax, investment,
-                accounting, custody, security, estate-planning, or software
-                assurance advice.
-
-            </p>
-
-            <p>
-
-                Bitcoin smart contracts can permanently lock or transfer
-                funds. Errors may be irreversible.
-
-            </p>
-
-            <p>
-
-                Users should independently review any contract, verify all
-                software, understand every spending and recovery path, and
-                obtain qualified professional advice where appropriate.
-
-            </p>
-
-            <div class="button-group">
-
-                <a
-                    class="button"
-                    href="../bitcoin/">
-                    Bitcoin Overview
-                </a>
-
-                <a
-                    class="button button-secondary"
-                    href="../legal/">
-                    Legal Information
-                </a>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!--
-    ========================================================================
-    Call to Action
-    ========================================================================
-    -->
-
-    <section
-        class="call-to-action"
-        aria-labelledby="smart-contracts-cta-title">
-
-        <div class="container">
-
-            <div class="call-to-action-inner">
-
-                <div>
-
-                    <h2 id="smart-contracts-cta-title">
-                        Build Verifiable Agreements
-                    </h2>
-
-                    <p>
-
-                        Study Bitcoin Script, test policies safely, run a full
-                        node, document every recovery path, and use
-                        programmable Bitcoin responsibly.
-
-                    </p>
-
+        </section>
+        <!--
+        ========================================================================
+        Overview
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="smart-contracts-overview-title">
+            <div class="container">
+                <div class="content-grid content-grid-two-column">
+                    <article class="content-card">
+                        <h2 id="smart-contracts-overview-title">What a Bitcoin Smart Contract Is</h2>
+                        <p>
+                            A Bitcoin smart contract is a set of cryptographic and
+                            logical conditions attached to bitcoin.
+                        </p>
+                        <p>
+                            These conditions determine what evidence must be
+                            provided before the funds can be spent. That evidence
+                            may include a valid digital signature, multiple
+                            signatures, the passage of time, knowledge of a secret,
+                            or satisfaction of a more complex spending policy.
+                        </p>
+                        <p>
+                            Once a transaction is broadcast, full nodes evaluate
+                            the relevant conditions. Transactions that fail those
+                            conditions are rejected.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h2>Bitcoin Script</h2>
+                        <p>
+                            Bitcoin smart contracts are primarily expressed using
+                            Bitcoin Script, a stack-based scripting language
+                            designed for transaction validation.
+                        </p>
+                        <p>
+                            Script is intentionally limited. It is not designed as
+                            a general-purpose programming language and does not
+                            include unrestricted loops or arbitrary persistent
+                            computation.
+                        </p>
+                        <p>
+                            This conservative design reduces complexity, limits
+                            resource consumption, improves predictability, and
+                            helps make validation consistent across the network.
+                        </p>
+                    </article>
                 </div>
-
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Why Bitcoin Uses a Constrained Language
+        ========================================================================
+        -->
+        <section class="content-section section-muted" aria-labelledby="limited-language-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Design Philosophy</p>
+                    <h2 id="limited-language-title">Why Bitcoin Uses a Constrained Language</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        Every fully validating Bitcoin node must be able to
+                        evaluate transaction conditions consistently.
+                    </p>
+                    <p>
+                        A highly expressive execution environment can introduce
+                        unpredictable computation, denial-of-service risk,
+                        software ambiguity, complex state management, and a
+                        larger attack surface.
+                    </p>
+                    <p>
+                        Bitcoin instead favors narrowly defined conditions whose
+                        meaning can be reviewed and verified before funds are
+                        committed.
+                    </p>
+                    <p>
+                        The result is a smart-contract model focused less on
+                        running large applications inside the blockchain and more
+                        on securely coordinating ownership, authorization, time,
+                        secrets, payments, and settlement.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Core Smart-Contract Building Blocks
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="building-blocks-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Contract Components</p>
+                    <h2 id="building-blocks-title">Core Smart-Contract Building Blocks</h2>
+                </div>
+                <div class="card-grid card-grid-four">
+                    <article class="content-card">
+                        <h3>Digital Signatures</h3>
+                        <p>
+                            Signatures prove that a transaction was authorized by
+                            the holder of a corresponding private key.
+                        </p>
+                        <p>
+                            Most Bitcoin spending conditions require one or more
+                            valid signatures.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Multisignature</h3>
+                        <p>
+                            Multisignature policies require more than one key to
+                            authorize a transaction.
+                        </p>
+                        <p>
+                            Common forms include two-of-three, three-of-five, and
+                            other threshold arrangements.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Timelocks</h3>
+                        <p>
+                            Timelocks prevent funds from being spent until a
+                            specified block height, time, or relative delay has
+                            passed.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Hashlocks</h3>
+                        <p>
+                            Hashlocks require a spender to reveal a secret whose
+                            hash matches a value committed to in advance.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Threshold Policies</h3>
+                        <p>
+                            Threshold policies allow one of several approved
+                            combinations of conditions to authorize spending.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Recovery Paths</h3>
+                        <p>
+                            Contracts can include alternate spending paths that
+                            become available after a delay or under emergency
+                            conditions.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Commitments</h3>
+                        <p>
+                            Cryptographic commitments allow parties to prove that
+                            specific data or terms existed without revealing all
+                            information immediately.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Transaction Chains</h3>
+                        <p>
+                            Multiple transactions can be constructed together so
+                            that later actions depend upon earlier signed states.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Multisignature Contracts
+        ========================================================================
+        -->
+        <section class="content-section section-accent" aria-labelledby="multisignature-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Shared Authorization</p>
+                    <h2 id="multisignature-title">Multisignature Contracts</h2>
+                </div>
+                <div class="content-grid content-grid-two-column">
+                    <article class="content-card">
+                        <h3>Shared Custody</h3>
+                        <p>
+                            A multisignature contract can require approval from
+                            several independent keys before bitcoin may be spent.
+                        </p>
+                        <p>
+                            A two-of-three arrangement, for example, permits any
+                            two authorized keys to approve a transaction while
+                            preventing a single compromised key from moving the
+                            funds.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Organizational Treasury</h3>
+                        <p>
+                            Businesses, research organizations, nonprofits, and
+                            collaborative projects may use threshold signatures
+                            to distribute financial authority across multiple
+                            people or devices.
+                        </p>
+                        <p>
+                            This can reduce dependence upon a single employee,
+                            administrator, machine, office, or physical location.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Personal Security</h3>
+                        <p>
+                            Individuals may store separate keys on different
+                            hardware wallets, in different locations, or with
+                            carefully chosen recovery participants.
+                        </p>
+                        <p>
+                            A properly designed threshold policy can make theft
+                            more difficult while preserving recovery options.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Collaborative Custody</h3>
+                        <p>
+                            Collaborative custody can divide authority between a
+                            user and one or more service providers without giving
+                            any single provider unilateral control.
+                        </p>
+                        <p>
+                            The exact security model depends upon the contract,
+                            wallet software, backup procedures, and distribution
+                            of keys.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Timelocks
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="timelocks-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Time-Based Conditions</p>
+                    <h2 id="timelocks-title">Timelocks</h2>
+                </div>
+                <div class="content-grid content-grid-two-column">
+                    <article class="content-card">
+                        <h3>Absolute Timelocks</h3>
+                        <p>
+                            Absolute timelocks prevent a transaction or spending
+                            path from becoming valid before a specified block
+                            height or time.
+                        </p>
+                        <p>
+                            They can be used for delayed distributions, scheduled
+                            recovery, long-term savings, inheritance planning, or
+                            contract deadlines.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Relative Timelocks</h3>
+                        <p>
+                            Relative timelocks require a specified delay after a
+                            previous transaction output has been confirmed.
+                        </p>
+                        <p>
+                            These delays are important in payment channels, vault
+                            designs, revocation systems, and staged recovery
+                            arrangements.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Delayed Recovery</h3>
+                        <p>
+                            A contract may allow an ordinary spending path with
+                            one key while permitting a separate recovery key to
+                            act only after a delay.
+                        </p>
+                        <p>
+                            This can provide time to detect unauthorized activity
+                            and respond before final settlement.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Inheritance</h3>
+                        <p>
+                            Timelocked recovery paths can support inheritance
+                            arrangements in which designated keys gain authority
+                            only after a long period of inactivity or according to
+                            an established succession plan.
+                        </p>
+                        <p>
+                            Any inheritance design should be reviewed carefully
+                            for legal, operational, privacy, and security risks.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Hashlocks
+        ========================================================================
+        -->
+        <section class="content-section section-muted" aria-labelledby="hashlocks-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Secret-Based Conditions</p>
+                    <h2 id="hashlocks-title">Hashlocks</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        A hashlock requires the spender to reveal a secret value,
+                        commonly called a preimage, whose cryptographic hash
+                        matches a value specified by the contract.
+                    </p>
+                    <p>
+                        Before the secret is revealed, parties can verify the
+                        committed hash without knowing the underlying value.
+                    </p>
+                    <p>
+                        When the correct preimage is published in a valid
+                        transaction, the secret becomes visible and may unlock a
+                        related contract elsewhere.
+                    </p>
+                    <p>
+                        Hashlocks are important in Lightning Network payments,
+                        atomic swaps, cross-system settlement, and contracts in
+                        which one disclosure triggers several coordinated
+                        outcomes.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Hashed Timelock Contracts
+        ========================================================================
+        -->
+        <section class="content-section section-accent" aria-labelledby="htlc-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Hash and Time</p>
+                    <h2 id="htlc-title">Hashed Timelock Contracts</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        A Hashed Timelock Contract combines a hashlock with a
+                        timelock.
+                    </p>
+                    <p>
+                        One party may claim the funds by revealing the correct
+                        secret before a deadline. If that does not happen, an
+                        alternate party may recover the funds after the timeout.
+                    </p>
+                    <p>
+                        This creates a conditional payment that either succeeds
+                        through disclosure of the required preimage or safely
+                        expires through a refund path.
+                    </p>
+                    <p>
+                        Hashed Timelock Contracts historically formed a major
+                        component of routed Lightning Network payments and remain
+                        a foundational concept in Bitcoin contract design.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Lightning Network Smart Contracts
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="lightning-contracts-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Payment Channels</p>
+                    <h2 id="lightning-contracts-title">Lightning Network Smart Contracts</h2>
+                </div>
+                <div class="content-grid content-grid-two-column">
+                    <article class="content-card">
+                        <h3>Channel Funding</h3>
+                        <p>
+                            A Lightning channel begins when bitcoin is committed
+                            to an on-chain funding output governed by a shared
+                            contract.
+                        </p>
+                        <p>
+                            The participants then exchange signed state updates
+                            representing changes in channel ownership without
+                            publishing every update to the blockchain.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Commitment Transactions</h3>
+                        <p>
+                            Each participant holds a transaction capable of
+                            settling the current channel state on-chain.
+                        </p>
+                        <p>
+                            Contract conditions and revocation mechanisms
+                            discourage publication of obsolete states.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Routed Payments</h3>
+                        <p>
+                            Conditional payments can pass through several
+                            Lightning nodes.
+                        </p>
+                        <p>
+                            Each routing participant forwards value only when the
+                            linked conditions are satisfied, allowing the payment
+                            to complete atomically across the route.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Cooperative Settlement</h3>
+                        <p>
+                            Participants may cooperatively close a channel by
+                            agreeing upon the final allocation of funds and
+                            publishing a settlement transaction.
+                        </p>
+                        <p>
+                            Unilateral recovery paths remain available when a
+                            counterparty is unavailable or uncooperative.
+                        </p>
+                    </article>
+                </div>
                 <div class="button-group">
-
-                    <a
-                        class="button"
-                        href="../bitcoin/">
-                        Explore Bitcoin
-                    </a>
-
-                    <a
-                        class="button button-secondary"
-                        href="../lightning/">
-                        Explore Lightning
-                    </a>
-
+                    <a class="button" href="../lightning-network/">Explore Lightning</a>
+                    <a class="button button-secondary" href="../bitcoin/">Return to Bitcoin</a>
                 </div>
-
             </div>
-
-        </div>
-
-    </section>
-
-</main>
-
-<div data-include="footer"></div>
-
-<script
-    src="../static/script.js"
-    defer>
-</script>
-
+        </section>
+        <!--
+        ========================================================================
+        Escrow and Dispute Resolution
+        ========================================================================
+        -->
+        <section class="content-section section-muted" aria-labelledby="escrow-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Conditional Settlement</p>
+                    <h2 id="escrow-title">Escrow and Dispute Resolution</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        Bitcoin contracts can support escrow arrangements in
+                        which funds require authorization from a buyer, seller,
+                        mediator, or threshold combination of participants.
+                    </p>
+                    <p>
+                        A common two-of-three arrangement gives the buyer and
+                        seller the ability to complete a transaction
+                        cooperatively while allowing a neutral third party to
+                        assist if a dispute occurs.
+                    </p>
+                    <p>
+                        Unlike ordinary custodial escrow, the mediator does not
+                        necessarily need unilateral control over the funds.
+                    </p>
+                    <p>
+                        Contract design cannot determine whether physical goods
+                        were delivered, whether work met a subjective standard,
+                        or whether a legal obligation was fulfilled. Human
+                        judgment, documentation, trusted evidence, or external
+                        dispute-resolution processes may still be required.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Atomic Swaps
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="atomic-swaps-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Coordinated Exchange</p>
+                    <h2 id="atomic-swaps-title">Atomic Swaps</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        Atomic swaps allow two parties to exchange assets across
+                        compatible systems without requiring one party to send
+                        irrevocably first.
+                    </p>
+                    <p>
+                        Hashlocks and timelocks can coordinate the exchange so
+                        that either both sides complete or both sides eventually
+                        recover their original funds.
+                    </p>
+                    <p>
+                        When one party claims the asset on one system, the
+                        revealed secret permits the other party to claim the
+                        corresponding asset on the second system.
+                    </p>
+                    <p>
+                        Atomic swaps require compatible cryptographic primitives,
+                        carefully coordinated timeouts, reliable transaction
+                        monitoring, sufficient fees, and correct implementation.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Taproot
+        ========================================================================
+        -->
+        <section class="content-section section-accent" aria-labelledby="taproot-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Modern Bitcoin Contracts</p>
+                    <h2 id="taproot-title">Taproot</h2>
+                </div>
+                <div class="content-grid content-grid-two-column">
+                    <article class="content-card">
+                        <h3>Key-Path Spending</h3>
+                        <p>
+                            Taproot allows participants to aggregate cooperative
+                            authorization into a spending path that resembles a
+                            single public key and signature.
+                        </p>
+                        <p>
+                            When all required parties agree, complex arrangements
+                            may settle efficiently without revealing every
+                            possible contract branch.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Script-Path Spending</h3>
+                        <p>
+                            Taproot can commit to multiple alternative scripts
+                            while revealing only the branch actually used.
+                        </p>
+                        <p>
+                            Unused conditions remain undisclosed, improving
+                            privacy and reducing the amount of contract data
+                            placed on-chain.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Schnorr Signatures</h3>
+                        <p>
+                            Taproot uses Schnorr signatures, which support
+                            efficient signature aggregation and cleaner
+                            construction of collaborative signing schemes.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Improved Contract Design</h3>
+                        <p>
+                            Taproot enables more private and efficient
+                            multisignature policies, payment channels, vault
+                            structures, recovery paths, and advanced signing
+                            arrangements.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Miniscript
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="miniscript-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Structured Policy Design</p>
+                    <h2 id="miniscript-title">Miniscript</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        Miniscript is a structured language and framework for
+                        expressing Bitcoin spending policies in a form that can
+                        be analyzed, composed, and compiled into Bitcoin Script.
+                    </p>
+                    <p>
+                        It helps wallet developers reason about which keys,
+                        timelocks, and threshold conditions can satisfy a
+                        contract.
+                    </p>
+                    <p>
+                        Miniscript can also assist with fee estimation,
+                        satisfiability analysis, recovery planning, wallet
+                        interoperability, and construction of complex policies
+                        without manually assembling low-level script operations.
+                    </p>
+                    <p>
+                        A policy may describe a primary spending path, one or more
+                        recovery paths, delayed emergency authority, and
+                        alternative combinations of keys.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Output Script Descriptors
+        ========================================================================
+        -->
+        <section class="content-section section-muted" aria-labelledby="descriptors-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Wallet Interoperability</p>
+                    <h2 id="descriptors-title">Output Script Descriptors</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        Output script descriptors provide a standardized way to
+                        describe how wallet addresses and spending scripts are
+                        derived.
+                    </p>
+                    <p>
+                        A descriptor can identify the script type, public keys,
+                        derivation paths, multisignature threshold, checksum, and
+                        other information needed to reconstruct a wallet policy.
+                    </p>
+                    <p>
+                        Descriptors improve backup quality and interoperability
+                        because they preserve more information than a collection
+                        of addresses alone.
+                    </p>
+                    <p>
+                        A watch-only system may use public descriptors to monitor
+                        balances and generate addresses without holding the
+                        private keys required to spend.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Discreet Log Contracts
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="dlc-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">External Events</p>
+                    <h2 id="dlc-title">Discreet Log Contracts</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        Discreet Log Contracts allow parties to create Bitcoin
+                        contracts whose settlement depends upon an event attested
+                        to by an external oracle.
+                    </p>
+                    <p>
+                        The oracle publishes cryptographic information associated
+                        with an outcome, such as a price, measurement, election
+                        result, weather observation, or other verifiable event.
+                    </p>
+                    <p>
+                        The oracle does not necessarily take custody of funds and
+                        may not know the identities or exact contract terms of the
+                        participants.
+                    </p>
+                    <p>
+                        Discreet Log Contracts can support conditional payouts,
+                        financial agreements, insurance-like arrangements,
+                        hedging, research incentives, and prediction-based
+                        settlement.
+                    </p>
+                    <p>
+                        Participants remain exposed to oracle failure,
+                        misreporting, collusion, ambiguous outcomes, software
+                        defects, regulatory obligations, and counterparty risk.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Oracles and Real-World Data
+        ========================================================================
+        -->
+        <section class="content-section section-accent" aria-labelledby="oracles-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">External Information</p>
+                    <h2 id="oracles-title">Oracles and Real-World Data</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        Bitcoin nodes can verify signatures, transaction history,
+                        block conditions, hashes, and other information available
+                        within the protocol.
+                    </p>
+                    <p>
+                        They cannot independently determine whether a shipment
+                        arrived, whether rain fell in a specific location,
+                        whether a species was observed, whether a sporting event
+                        occurred, or whether a published market price is correct.
+                    </p>
+                    <p>
+                        An oracle provides a cryptographically signed statement
+                        about an external event.
+                    </p>
+                    <p>
+                        Oracle-based systems must consider source reliability,
+                        measurement standards, publication timing, data
+                        availability, conflicting reports, compromise,
+                        jurisdiction, and dispute resolution.
+                    </p>
+                    <p>
+                        Multiple independent oracles and threshold attestation can
+                        reduce dependence upon a single data provider, but they do
+                        not eliminate the need for trust in external information.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Bitcoin Vaults
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="vaults-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Defensive Custody</p>
+                    <h2 id="vaults-title">Bitcoin Vaults</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        A Bitcoin vault is a custody design intended to restrict
+                        or delay how funds can be moved.
+                    </p>
+                    <p>
+                        Vault systems may separate ordinary spending authority
+                        from emergency recovery authority, require waiting
+                        periods, limit destination addresses, or provide time to
+                        detect and respond to an unauthorized transaction.
+                    </p>
+                    <p>
+                        Some vault designs can be approximated using existing
+                        multisignature, timelock, pre-signed transaction, and
+                        wallet-policy techniques.
+                    </p>
+                    <p>
+                        More advanced vault proposals may depend upon future
+                        consensus changes or additional transaction constraints.
+                    </p>
+                    <p>
+                        Vaults can improve security against certain threats while
+                        introducing additional complexity, backup requirements,
+                        monitoring obligations, fee considerations, and recovery
+                        failure modes.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Inheritance and Succession Contracts
+        ========================================================================
+        -->
+        <section class="content-section section-muted" aria-labelledby="inheritance-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Long-Term Recovery</p>
+                    <h2 id="inheritance-title">Inheritance and Succession Contracts</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        Bitcoin inheritance requires both technical and legal
+                        planning.
+                    </p>
+                    <p>
+                        A smart-contract policy may include delayed recovery keys,
+                        distributed family authorization, professional executors,
+                        multisignature trustees, or prearranged succession paths.
+                    </p>
+                    <p>
+                        The contract must be designed so that heirs can recover
+                        the funds when appropriate without gaining premature
+                        access or exposing sensitive information while the owner
+                        is alive.
+                    </p>
+                    <p>
+                        Plans should account for lost devices, forgotten
+                        passphrases, obsolete wallet software, changing family
+                        circumstances, unavailable cosigners, legal disputes, and
+                        long periods between testing.
+                    </p>
+                    <p>
+                        Any inheritance arrangement should be documented,
+                        periodically tested, and reviewed with qualified legal
+                        and financial professionals where appropriate.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Research and Conservation Applications
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="research-applications-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Scientific and Public Infrastructure</p>
+                    <h2 id="research-applications-title">Research and Conservation Applications</h2>
+                </div>
+                <div class="content-grid content-grid-two-column">
+                    <article class="content-card">
+                        <h3>Research Grants</h3>
+                        <p>
+                            Multisignature and milestone-based contracts may help
+                            coordinate research grants, field-expedition funding,
+                            equipment procurement, and staged project support.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Conservation Bounties</h3>
+                        <p>
+                            Conditional payouts may support verified habitat
+                            restoration, species observations, invasive-species
+                            removal, cleanup programs, or independently audited
+                            conservation outcomes.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Data Publication</h3>
+                        <p>
+                            Cryptographic commitments and timestamped
+                            transactions may help establish that a dataset,
+                            research record, image, or document existed before a
+                            particular point in time.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Distributed Governance</h3>
+                        <p>
+                            Threshold authorization can help distribute control
+                            of shared project funds across institutions,
+                            researchers, trustees, or regional conservation
+                            partners.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Emergency Funds</h3>
+                        <p>
+                            Timelocked and multisignature arrangements may help
+                            secure emergency response funds while preserving
+                            access during disasters, infrastructure failures, or
+                            organizational disruption.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Provenance</h3>
+                        <p>
+                            Signed records can help establish the origin,
+                            authorship, approval history, and integrity of
+                            scientific or conservation documentation.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Smart Contracts and Speciedex
+        ========================================================================
+        -->
+        <section class="content-section section-accent" aria-labelledby="speciedex-contracts-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Speciedex Infrastructure</p>
+                    <h2 id="speciedex-contracts-title">Smart Contracts and Speciedex</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        Speciedex may research Bitcoin smart contracts for
+                        transparent project funding, multisignature treasury
+                        management, Lightning payments, public bounties,
+                        contributor compensation, archival timestamping, data
+                        provenance, infrastructure procurement, and conservation
+                        financing.
+                    </p>
+                    <p>
+                        Any production implementation should prioritize
+                        simplicity, independent verification, open documentation,
+                        recoverability, privacy, and minimal dependence upon
+                        custodial intermediaries.
+                    </p>
+                    <p>
+                        Speciedex does not require a proprietary token, private
+                        blockchain, speculative asset, or unrelated digital
+                        currency to implement programmable financial agreements.
+                    </p>
+                    <p>
+                        Where smart-contract functionality is appropriate, the
+                        project prefers established Bitcoin primitives and
+                        independently verifiable open-source infrastructure.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        What Smart Contracts Cannot Determine
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="limitations-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Limitations</p>
+                    <h2 id="limitations-title">What Smart Contracts Cannot Determine</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        A smart contract can enforce only the conditions visible
+                        to its validation environment.
+                    </p>
+                    <p>
+                        It cannot independently determine whether a biological
+                        specimen was correctly identified, whether a conservation
+                        project succeeded, whether a shipment contained the
+                        promised equipment, whether a person acted ethically, or
+                        whether a legal agreement was fair.
+                    </p>
+                    <p>
+                        External facts require trusted data, human judgment,
+                        sensors, signed attestations, legal processes, oracles,
+                        inspectors, auditors, or scientific review.
+                    </p>
+                    <p>
+                        Smart contracts reduce certain forms of counterparty risk,
+                        but they do not eliminate fraud, coercion, bad data,
+                        operational mistakes, legal disputes, software defects,
+                        or physical-world uncertainty.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Smart-Contract Risks
+        ========================================================================
+        -->
+        <section class="content-section section-muted" aria-labelledby="security-risks-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Security</p>
+                    <h2 id="security-risks-title">Smart-Contract Risks</h2>
+                </div>
+                <div class="content-grid content-grid-two-column">
+                    <article class="content-card">
+                        <h3>Incorrect Policy</h3>
+                        <p>
+                            A contract may faithfully enforce conditions that do
+                            not match the user's actual intent.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Lost Keys</h3>
+                        <p>
+                            If required keys are lost and no recovery path exists,
+                            the funds may become permanently unspendable.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Compromised Keys</h3>
+                        <p>
+                            Attackers who obtain enough authorized keys may be
+                            able to satisfy the contract and transfer the funds.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Backup Failure</h3>
+                        <p>
+                            Incomplete descriptors, missing derivation details,
+                            lost channel state, or damaged recovery records may
+                            prevent restoration.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Software Defects</h3>
+                        <p>
+                            Wallets, signing devices, contract compilers, node
+                            software, and interfaces may contain implementation
+                            errors.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Fee Conditions</h3>
+                        <p>
+                            A contract may become expensive or difficult to
+                            execute if transaction fees rise unexpectedly.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Privacy Leakage</h3>
+                        <p>
+                            Contract structures, public keys, timing, transaction
+                            relationships, and revealed scripts may expose
+                            information about participants.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Oracle Failure</h3>
+                        <p>
+                            Contracts based upon external events may fail if an
+                            oracle disappears, reports incorrectly, or becomes
+                            compromised.
+                        </p>
+                    </article>
+                </div>
+                <div class="notice notice-warning">
+                    <h3>Test Before Funding</h3>
+                    <p>
+                        Complex Bitcoin contracts should be reviewed, tested on
+                        appropriate development networks, independently verified,
+                        backed up, and exercised through recovery procedures
+                        before substantial funds are committed.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Contract Design Principles
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="best-practices-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Responsible Engineering</p>
+                    <h2 id="best-practices-title">Contract Design Principles</h2>
+                </div>
+                <article class="content-card">
+                    <p>
+                        Use the simplest policy that satisfies the actual
+                        security requirement.
+                    </p>
+                    <p>
+                        Prefer widely reviewed standards, mature wallet software,
+                        documented descriptors, reproducible builds, and
+                        independently verifiable open-source implementations.
+                    </p>
+                    <p>
+                        Separate signing devices, distribute critical keys,
+                        document recovery procedures, protect metadata, verify
+                        receiving addresses, and test every recovery path.
+                    </p>
+                    <p>
+                        Avoid relying upon a single developer, service provider,
+                        hardware device, oracle, geographic location, or
+                        undocumented custom script.
+                    </p>
+                    <p>
+                        Preserve clear human-readable documentation explaining
+                        who can spend, under what conditions, after what delay,
+                        and how recovery is performed.
+                    </p>
+                </article>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Bitcoin Contract Development
+        ========================================================================
+        -->
+        <section class="content-section section-accent" aria-labelledby="development-tools-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Development</p>
+                    <h2 id="development-tools-title">Bitcoin Contract Development</h2>
+                </div>
+                <div class="content-grid content-grid-two-column">
+                    <article class="content-card">
+                        <h3>Regtest</h3>
+                        <p>
+                            Bitcoin Core's regression-test mode provides a private
+                            local blockchain where developers can create blocks,
+                            test wallets, construct transactions, and inspect
+                            contract behavior without using real bitcoin.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Signet</h3>
+                        <p>
+                            Signet provides a public testing environment with more
+                            predictable block production than traditional
+                            proof-of-work test networks.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>PSBT</h3>
+                        <p>
+                            Partially Signed Bitcoin Transactions allow multiple
+                            wallets and devices to exchange transaction
+                            information and signatures without exposing private
+                            keys.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Hardware Wallets</h3>
+                        <p>
+                            Hardware signing devices can isolate private keys and
+                            display transaction details before authorization.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Watch-Only Wallets</h3>
+                        <p>
+                            Watch-only systems can monitor contract balances and
+                            prepare transactions without holding spending keys.
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Independent Verification</h3>
+                        <p>
+                            Full nodes, separate wallet software, policy analysis,
+                            transaction decoders, and reproducible test vectors
+                            can help verify contract behavior.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Smart-Contract Resources
+        ========================================================================
+        -->
+        <section class="content-section" aria-labelledby="resources-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Further Study</p>
+                    <h2 id="resources-title">Smart-Contract Resources</h2>
+                </div>
+                <div class="card-grid card-grid-four">
+                    <article class="content-card">
+                        <h3>Bitcoin Developer Documentation</h3>
+                        <p>
+                            Technical documentation concerning Bitcoin
+                            transactions, scripts, wallets, nodes, and network
+                            behavior.
+                        </p>
+                        <p>
+                            <a class="text-link" href="https://developer.bitcoin.org/" target="_blank" rel="noopener noreferrer">
+                                Visit Developer Documentation <span aria-hidden="true">↗</span>
+                            </a>
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Bitcoin Core</h3>
+                        <p>
+                            Full-node software, wallet tools, transaction
+                            interfaces, descriptors, and development resources.
+                        </p>
+                        <p>
+                            <a class="text-link" href="https://bitcoincore.org/" target="_blank" rel="noopener noreferrer">
+                                Visit Bitcoin Core <span aria-hidden="true">↗</span>
+                            </a>
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Bitcoin Optech</h3>
+                        <p>
+                            Technical information about Bitcoin protocol
+                            development, wallets, scaling, Script, Lightning, and
+                            implementation practices.
+                        </p>
+                        <p>
+                            <a class="text-link" href="https://bitcoinops.org/" target="_blank" rel="noopener noreferrer">
+                                Visit Bitcoin Optech <span aria-hidden="true">↗</span>
+                            </a>
+                        </p>
+                    </article>
+                    <article class="content-card">
+                        <h3>Lightning Engineering</h3>
+                        <p>
+                            Resources concerning Lightning Network software,
+                            payment channels, node operation, LND, and
+                            development.
+                        </p>
+                        <p>
+                            <a class="text-link" href="https://lightning.engineering/" target="_blank" rel="noopener noreferrer">
+                                Visit Lightning Engineering <span aria-hidden="true">↗</span>
+                            </a>
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Technical and Legal Notice
+        ========================================================================
+        -->
+        <section class="content-section section-muted" aria-labelledby="smart-contract-disclaimer-title">
+            <div class="container container-narrow">
+                <h2 id="smart-contract-disclaimer-title">Technical and Legal Notice</h2>
+                <p>
+                    This page is provided for general educational and research
+                    purposes.
+                </p>
+                <p>
+                    It does not provide financial, legal, tax, investment,
+                    accounting, custody, security, estate-planning, or software
+                    assurance advice.
+                </p>
+                <p>
+                    Bitcoin smart contracts can permanently lock or transfer
+                    funds. Errors may be irreversible.
+                </p>
+                <p>
+                    Users should independently review any contract, verify all
+                    software, understand every spending and recovery path, and
+                    obtain qualified professional advice where appropriate.
+                </p>
+                <div class="button-group">
+                    <a class="button" href="../bitcoin/">Bitcoin Overview</a>
+                    <a class="button button-secondary" href="../legal/">Legal Information</a>
+                </div>
+            </div>
+        </section>
+        <!--
+        ========================================================================
+        Final Call to Action
+        ========================================================================
+        -->
+        <section class="call-to-action" aria-labelledby="smart-contracts-cta-title">
+            <div class="container">
+                <div class="call-to-action-inner">
+                    <div>
+                        <h2 id="smart-contracts-cta-title">Build Verifiable Agreements</h2>
+                        <p>
+                            Study Bitcoin Script, test policies safely, run a full
+                            node, document every recovery path, and use
+                            programmable Bitcoin responsibly.
+                        </p>
+                    </div>
+                    <div class="button-group">
+                        <a class="button" href="../bitcoin/">Explore Bitcoin</a>
+                        <a class="button button-secondary" href="../lightning-network/">Explore Lightning</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <div data-include="footer"></div>
+    <script src="../static/script.js" defer></script>
 </body>
 </html>
