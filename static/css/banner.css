@@ -1,0 +1,134 @@
+/*
+========================================================================
+Speciedex.org
+banner.css
+Site Banner
+========================================================================
+*/
+
+/*
+========================================================================
+Banner
+========================================================================
+*/
+.site-banner {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-height: var(--banner-height);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-background);
+}
+
+/*
+========================================================================
+Banner Link
+========================================================================
+*/
+.site-banner a {
+    display: block;
+    width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+/*
+========================================================================
+Banner Image
+========================================================================
+*/
+.site-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 12rem;
+    max-height: var(--banner-height);
+    object-fit: cover;
+    object-position: center;
+    user-select: none;
+}
+
+/*
+========================================================================
+Optional Banner Overlay
+========================================================================
+*/
+.site-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        rgba(0,0,0,.08),
+        rgba(0,0,0,.18)
+    );
+    pointer-events: none;
+}
+
+/*
+========================================================================
+Banner Content Overlay
+========================================================================
+*/
+.banner-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+    text-align: center;
+}
+
+.banner-overlay > * {
+    max-width: var(--content-width);
+}
+
+/*
+========================================================================
+Banner Variants
+========================================================================
+*/
+.banner-small {
+    max-height: 12rem;
+}
+
+.banner-medium {
+    max-height: 18rem;
+}
+
+.banner-large {
+    max-height: 28rem;
+}
+
+.banner-full {
+    max-height: none;
+}
+
+/*
+========================================================================
+Responsive
+========================================================================
+*/
+@media (max-width: 1024px) {
+    .site-banner img {
+        max-height: 18rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .site-banner img {
+        min-height: 8rem;
+        max-height: 12rem;
+    }
+
+    .banner-overlay {
+        padding: var(--space-4);
+    }
+}
+
+@media (max-height: 540px) and (orientation: landscape) {
+    .site-banner img {
+        max-height: 10rem;
+    }
+}
