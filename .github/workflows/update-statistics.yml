@@ -1,0 +1,73 @@
+name: Update Species Statistics
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "*/15 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: speciedex-statistics-update
+  cancel-in-progress: false
+
+jobs:
+  update-statistics:
+    name: Update biodiversity statistics
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Validate stat grabber syntax
+        run: |
+          python -m py_compile static/tools/stat-grabber.py
+
+      - name: Update statistics
+        run: |
+          python static/tools/stat-grabber.py \
+            --output static/data/statistics.json \
+            --sources-output static/data/statistics-sources.json \
+            --history static/data/statistics-history.json \
+            --history-limit 672 \
+            --timeout 30 \
+            --retries 4
+
+      - name: Validate generated JSON
+        run: |
+          python -m json.tool static/data/statistics.json >/dev/null
+          python -m json.tool static/data/statistics-sources.json >/dev/null
+          python -m json.tool static/data/statistics-history.json >/dev/null
+
+      - name: Commit updated statistics
+        run: |
+          if git diff --quiet -- \
+            static/data/statistics.json \
+            static/data/statistics-sources.json \
+            static/data/statistics-history.json
+          then
+            printf '%s\n' "No statistics changes detected."
+            exit 0
+          fi
+
+          git config user.name "speciedex-statistics-bot"
+          git config user.email "speciedex-statistics-bot@users.noreply.github.com"
+
+          git add \
+            static/data/statistics.json \
+            static/data/statistics-sources.json \
+            static/data/statistics-history.json
+
+          git commit -m "Update biodiversity statistics"
+          git push
