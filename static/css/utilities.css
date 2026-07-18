@@ -11,7 +11,6 @@ Utility Classes
 Display
 ========================================================================
 */
-
 .block {
     display: block;
 }
@@ -55,7 +54,6 @@ Display
 Flex Utilities
 ========================================================================
 */
-
 .flex-row {
     flex-direction: row;
 }
@@ -131,22 +129,20 @@ Flex Utilities
 Grid Utilities
 ========================================================================
 */
-
 .grid-auto {
-    grid-template-columns:
-        repeat(auto-fit,minmax(min(100%,16rem),1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
 }
 
 .grid-2 {
-    grid-template-columns: repeat(2,minmax(0,1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .grid-3 {
-    grid-template-columns: repeat(3,minmax(0,1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .grid-4 {
-    grid-template-columns: repeat(4,minmax(0,1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 /*
@@ -154,7 +150,6 @@ Grid Utilities
 Width
 ========================================================================
 */
-
 .w-auto {
     width: auto;
 }
@@ -192,7 +187,6 @@ Width
 Height
 ========================================================================
 */
-
 .h-auto {
     height: auto;
 }
@@ -210,7 +204,6 @@ Height
 Spacing
 ========================================================================
 */
-
 .m-0 {
     margin: 0;
 }
@@ -252,7 +245,6 @@ Spacing
 Text Alignment
 ========================================================================
 */
-
 .text-left {
     text-align: left;
 }
@@ -274,7 +266,6 @@ Text Alignment
 Text Colors
 ========================================================================
 */
-
 .text-primary {
     color: var(--color-primary);
 }
@@ -312,7 +303,6 @@ Text Colors
 Backgrounds
 ========================================================================
 */
-
 .bg-primary {
     background: var(--color-primary);
 }
@@ -338,7 +328,6 @@ Backgrounds
 Typography
 ========================================================================
 */
-
 .uppercase {
     text-transform: uppercase;
 }
@@ -371,7 +360,6 @@ Typography
 Borders
 ========================================================================
 */
-
 .border {
     border: 1px solid var(--color-border);
 }
@@ -393,7 +381,6 @@ Borders
 Border Radius
 ========================================================================
 */
-
 .rounded-none {
     border-radius: 0;
 }
@@ -423,7 +410,6 @@ Border Radius
 Shadows
 ========================================================================
 */
-
 .shadow-none {
     box-shadow: none;
 }
@@ -445,7 +431,6 @@ Shadows
 Overflow
 ========================================================================
 */
-
 .overflow-hidden {
     overflow: hidden;
 }
@@ -471,7 +456,6 @@ Overflow
 Position
 ========================================================================
 */
-
 .relative {
     position: relative;
 }
@@ -493,7 +477,6 @@ Position
 Aspect Ratios
 ========================================================================
 */
-
 .aspect-square {
     aspect-ratio: 1 / 1;
 }
@@ -528,7 +511,6 @@ Aspect Ratios
 Opacity
 ========================================================================
 */
-
 .opacity-0 {
     opacity: 0;
 }
@@ -554,7 +536,6 @@ Opacity
 Cursor
 ========================================================================
 */
-
 .pointer {
     cursor: pointer;
 }
@@ -567,18 +548,29 @@ Cursor
     cursor: grab;
 }
 
+.grabbing {
+    cursor: grabbing;
+}
+
 /*
 ========================================================================
 User Selection
 ========================================================================
 */
-
 .select-none {
     user-select: none;
 }
 
+.select-text {
+    user-select: text;
+}
+
 .select-all {
     user-select: all;
+}
+
+.select-auto {
+    user-select: auto;
 }
 
 /*
@@ -586,7 +578,6 @@ User Selection
 Accessibility
 ========================================================================
 */
-
 .visually-hidden {
     position: absolute !important;
     width: 1px !important;
@@ -594,7 +585,7 @@ Accessibility
     margin: -1px !important;
     padding: 0 !important;
     overflow: hidden !important;
-    clip: rect(0,0,0,0) !important;
+    clip: rect(0, 0, 0, 0) !important;
     clip-path: inset(50%) !important;
     white-space: nowrap !important;
     border: 0 !important;
@@ -605,7 +596,6 @@ Accessibility
 Screen Reader Focusable
 ========================================================================
 */
-
 .visually-hidden-focusable:not(:focus):not(:focus-within) {
     position: absolute !important;
     width: 1px !important;
@@ -613,7 +603,7 @@ Screen Reader Focusable
     margin: -1px !important;
     padding: 0 !important;
     overflow: hidden !important;
-    clip: rect(0,0,0,0) !important;
+    clip: rect(0, 0, 0, 0) !important;
     clip-path: inset(50%) !important;
     white-space: nowrap !important;
     border: 0 !important;
@@ -624,7 +614,6 @@ Screen Reader Focusable
 Transitions
 ========================================================================
 */
-
 .transition {
     transition:
         color var(--transition),
@@ -635,12 +624,28 @@ Transitions
         transform var(--transition);
 }
 
+.transition-none {
+    transition: none;
+}
+
+/*
+========================================================================
+Pointer Events
+========================================================================
+*/
+.pointer-events-none {
+    pointer-events: none;
+}
+
+.pointer-events-auto {
+    pointer-events: auto;
+}
+
 /*
 ========================================================================
 Z-Index
 ========================================================================
 */
-
 .z-0 {
     z-index: 0;
 }
@@ -653,6 +658,10 @@ Z-Index
     z-index: 20;
 }
 
+.z-30 {
+    z-index: 30;
+}
+
 .z-header {
     z-index: var(--z-header);
 }
@@ -661,14 +670,21 @@ Z-Index
     z-index: var(--z-dropdown);
 }
 
+.z-modal {
+    z-index: var(--z-modal);
+}
+
 /*
 ========================================================================
 Responsive Visibility
 ========================================================================
 */
-
 .mobile-only {
     display: none !important;
+}
+
+.desktop-only {
+    display: initial !important;
 }
 
 @media (max-width: 760px) {
@@ -682,7 +698,7 @@ Responsive Visibility
 
     .grid-3,
     .grid-4 {
-        grid-template-columns: repeat(2,minmax(0,1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -697,5 +713,31 @@ Responsive Visibility
     .w-50,
     .w-75 {
         width: 100%;
+    }
+}
+
+/*
+========================================================================
+Reduced Motion
+========================================================================
+*/
+@media (prefers-reduced-motion: reduce) {
+    .transition {
+        transition: none !important;
+    }
+}
+
+/*
+========================================================================
+Print
+========================================================================
+*/
+@media print {
+    .print-hidden {
+        display: none !important;
+    }
+
+    .print-only {
+        display: block !important;
     }
 }
