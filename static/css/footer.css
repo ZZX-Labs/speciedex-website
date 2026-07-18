@@ -1,3 +1,4 @@
+```css
 /*
 ========================================================================
 Speciedex.org
@@ -14,11 +15,8 @@ Site Footer
 
 .site-footer,
 .footer {
-
     margin-top: var(--space-9);
-
     border-top: 1px solid var(--color-border);
-
     background: var(--color-background-alt);
 }
 
@@ -29,11 +27,8 @@ Footer Layout
 */
 
 .footer-inner {
-
     width: min(calc(100% - 2rem), var(--container-width));
-
     margin-inline: auto;
-
     padding: var(--space-8) 0;
 }
 
@@ -44,13 +39,10 @@ Footer Grid
 */
 
 .footer-grid {
-
     display: grid;
-
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-
+    grid-template-columns: minmax(280px, 1.5fr) repeat(3, minmax(160px, 1fr));
+    align-items: start;
     gap: var(--space-7);
-
     margin-bottom: var(--space-7);
 }
 
@@ -61,26 +53,24 @@ Footer Columns
 */
 
 .footer-column {
-
     display: flex;
-
     flex-direction: column;
-
+    align-items: flex-start;
     gap: var(--space-3);
+    min-width: 0;
+}
+
+.footer-column:first-child {
+    max-width: 34rem;
 }
 
 .footer-heading {
-
-    margin: 0;
-
+    margin: 0 0 .15rem;
     color: var(--color-primary);
-
     font-size: var(--font-size-base);
-
     font-weight: var(--font-weight-bold);
-
+    line-height: 1.2;
     letter-spacing: var(--letter-spacing-wide);
-
     text-transform: uppercase;
 }
 
@@ -91,39 +81,32 @@ Footer Branding
 */
 
 .footer-brand {
-
     display: flex;
-
     align-items: center;
-
     gap: var(--space-3);
-
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-2);
 }
 
 .footer-brand img {
-
+    display: block;
+    flex: 0 0 auto;
     width: 48px;
-
     height: 48px;
-
     object-fit: contain;
 }
 
 .footer-brand-name {
-
     color: var(--color-primary);
-
     font-size: var(--font-size-lg);
-
     font-weight: var(--font-weight-bold);
+    line-height: 1.2;
 }
 
 .footer-description {
-
     max-width: 32rem;
-
+    margin: 0;
     color: var(--color-text-muted);
+    line-height: 1.65;
 }
 
 /*
@@ -133,31 +116,34 @@ Footer Navigation
 */
 
 .footer-links {
-
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+    width: 100%;
     margin: 0;
-
     padding: 0;
-
     list-style: none;
 }
 
-.footer-links li + li {
+.footer-links li {
+    margin: 0;
+    padding: 0;
+}
 
-    margin-top: .45rem;
+.footer-links li + li {
+    margin-top: 0;
 }
 
 .footer-links a {
-
+    display: inline-block;
     color: var(--color-text-muted);
-
+    line-height: 1.4;
     text-decoration: none;
-
     transition: color var(--transition);
 }
 
 .footer-links a:hover,
 .footer-links a:focus-visible {
-
     color: var(--color-primary);
 }
 
@@ -168,23 +154,23 @@ Footer Contact
 */
 
 .footer-contact {
-
     display: flex;
-
     flex-direction: column;
-
+    align-items: flex-start;
     gap: .60rem;
+    width: 100%;
 }
 
 .footer-contact a {
-
     color: var(--color-text-muted);
-
+    line-height: 1.4;
+    overflow-wrap: anywhere;
     text-decoration: none;
+    transition: color var(--transition);
 }
 
-.footer-contact a:hover {
-
+.footer-contact a:hover,
+.footer-contact a:focus-visible {
     color: var(--color-primary);
 }
 
@@ -195,50 +181,34 @@ Footer Social
 */
 
 .footer-social {
-
     display: flex;
-
     flex-wrap: wrap;
-
+    align-items: center;
     gap: var(--space-3);
+    margin-top: .25rem;
 }
 
 .footer-social a {
-
     display: inline-flex;
-
     align-items: center;
-
     justify-content: center;
-
+    flex: 0 0 auto;
     width: 2.5rem;
-
     height: 2.5rem;
-
-    border: 1px solid var(--color-border);
-
-    border-radius: 50%;
-
     color: var(--color-text);
-
     text-decoration: none;
-
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
     transition:
-
         color var(--transition),
-
         border-color var(--transition),
-
         background-color var(--transition);
 }
 
 .footer-social a:hover,
 .footer-social a:focus-visible {
-
     color: var(--color-primary);
-
     border-color: var(--color-primary);
-
     background: rgba(192,214,116,.08);
 }
 
@@ -249,17 +219,12 @@ Footer Bottom
 */
 
 .footer-bottom {
-
     display: flex;
-
-    align-items: center;
-
+    align-items: flex-start;
     justify-content: space-between;
-
-    gap: var(--space-4);
-
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-6);
     padding-top: var(--space-5);
-
     border-top: 1px solid var(--color-border);
 }
 
@@ -270,21 +235,22 @@ Copyright
 */
 
 .footer-copyright {
-
+    flex: 1 1 24rem;
+    min-width: 0;
+    margin: 0;
     color: var(--color-text-muted);
-
     font-size: var(--font-size-sm);
+    line-height: 1.6;
 }
 
 .footer-copyright a {
-
     color: inherit;
-
     text-decoration: none;
+    transition: color var(--transition);
 }
 
-.footer-copyright a:hover {
-
+.footer-copyright a:hover,
+.footer-copyright a:focus-visible {
     color: var(--color-primary);
 }
 
@@ -295,28 +261,25 @@ Legal Navigation
 */
 
 .footer-legal {
-
     display: flex;
-
+    flex: 0 1 auto;
     flex-wrap: wrap;
-
-    gap: var(--space-4);
+    align-items: center;
+    justify-content: flex-end;
+    gap: .65rem var(--space-4);
 }
 
 .footer-legal a {
-
     color: var(--color-text-muted);
-
     font-size: var(--font-size-sm);
-
+    line-height: 1.4;
     text-decoration: none;
-
+    white-space: nowrap;
     transition: color var(--transition);
 }
 
 .footer-legal a:hover,
 .footer-legal a:focus-visible {
-
     color: var(--color-primary);
 }
 
@@ -327,12 +290,11 @@ License
 */
 
 .footer-license {
-
+    width: 100%;
     margin-top: var(--space-3);
-
     color: var(--color-text-muted);
-
     font-size: var(--font-size-xs);
+    line-height: 1.55;
 }
 
 /*
@@ -342,16 +304,107 @@ Footer Notice
 */
 
 .footer-notice {
-
+    width: 100%;
     margin-top: var(--space-5);
-
     padding-top: var(--space-5);
-
     border-top: 1px dashed var(--color-border);
-
     color: var(--color-text-muted);
-
     font-size: var(--font-size-sm);
-
+    line-height: 1.6;
     text-align: center;
 }
+
+/*
+========================================================================
+Tablet Footer
+========================================================================
+*/
+
+@media (max-width: 1100px) {
+    .footer-grid {
+        grid-template-columns: minmax(260px, 1.4fr) repeat(2, minmax(180px, 1fr));
+        gap: var(--space-6);
+    }
+
+    .footer-column:first-child {
+        grid-column: span 3;
+        max-width: 42rem;
+    }
+}
+
+/*
+========================================================================
+Small Tablet Footer
+========================================================================
+*/
+
+@media (max-width: 760px) {
+    .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-6);
+    }
+
+    .footer-column:first-child {
+        grid-column: 1 / -1;
+        max-width: none;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .footer-copyright {
+        flex: 0 1 auto;
+    }
+
+    .footer-legal {
+        justify-content: flex-start;
+    }
+}
+
+/*
+========================================================================
+Mobile Footer
+========================================================================
+*/
+
+@media (max-width: 520px) {
+    .footer-inner {
+        width: min(calc(100% - 1.25rem), var(--container-width));
+        padding: var(--space-7) 0;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-6);
+    }
+
+    .footer-column:first-child {
+        grid-column: auto;
+    }
+
+    .footer-brand {
+        align-items: flex-start;
+    }
+
+    .footer-brand img {
+        width: 44px;
+        height: 44px;
+    }
+
+    .footer-legal {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: .55rem;
+    }
+
+    .footer-legal a {
+        white-space: normal;
+    }
+
+    .footer-notice {
+        text-align: left;
+    }
+}
+```
