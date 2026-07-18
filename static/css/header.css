@@ -11,12 +11,11 @@ Site Header
 Skip Link
 ========================================================================
 */
-
 .skip-link {
     position: fixed;
     top: .75rem;
     left: .75rem;
-    z-index: calc(var(--z-header) + 100);
+    z-index: var(--z-skip-link);
     padding: .70rem 1rem;
     color: var(--color-background);
     background: var(--color-primary);
@@ -28,9 +27,7 @@ Skip Link
     transform: translateY(-200%);
     opacity: 0;
     pointer-events: none;
-    transition:
-        transform var(--transition),
-        opacity var(--transition);
+    transition: transform var(--transition), opacity var(--transition);
 }
 
 .skip-link:focus,
@@ -47,7 +44,6 @@ Skip Link
 Site Header
 ========================================================================
 */
-
 .site-header,
 .header {
     position: relative;
@@ -62,15 +58,16 @@ Site Header
 
 /*
 ========================================================================
-Header Layout
+Header Container
 ========================================================================
 */
-
+.site-header > .container,
+.header > .container,
 .site-header-inner,
 .header-inner {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     gap: var(--space-5);
     width: min(calc(100% - 2rem), var(--container-width));
     min-height: var(--header-height);
@@ -80,17 +77,22 @@ Header Layout
 
 /*
 ========================================================================
-Logo
+Header Branding
 ========================================================================
 */
+.site-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-width: 0;
+}
 
 .site-logo,
 .logo {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-3);
+    justify-content: center;
     flex: 0 0 auto;
-    min-width: 0;
     color: var(--color-primary);
     text-decoration: none;
 }
@@ -105,29 +107,13 @@ Logo
 .site-logo img,
 .logo img {
     display: block;
-    width: auto;
-    height: 56px;
+    width: 96px;
+    height: 96px;
     max-width: 100%;
     object-fit: contain;
 }
 
-.site-title,
-.logo-text {
-    font-family: var(--font-heading);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    line-height: 1.1;
-    letter-spacing: var(--letter-spacing-wide);
-    color: var(--color-primary);
-    white-space: nowrap;
-}
-
-/*
-========================================================================
-Branding
-========================================================================
-*/
-
+.site-brand-text,
 .site-branding {
     display: flex;
     flex-direction: column;
@@ -135,54 +121,65 @@ Branding
     min-width: 0;
 }
 
+.site-title,
+.logo-text {
+    margin: 0;
+    color: var(--color-primary);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.1;
+    letter-spacing: var(--letter-spacing-wide);
+}
+
+.site-title a,
+.logo-text a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.site-title a:hover,
+.site-title a:focus-visible,
+.logo-text a:hover,
+.logo-text a:focus-visible {
+    color: var(--color-primary-light);
+    text-decoration: none;
+}
+
 .site-tagline {
-    margin-top: .20rem;
-    color: var(--color-text-muted);
+    margin: .30rem 0 0;
+    color: var(--color-text);
     font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
     line-height: 1.35;
+}
+
+.site-description {
+    max-width: 58rem;
+    margin: .35rem 0 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-xs);
+    line-height: 1.5;
 }
 
 /*
 ========================================================================
-Navigation Alignment
+Header Navigation
 ========================================================================
 */
+.site-header > [data-include="nav"],
+.header > [data-include="nav"] {
+    width: 100%;
+    border-top: 1px solid var(--color-border);
+}
 
 .site-header .site-nav,
 .site-header nav,
 .header .site-nav,
 .header nav {
-    flex: 1 1 auto;
-    min-width: 0;
-    margin-left: auto;
-}
-
-/*
-========================================================================
-Header Actions
-========================================================================
-*/
-
-.header-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex: 0 0 auto;
-    gap: var(--space-3);
-    margin-left: 0;
-}
-
-/*
-========================================================================
-Search
-========================================================================
-*/
-
-.header-search {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-width: 0;
+    width: min(calc(100% - 2rem), var(--container-width));
+    margin-inline: auto;
+    padding-block: var(--space-3);
 }
 
 /*
@@ -190,13 +187,18 @@ Search
 Header Banner
 ========================================================================
 */
-
 .site-banner,
 .header-banner {
     position: relative;
     overflow: hidden;
     width: 100%;
     border-bottom: 1px solid var(--color-border);
+}
+
+.site-banner a,
+.header-banner a {
+    display: block;
+    width: 100%;
 }
 
 .site-banner img,
@@ -214,16 +216,15 @@ Header Banner
 Announcement Banner
 ========================================================================
 */
-
 .header-notice {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     padding: .65rem 1rem;
+    color: var(--color-primary-light);
     background: rgba(192,214,116,.06);
     border-bottom: 1px solid var(--color-border);
-    color: var(--color-primary-light);
     font-size: var(--font-size-sm);
     line-height: 1.45;
     text-align: center;
@@ -234,7 +235,6 @@ Announcement Banner
 Breadcrumbs
 ========================================================================
 */
-
 .header-breadcrumbs {
     width: min(calc(100% - 2rem), var(--container-width));
     margin-inline: auto;
@@ -243,10 +243,29 @@ Breadcrumbs
 
 /*
 ========================================================================
+Header Actions
+========================================================================
+*/
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 0 auto;
+    gap: var(--space-3);
+}
+
+.header-search {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+}
+
+/*
+========================================================================
 Header Utilities
 ========================================================================
 */
-
 .header-spacer {
     flex: 1 1 auto;
     min-width: 0;
@@ -262,12 +281,22 @@ Header Utilities
 
 /*
 ========================================================================
+Scrolled Header
+========================================================================
+*/
+.site-header.header-scrolled,
+.header.header-scrolled {
+    background: rgba(8,11,9,.985);
+    box-shadow: var(--shadow-dropdown);
+}
+
+/*
+========================================================================
 Anchor Target Offset
 ========================================================================
 */
-
 #main-content {
-    scroll-margin-top: calc(var(--header-height) + 1rem);
+    scroll-margin-top: calc(var(--site-header-height, var(--header-height)) + 1rem);
 }
 
 /*
@@ -275,25 +304,27 @@ Anchor Target Offset
 Tablet Header
 ========================================================================
 */
-
 @media (max-width: 1100px) {
+    .site-header > .container,
+    .header > .container,
     .site-header-inner,
     .header-inner {
         gap: var(--space-4);
     }
 
-    .site-title,
-    .logo-text {
-        font-size: var(--font-size-base);
-    }
-
-    .site-tagline {
-        display: none;
-    }
-
     .site-logo img,
     .logo img {
-        height: 50px;
+        width: 80px;
+        height: 80px;
+    }
+
+    .site-title,
+    .logo-text {
+        font-size: var(--font-size-lg);
+    }
+
+    .site-description {
+        max-width: 42rem;
     }
 }
 
@@ -302,45 +333,44 @@ Tablet Header
 Mobile Header
 ========================================================================
 */
-
 @media (max-width: 860px) {
+    .site-header > .container,
+    .header > .container,
     .site-header-inner,
     .header-inner {
-        position: relative;
-        justify-content: space-between;
         gap: var(--space-3);
-        min-height: var(--header-height);
-        padding-block: .65rem;
+        min-height: var(--mobile-header-height);
+        padding-block: var(--space-3);
     }
 
-    .site-logo,
-    .logo {
-        flex: 1 1 auto;
-        min-width: 0;
+    .site-brand {
+        gap: var(--space-3);
     }
 
-    .site-branding {
-        min-width: 0;
+    .site-logo img,
+    .logo img {
+        width: 64px;
+        height: 64px;
     }
 
     .site-title,
     .logo-text {
         overflow: hidden;
+        font-size: var(--font-size-base);
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    .site-description {
+        display: none;
     }
 
     .site-header .site-nav,
     .site-header nav,
     .header .site-nav,
     .header nav {
-        flex: 0 0 auto;
-        min-width: auto;
-        margin-left: auto;
-    }
-
-    .header-actions {
-        flex: 0 0 auto;
+        width: min(calc(100% - 2rem), var(--container-width));
+        padding-block: var(--space-2);
     }
 
     .header-divider {
@@ -353,16 +383,27 @@ Mobile Header
 Small Phones
 ========================================================================
 */
-
 @media (max-width: 560px) {
+    .site-header > .container,
+    .header > .container,
     .site-header-inner,
     .header-inner {
         width: min(calc(100% - 1.25rem), var(--container-width));
     }
 
+    .site-brand {
+        min-width: 0;
+    }
+
     .site-logo img,
     .logo img {
-        height: 44px;
+        width: 52px;
+        height: 52px;
+    }
+
+    .site-brand-text,
+    .site-branding {
+        overflow: hidden;
     }
 
     .site-title,
@@ -371,7 +412,17 @@ Small Phones
     }
 
     .site-tagline {
-        display: none;
+        overflow: hidden;
+        font-size: var(--font-size-xs);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .site-header .site-nav,
+    .site-header nav,
+    .header .site-nav,
+    .header nav {
+        width: min(calc(100% - 1.25rem), var(--container-width));
     }
 
     .header-actions {
