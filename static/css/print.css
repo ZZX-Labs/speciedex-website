@@ -15,23 +15,20 @@ Print Stylesheet
     */
 
     @page {
-
         margin: 1.5cm;
     }
 
     html {
-
         font-size: 11pt;
+        background: #fff !important;
     }
 
     body {
-
+        min-height: auto;
+        margin: 0;
         color: #000;
-
-        background: #fff;
-
+        background: #fff !important;
         font-family: serif;
-
         line-height: 1.5;
     }
 
@@ -42,23 +39,14 @@ Print Stylesheet
     */
 
     *,
-
     *::before,
-
     *::after {
-
         color: inherit !important;
-
         background: transparent !important;
-
         box-shadow: none !important;
-
         text-shadow: none !important;
-
         filter: none !important;
-
         animation: none !important;
-
         transition: none !important;
     }
 
@@ -68,46 +56,83 @@ Print Stylesheet
     ========================================================================
     */
 
-    .site-header,
-
     .site-nav,
-
     .menu-toggle,
-
     .nav-toggle,
-
     .header-actions,
-
+    .header-search,
     .hero-actions,
-
     .button,
-
     .btn,
-
     .cta,
-
+    .call-to-action,
     .pagination,
-
     .footer-social,
-
     .video,
-
     video,
-
     audio,
-
     iframe,
-
     canvas,
-
     .tooltip,
-
-    .accordion-header,
-
     .callout-actions,
-
     .no-print {
+        display: none !important;
+    }
 
+    /*
+    ========================================================================
+    Header
+    ========================================================================
+    */
+
+    .site-header,
+    .header {
+        position: static !important;
+        width: 100%;
+        margin: 0 0 .75cm;
+        border: 0;
+        border-bottom: 1px solid #000;
+        backdrop-filter: none !important;
+    }
+
+    .site-header-inner,
+    .header-inner {
+        display: block;
+        width: 100% !important;
+        min-height: 0;
+        margin: 0 !important;
+        padding: 0 0 .5cm !important;
+    }
+
+    .site-logo,
+    .logo {
+        display: inline-flex;
+        color: #000 !important;
+        text-decoration: none;
+    }
+
+    .site-logo img,
+    .logo img {
+        max-height: 42px;
+    }
+
+    .site-title,
+    .logo-text {
+        color: #000 !important;
+    }
+
+    .site-tagline {
+        color: #000 !important;
+    }
+
+    .site-banner,
+    .header-banner,
+    .header-notice,
+    .header-breadcrumbs {
+        display: none !important;
+    }
+
+    .skip-link {
         display: none !important;
     }
 
@@ -117,30 +142,58 @@ Print Stylesheet
     ========================================================================
     */
 
-    .container,
-
-    .content-container,
-
-    .article-container,
-
-    .section-inner,
-
-    .article-section {
-
+    main,
+    .site-content {
         width: 100% !important;
-
         max-width: none !important;
+    }
 
+    .container,
+    .content-container,
+    .article-container,
+    .section-inner,
+    .article-section {
+        width: 100% !important;
+        max-width: none !important;
         margin: 0 !important;
-
         padding: 0 !important;
     }
 
-    .section {
+    .section,
+    .content-section,
+    .page-header {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 0 1cm !important;
+        padding: 0 !important;
+    }
 
-        padding: 0;
+    .section-full,
+    .section-fluid,
+    .full-width {
+        width: 100% !important;
+    }
 
-        margin: 0 0 1.25cm;
+    .grid,
+    .card-grid,
+    .feature-grid,
+    .project-grid,
+    .resource-grid,
+    .release-grid,
+    .ecosystem-grid,
+    .quick-link-grid,
+    .roadmap-grid,
+    .status-grid,
+    .metric-grid,
+    .grid-2,
+    .grid-3,
+    .grid-4,
+    .grid-5,
+    .grid-6,
+    .two-column,
+    .three-column,
+    .sidebar-layout {
+        display: block !important;
     }
 
     /*
@@ -150,36 +203,34 @@ Print Stylesheet
     */
 
     h1,
-
     h2,
-
     h3,
-
     h4,
-
     h5,
-
     h6 {
-
-        page-break-after: avoid;
-
-        break-after: avoid;
-
         color: #000 !important;
+        page-break-after: avoid;
+        break-after: avoid-page;
+    }
+
+    h1 {
+        font-size: 24pt;
+    }
+
+    h2 {
+        font-size: 18pt;
+    }
+
+    h3 {
+        font-size: 14pt;
     }
 
     p,
-
     li,
-
     table,
-
     pre,
-
     blockquote {
-
         orphans: 3;
-
         widows: 3;
     }
 
@@ -190,30 +241,26 @@ Print Stylesheet
     */
 
     a,
-
     a:visited {
-
         color: #000 !important;
-
         text-decoration: underline;
     }
 
-    a[href^="http"]::after {
-
+    main a[href^="http"]:not(.button)::after,
+    article a[href^="http"]:not(.button)::after {
         content: " (" attr(href) ")";
-
         font-size: 90%;
-
         word-break: break-all;
     }
 
     a[href^="#"]::after,
-
     a[href^="mailto:"]::after,
-
-    a[href^="tel:"]::after {
-
-        content: "";
+    a[href^="tel:"]::after,
+    .site-logo::after,
+    .logo::after,
+    .footer-links a::after,
+    .footer-legal a::after {
+        content: "" !important;
     }
 
     /*
@@ -223,21 +270,18 @@ Print Stylesheet
     */
 
     img,
-
-    svg {
-
+    svg,
+    picture {
         max-width: 100% !important;
-
+        height: auto !important;
         page-break-inside: avoid;
-
-        break-inside: avoid;
+        break-inside: avoid-page;
     }
 
     figure {
-
+        margin-inline: 0;
         page-break-inside: avoid;
-
-        break-inside: avoid;
+        break-inside: avoid-page;
     }
 
     /*
@@ -247,30 +291,54 @@ Print Stylesheet
     */
 
     .card,
-
     .feature-card,
-
+    .feature,
     .project-card,
-
     .resource-card,
-
     .status-card,
-
     .metric-card,
-
+    .stat-card,
     .release-card,
-
+    .ecosystem-card,
+    .activity-card,
+    .objective,
     .statement-card,
-
-    .callout {
-
+    .callout,
+    .content-card {
+        display: block !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 0 .6cm !important;
+        padding: .45cm !important;
         border: 1px solid #000 !important;
-
         page-break-inside: avoid;
+        break-inside: avoid-page;
+    }
 
-        break-inside: avoid;
+    .card:hover,
+    .quick-link-card:hover {
+        transform: none !important;
+    }
 
-        margin-bottom: .75cm;
+    .card-media {
+        margin: 0 0 .4cm !important;
+        border-radius: 0 !important;
+    }
+
+    .card-horizontal {
+        display: block !important;
+    }
+
+    .card-horizontal .card-body {
+        padding: 0 !important;
+    }
+
+    .card-footer,
+    .project-card-footer,
+    .ecosystem-card-actions {
+        margin-top: .3cm;
+        padding-top: .3cm;
+        border-top: 1px solid #777 !important;
     }
 
     /*
@@ -280,37 +348,35 @@ Print Stylesheet
     */
 
     table {
-
         width: 100%;
-
         border-collapse: collapse;
+        page-break-inside: auto;
+        break-inside: auto;
     }
 
     thead {
-
         display: table-header-group;
     }
 
-    tr,
+    tfoot {
+        display: table-footer-group;
+    }
 
-    img,
-
-    pre,
-
-    blockquote {
-
+    tr {
         page-break-inside: avoid;
-
-        break-inside: avoid;
+        break-inside: avoid-page;
     }
 
     th,
-
     td {
-
-        border: 1px solid #000;
-
         padding: .4rem;
+        color: #000 !important;
+        background: transparent !important;
+        border: 1px solid #000 !important;
+    }
+
+    th {
+        font-weight: bold;
     }
 
     /*
@@ -319,15 +385,66 @@ Print Stylesheet
     ========================================================================
     */
 
-    pre,
-
-    code {
-
-        border: 1px solid #888 !important;
-
+    pre {
+        max-width: 100%;
         white-space: pre-wrap;
-
         word-break: break-word;
+        overflow: visible;
+        page-break-inside: avoid;
+        break-inside: avoid-page;
+    }
+
+    pre,
+    code {
+        color: #000 !important;
+        background: transparent !important;
+        border-color: #888 !important;
+    }
+
+    pre code {
+        border: 0 !important;
+    }
+
+    /*
+    ========================================================================
+    Quotes
+    ========================================================================
+    */
+
+    blockquote {
+        color: #000 !important;
+        border-left: 3px solid #000 !important;
+        page-break-inside: avoid;
+        break-inside: avoid-page;
+    }
+
+    /*
+    ========================================================================
+    Accordion
+    ========================================================================
+    */
+
+    .accordion {
+        border: 0 !important;
+    }
+
+    .accordion-item {
+        page-break-inside: avoid;
+        break-inside: avoid-page;
+    }
+
+    .accordion-header {
+        display: block !important;
+        padding: 0 0 .2cm !important;
+        color: #000 !important;
+        font-weight: bold;
+        text-align: left;
+        border: 0 !important;
+    }
+
+    .accordion-panel {
+        display: block !important;
+        padding: 0 !important;
     }
 
     /*
@@ -336,21 +453,51 @@ Print Stylesheet
     ========================================================================
     */
 
-    .site-footer {
-
+    .site-footer,
+    .footer {
         margin-top: 1.5cm;
-
+        padding-top: .6cm;
         border-top: 1px solid #000;
     }
 
-    .footer-grid {
+    .footer-inner {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 
-        display: block;
+    .footer-grid {
+        display: block !important;
+        margin-bottom: .75cm;
     }
 
     .footer-column {
+        display: block;
+        margin-bottom: .5cm;
+    }
 
-        margin-bottom: .75cm;
+    .footer-brand {
+        margin-bottom: .25cm;
+    }
+
+    .footer-bottom {
+        display: block;
+        padding-top: .4cm;
+        border-top: 1px solid #000 !important;
+    }
+
+    .footer-legal {
+        display: block;
+        margin-top: .25cm;
+    }
+
+    .footer-legal a {
+        display: inline;
+        margin-right: .4cm;
+    }
+
+    .footer-notice {
+        text-align: left;
     }
 
     /*
@@ -360,13 +507,25 @@ Print Stylesheet
     */
 
     .print-only {
-
         display: block !important;
     }
 
     .screen-only {
-
         display: none !important;
     }
 
+    .page-break-before {
+        break-before: page;
+        page-break-before: always;
+    }
+
+    .page-break-after {
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .avoid-break {
+        break-inside: avoid-page;
+        page-break-inside: avoid;
+    }
 }
