@@ -1,1 +1,13 @@
-[]
+[
+    {
+        "timestamp": "2026-07-18T22:04:06Z",
+        "source": "GBIF",
+        "species": 29744627,
+        "genera": 4048670,
+        "families": 560024,
+        "orders": 171514,
+        "classes": 88637,
+        "phyla": 74533,
+        "kingdoms": 67473
+    }
+]

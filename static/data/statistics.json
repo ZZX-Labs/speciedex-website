@@ -1,14 +1,16 @@
 {
-    "species": 0,
-    "kingdoms": 0,
-    "phyla": 0,
-    "classes": 0,
-    "orders": 0,
-    "families": 0,
-    "genera": 0,
-    "last_updated": null,
-    "source": "pending",
-    "sources": [],
+    "species": 29744627,
+    "kingdoms": 67473,
+    "phyla": 74533,
+    "classes": 88637,
+    "orders": 171514,
+    "families": 560024,
+    "genera": 4048670,
+    "last_updated": "2026-07-18T22:04:06Z",
+    "source": "GBIF",
+    "sources": [
+        "GBIF"
+    ],
     "failed_sources": [],
     "cached_fields": [],
     "generator": {
