@@ -11,7 +11,6 @@ Splash / Hero
 Splash
 ========================================================================
 */
-
 .splash {
     position: relative;
     overflow: hidden;
@@ -26,12 +25,11 @@ Splash
     content: "";
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(
-            circle at top,
-            rgba(192,214,116,.08),
-            transparent 60%
-        );
+    background: radial-gradient(
+        circle at top,
+        rgba(192,214,116,.08),
+        transparent 60%
+    );
     pointer-events: none;
 }
 
@@ -39,19 +37,18 @@ Splash
     content: "";
     position: absolute;
     inset: 0;
-    background:
-        linear-gradient(
-            to bottom,
-            rgba(0,0,0,.10),
-            rgba(0,0,0,.55)
-        );
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,.10),
+        rgba(0,0,0,.55)
+    );
     pointer-events: none;
 }
 
 .splash-content {
     position: relative;
     z-index: 2;
-    width: min(calc(100% - 2rem),var(--content-width));
+    width: min(calc(100% - 2rem), var(--content-width));
     margin-inline: auto;
     text-align: center;
 }
@@ -61,7 +58,6 @@ Splash
 Hero
 ========================================================================
 */
-
 .hero {
     position: relative;
     overflow: hidden;
@@ -70,7 +66,7 @@ Hero
 }
 
 .hero-content {
-    width: min(calc(100% - 2rem),var(--content-width));
+    width: min(calc(100% - 2rem), var(--content-width));
     margin-inline: auto;
 }
 
@@ -84,7 +80,6 @@ Hero
 Hero Text
 ========================================================================
 */
-
 .hero-title,
 .splash h1 {
     margin-bottom: var(--space-4);
@@ -111,7 +106,6 @@ Hero Text
 Eyebrow / Kicker
 ========================================================================
 */
-
 .eyebrow,
 .kicker {
     display: inline-flex;
@@ -127,8 +121,8 @@ Eyebrow / Kicker
     font-weight: var(--font-weight-semibold);
     line-height: 1.2;
     letter-spacing: .08em;
-    text-transform: uppercase;
     text-align: center;
+    text-transform: uppercase;
 }
 
 /*
@@ -136,7 +130,6 @@ Eyebrow / Kicker
 Hero Actions
 ========================================================================
 */
-
 .hero-actions {
     display: flex;
     align-items: center;
@@ -151,7 +144,6 @@ Hero Actions
 Hero Image
 ========================================================================
 */
-
 .hero-image {
     display: block;
     width: 100%;
@@ -171,7 +163,6 @@ Hero Image
 Feature Highlights
 ========================================================================
 */
-
 .hero-highlights {
     display: flex;
     align-items: stretch;
@@ -211,7 +202,6 @@ Feature Highlights
 Page Banner
 ========================================================================
 */
-
 .page-banner {
     position: relative;
     overflow: hidden;
@@ -231,7 +221,6 @@ Page Banner
 Scroll Indicator
 ========================================================================
 */
-
 .scroll-indicator {
     display: flex;
     align-items: center;
@@ -249,7 +238,6 @@ Scroll Indicator
 Tablet
 ========================================================================
 */
-
 @media (max-width: 1024px) {
     .splash {
         min-height: auto;
@@ -270,7 +258,6 @@ Tablet
 Mobile
 ========================================================================
 */
-
 @media (max-width: 640px) {
     .splash {
         min-height: auto;
@@ -330,7 +317,6 @@ Mobile
 Short Landscape Screens
 ========================================================================
 */
-
 @media (max-height: 540px) and (orientation: landscape) {
     .splash {
         min-height: auto;
