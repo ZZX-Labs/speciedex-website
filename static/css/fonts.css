@@ -11,7 +11,6 @@ Font Definitions
 Adult Swim Display Font
 ========================================================================
 */
-
 @font-face {
     font-family: "AdultSwim";
     src:
@@ -28,7 +27,6 @@ Adult Swim Display Font
 IBM Plex Mono
 ========================================================================
 */
-
 @font-face {
     font-family: "IBM Plex Mono";
     src:
@@ -75,7 +73,6 @@ IBM Plex Mono
 Typography Tokens
 ========================================================================
 */
-
 :root {
 
     /*
@@ -83,7 +80,6 @@ Typography Tokens
     Font Families
     ========================================================================
     */
-
     --font-heading:
         "IBM Plex Mono",
         "AdultSwim",
@@ -121,7 +117,6 @@ Typography Tokens
     Font Weights
     ========================================================================
     */
-
     --font-weight-light: 300;
     --font-weight-normal: 400;
     --font-weight-medium: 500;
@@ -133,9 +128,8 @@ Typography Tokens
     Font Sizes
     ========================================================================
     */
-
-    --font-size-xs: 0.75rem;
-    --font-size-sm: 0.875rem;
+    --font-size-xs: .75rem;
+    --font-size-sm: .875rem;
     --font-size-base: 1rem;
     --font-size-md: 1rem;
     --font-size-lg: 1.125rem;
@@ -150,7 +144,6 @@ Typography Tokens
     Line Heights
     ========================================================================
     */
-
     --line-height-tight: 1.15;
     --line-height-normal: 1.6;
     --line-height-relaxed: 1.8;
@@ -160,9 +153,8 @@ Typography Tokens
     Letter Spacing
     ========================================================================
     */
-
-    --letter-spacing-tight: -0.02em;
+    --letter-spacing-tight: -.02em;
     --letter-spacing-normal: 0;
-    --letter-spacing-wide: 0.04em;
-    --letter-spacing-wider: 0.12em;
+    --letter-spacing-wide: .04em;
+    --letter-spacing-wider: .12em;
 }
