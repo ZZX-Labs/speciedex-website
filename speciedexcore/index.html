@@ -1,1 +1,5219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="robots"
+        content="index,follow">
+
+    <meta
+        name="description"
+        content="Explore SpeciedexCore, the open-source data, taxonomy, indexing, validation, search, API, synchronization, and archival engine that powers the Speciedex biodiversity platform.">
+
+    <title>
+        SpeciedexCore | Speciedex.org
+    </title>
+
+    <link
+        rel="icon"
+        href="../static/icons/favicon.ico"
+        type="image/x-icon">
+
+    <link
+        rel="stylesheet"
+        href="../static/styles.css">
+
+</head>
+
+<body>
+
+<a
+    class="skip-link"
+    href="#main-content">
+    Skip to main content
+</a>
+
+<div data-include="header"></div>
+
+<div data-include="splash"></div>
+
+<main
+    id="main-content"
+    class="site-main">
+
+    <!--
+    ========================================================================
+    Page Header
+    ========================================================================
+    -->
+
+    <section
+        class="page-header"
+        aria-labelledby="speciedexcore-page-title">
+
+        <div class="container">
+
+            <p class="eyebrow">
+                Biodiversity Data Infrastructure
+            </p>
+
+            <h1 id="speciedexcore-page-title">
+                SpeciedexCore
+            </h1>
+
+            <p class="page-introduction">
+
+                SpeciedexCore is the open-source data, taxonomy, indexing,
+                validation, search, synchronization, and application engine
+                that powers the Speciedex biodiversity platform.
+
+            </p>
+
+            <p class="page-introduction">
+
+                It is designed to ingest biological records from many
+                independent sources, preserve their provenance, reconcile
+                conflicting classifications, normalize data into structured
+                models, expose documented interfaces, and make biodiversity
+                information searchable across species, geography, ecology,
+                media, observations, conservation, research, and taxonomy.
+
+            </p>
+
+            <p class="page-introduction">
+
+                SpeciedexCore is intended to support public websites,
+                scientific tools, offline archives, institutional mirrors,
+                research systems, educational applications, field devices,
+                APIs, and independent biodiversity databases.
+
+            </p>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Overview
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="core-overview-title">
+
+        <div class="container">
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h2 id="core-overview-title">
+                        What SpeciedexCore Is
+                    </h2>
+
+                    <p>
+
+                        SpeciedexCore is the backend foundation of the
+                        Speciedex project ecosystem.
+
+                    </p>
+
+                    <p>
+
+                        It provides the structured services required to store,
+                        connect, validate, search, update, export, and preserve
+                        biodiversity records.
+
+                    </p>
+
+                    <p>
+
+                        Rather than treating biodiversity information as a
+                        collection of disconnected pages, SpeciedexCore models
+                        organisms, names, places, habitats, observations,
+                        references, specimens, media, genetic identifiers,
+                        ecological relationships, and conservation records as
+                        linked data.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h2>
+                        Why a Dedicated Core Exists
+                    </h2>
+
+                    <p>
+
+                        Biodiversity data arrives from sources with different
+                        identifiers, licenses, taxonomic opinions, date
+                        formats, geographic systems, confidence levels,
+                        naming conventions, and technical structures.
+
+                    </p>
+
+                    <p>
+
+                        A dedicated core system is required to preserve the
+                        source data while creating a usable common structure.
+
+                    </p>
+
+                    <p>
+
+                        SpeciedexCore separates durable scientific records and
+                        data-processing logic from any single website,
+                        graphical interface, mobile application, search page,
+                        or deployment environment.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Design Goals
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="design-goals-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Engineering Principles
+                </p>
+
+                <h2 id="design-goals-title">
+                    Core Design Goals
+                </h2>
+
+            </div>
+
+            <div class="card-grid card-grid-four">
+
+                <article class="content-card">
+
+                    <h3>
+                        Source Traceability
+                    </h3>
+
+                    <p>
+
+                        Every imported or generated record should retain
+                        sufficient provenance to identify its source,
+                        retrieval date, license, original identifier, and
+                        transformation history.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Scientific Transparency
+                    </h3>
+
+                    <p>
+
+                        Conflicting names, uncertain identifications, disputed
+                        classifications, provisional records, and incomplete
+                        evidence should remain visible.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Interoperability
+                    </h3>
+
+                    <p>
+
+                        Data should be available through documented formats,
+                        stable identifiers, APIs, exports, and open standards.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Modularity
+                    </h3>
+
+                    <p>
+
+                        Importers, validators, search engines, storage
+                        adapters, media systems, maps, and application
+                        services should remain independently maintainable.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Resilience
+                    </h3>
+
+                    <p>
+
+                        The system should support mirrors, backups, offline
+                        copies, reproducible builds, independent deployments,
+                        and recovery after infrastructure failure.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Scalability
+                    </h3>
+
+                    <p>
+
+                        The architecture should support millions of taxa,
+                        observations, media records, references, and
+                        geographic features without requiring redesign of the
+                        entire platform.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Security
+                    </h3>
+
+                    <p>
+
+                        Administrative access, imports, APIs, files, secrets,
+                        user submissions, and generated output should be
+                        protected through layered controls and auditable
+                        workflows.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Long-Term Preservation
+                    </h3>
+
+                    <p>
+
+                        Important biological records should remain readable,
+                        exportable, attributable, and independently usable
+                        beyond the lifetime of any single interface or host.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Architecture
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="architecture-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    System Architecture
+                </p>
+
+                <h2 id="architecture-title">
+                    Layered Core Architecture
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Source Layer
+                    </h3>
+
+                    <p>
+
+                        The source layer connects to taxonomic catalogues,
+                        museum databases, observation platforms, conservation
+                        systems, journal repositories, genetic databases,
+                        mapping services, institutional archives, and other
+                        approved data providers.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Ingestion Layer
+                    </h3>
+
+                    <p>
+
+                        The ingestion layer downloads, receives, decodes,
+                        parses, validates, fingerprints, and records incoming
+                        datasets before they enter the normalized data model.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Normalization Layer
+                    </h3>
+
+                    <p>
+
+                        Source-specific structures are mapped into canonical
+                        records while preserving the original values and
+                        identifiers.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Reconciliation Layer
+                    </h3>
+
+                    <p>
+
+                        Names, identifiers, places, taxa, references, media,
+                        and records from different sources are compared and
+                        linked without erasing disagreement.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Storage Layer
+                    </h3>
+
+                    <p>
+
+                        Durable storage maintains normalized entities,
+                        original source records, indexes, media metadata,
+                        audit history, revisions, relationships, and derived
+                        data.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Search Layer
+                    </h3>
+
+                    <p>
+
+                        Search indexes support full-text, faceted, geographic,
+                        taxonomic, identifier-based, multilingual, and
+                        relationship-aware discovery.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Service Layer
+                    </h3>
+
+                    <p>
+
+                        APIs and internal services expose records to websites,
+                        applications, research tools, maps, exports, and
+                        independent clients.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Presentation Layer
+                    </h3>
+
+                    <p>
+
+                        Speciedex, SpeciedexExplorer, institutional portals,
+                        mobile interfaces, and other clients present the data
+                        without owning the underlying scientific model.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Core Modules
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="modules-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Core Components
+                </p>
+
+                <h2 id="modules-title">
+                    SpeciedexCore Modules
+                </h2>
+
+            </div>
+
+            <div class="card-grid card-grid-four">
+
+                <article class="content-card">
+
+                    <h3>
+                        Taxonomy Engine
+                    </h3>
+
+                    <p>
+
+                        Manages names, ranks, classifications, synonyms,
+                        authorities, taxonomic concepts, and hierarchical
+                        relationships.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Species Record Engine
+                    </h3>
+
+                    <p>
+
+                        Stores structured descriptions, traits, ecology,
+                        behavior, morphology, life history, and linked
+                        evidence.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Import Engine
+                    </h3>
+
+                    <p>
+
+                        Retrieves and processes files, APIs, feeds, archives,
+                        database exports, and approved manual submissions.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Validation Engine
+                    </h3>
+
+                    <p>
+
+                        Checks identifiers, field types, required values,
+                        relationships, geographic data, dates, and source
+                        consistency.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Reconciliation Engine
+                    </h3>
+
+                    <p>
+
+                        Links equivalent or related records while preserving
+                        distinct source opinions and revision history.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Search Engine
+                    </h3>
+
+                    <p>
+
+                        Builds searchable indexes and provides ranking,
+                        filtering, autocomplete, synonym expansion, and
+                        multilingual matching.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Geography Engine
+                    </h3>
+
+                    <p>
+
+                        Handles coordinates, regions, ranges, geometry,
+                        ecoregions, elevation, habitat areas, and protected
+                        locations.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Media Engine
+                    </h3>
+
+                    <p>
+
+                        Tracks media files, derivatives, metadata, licenses,
+                        attribution, checksums, dimensions, and linked taxa.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Observation Engine
+                    </h3>
+
+                    <p>
+
+                        Stores observation events, evidence, dates,
+                        locations, observers, review state, and confidence.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Conservation Engine
+                    </h3>
+
+                    <p>
+
+                        Organizes assessments, legal protections, threats,
+                        population trends, recovery plans, and sensitive
+                        records.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Reference Engine
+                    </h3>
+
+                    <p>
+
+                        Connects records with publications, datasets,
+                        specimens, reports, identifiers, and archival
+                        documents.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        API Engine
+                    </h3>
+
+                    <p>
+
+                        Provides authenticated and public interfaces for
+                        reading, searching, exporting, validating, and
+                        contributing data.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Taxonomy Engine
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="taxonomy-engine-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Biological Classification
+                </p>
+
+                <h2 id="taxonomy-engine-title">
+                    Taxonomy Engine
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Taxon Records
+                    </h3>
+
+                    <p>
+
+                        A taxon record represents a named biological group or
+                        taxonomic concept at a particular rank.
+
+                    </p>
+
+                    <p>
+
+                        Records may represent domains, kingdoms, phyla,
+                        classes, orders, families, genera, species,
+                        subspecies, varieties, forms, strains, clades, or
+                        other scientifically useful groupings.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Scientific Names
+                    </h3>
+
+                    <p>
+
+                        Scientific names are stored separately from taxonomic
+                        concepts so that the same name can be interpreted
+                        differently across authorities or periods.
+
+                    </p>
+
+                    <p>
+
+                        Name records can preserve spelling, authorship,
+                        publication year, rank, nomenclatural status, source,
+                        and formatting rules.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Synonymy
+                    </h3>
+
+                    <p>
+
+                        Synonyms, former combinations, misspellings,
+                        unavailable names, homonyms, replacement names, and
+                        historical classifications can be linked to accepted
+                        or source-specific concepts.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Taxonomic Opinions
+                    </h3>
+
+                    <p>
+
+                        A source may accept, reject, merge, split, elevate,
+                        reduce, or reposition a taxon.
+
+                    </p>
+
+                    <p>
+
+                        SpeciedexCore records these opinions as attributable
+                        assertions rather than rewriting all records into a
+                        single unexplained hierarchy.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Hierarchical Relationships
+                    </h3>
+
+                    <p>
+
+                        Parent and child relationships allow taxa to be
+                        traversed through source-specific or project-selected
+                        classifications.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Taxonomic Concepts
+                    </h3>
+
+                    <p>
+
+                        Concept records distinguish the biological meaning
+                        intended by a name in a specific publication or
+                        authority.
+
+                    </p>
+
+                    <p>
+
+                        This helps separate identical names used with
+                        different circumscriptions.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Data Model
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="data-model-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Structured Information
+                </p>
+
+                <h2 id="data-model-title">
+                    Core Data Model
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore uses linked entities rather than storing all
+                    biodiversity information inside a single species table.
+
+                </p>
+
+                <p>
+
+                    Taxa, names, classifications, places, habitats,
+                    observations, specimens, media, publications, genetic
+                    identifiers, conservation assessments, organizations,
+                    people, licenses, sources, and ecological relationships
+                    are modeled as distinct records.
+
+                </p>
+
+                <p>
+
+                    These entities can be connected through typed
+                    relationships with their own dates, confidence, source,
+                    review status, and explanatory notes.
+
+                </p>
+
+                <p>
+
+                    The design allows a single observation, publication,
+                    specimen, image, place, or conservation assessment to be
+                    linked to more than one relevant record without
+                    unnecessary duplication.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Canonical Records
+                    </h3>
+
+                    <p>
+
+                        Canonical records provide stable internal entities
+                        used by the platform to connect source records,
+                        classifications, relationships, and interfaces.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Source Records
+                    </h3>
+
+                    <p>
+
+                        Original imported records are preserved separately so
+                        that users can trace normalized values back to their
+                        source representation.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Assertions
+                    </h3>
+
+                    <p>
+
+                        An assertion records a sourced claim such as a habitat
+                        association, range statement, conservation status, or
+                        taxonomic placement.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Relationships
+                    </h3>
+
+                    <p>
+
+                        Typed links represent parentage, synonymy,
+                        observation, predation, parasitism, pollination,
+                        geography, authorship, citation, and other
+                        associations.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Identifiers
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="identifiers-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Record Identity
+                </p>
+
+                <h2 id="identifiers-title">
+                    Identifier System
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    Every core record should receive a stable Speciedex
+                    identifier independent of its display name.
+
+                </p>
+
+                <p>
+
+                    Scientific names, common names, taxonomic positions, and
+                    classifications can change. A stable identifier allows
+                    references to remain usable across those changes.
+
+                </p>
+
+                <p>
+
+                    External identifiers from source databases, specimen
+                    collections, genetic repositories, journal systems,
+                    conservation authorities, mapping systems, and archives
+                    are stored as linked identifiers rather than replacing
+                    the internal identity of the record.
+
+                </p>
+
+                <p>
+
+                    Identifier mappings may include confidence, source,
+                    effective dates, deprecation status, and notes describing
+                    uncertain or contested equivalence.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Stable Internal IDs
+                    </h3>
+
+                    <p>
+
+                        Internal identifiers remain independent of a taxon's
+                        current accepted name or classification.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        External Crosswalks
+                    </h3>
+
+                    <p>
+
+                        Crosswalk records connect Speciedex entities to
+                        identifiers used by independent scientific systems.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Human-Readable Slugs
+                    </h3>
+
+                    <p>
+
+                        Web routes may use readable names while redirecting
+                        through the stable record identity when names change.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Deprecated IDs
+                    </h3>
+
+                    <p>
+
+                        Merged, replaced, or retired identifiers can remain
+                        resolvable through redirects and audit history.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Import Pipeline
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="import-pipeline-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Data Ingestion
+                </p>
+
+                <h2 id="import-pipeline-title">
+                    Import Pipeline
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Acquisition
+                    </h3>
+
+                    <p>
+
+                        Import jobs retrieve approved data through APIs,
+                        downloadable archives, database exports, feeds,
+                        repository releases, direct uploads, or documented
+                        manual procedures.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Source Registration
+                    </h3>
+
+                    <p>
+
+                        Each source is registered with ownership, license,
+                        update frequency, access method, geographic scope,
+                        taxonomic scope, and technical documentation.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Integrity Verification
+                    </h3>
+
+                    <p>
+
+                        Checksums, signatures, file sizes, expected schemas,
+                        content types, and archive structure can be verified
+                        before processing.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Parsing
+                    </h3>
+
+                    <p>
+
+                        Source adapters decode CSV, TSV, JSON, JSON Lines,
+                        XML, Darwin Core archives, RDF, SQL exports, text
+                        files, images, media manifests, and other supported
+                        formats.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Staging
+                    </h3>
+
+                    <p>
+
+                        Incoming records enter an isolated staging area before
+                        they are allowed to modify production data.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Transformation
+                    </h3>
+
+                    <p>
+
+                        Source fields are mapped into normalized structures
+                        while preserving original values and transformation
+                        logs.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Reconciliation
+                    </h3>
+
+                    <p>
+
+                        Incoming records are compared against existing names,
+                        identifiers, taxa, places, publications, and media.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Publication
+                    </h3>
+
+                    <p>
+
+                        Approved records are committed as a versioned release,
+                        indexed for search, and made available to services and
+                        exports.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Validation
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="validation-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Data Quality
+                </p>
+
+                <h2 id="validation-title">
+                    Validation Engine
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    Validation occurs at several stages because a record may
+                    be technically well formed while still being
+                    scientifically questionable.
+
+                </p>
+
+                <p>
+
+                    Structural validation checks field types, required
+                    values, identifiers, encoding, date formats, geometry,
+                    relationships, controlled vocabularies, and schema
+                    compliance.
+
+                </p>
+
+                <p>
+
+                    Semantic validation checks whether values make sense in
+                    context. Examples include impossible coordinates,
+                    contradictory ranks, invalid parent relationships,
+                    future observation dates, malformed authorship, or
+                    conservation records without a defined scope.
+
+                </p>
+
+                <p>
+
+                    Scientific review may still be required for disputed
+                    taxonomy, difficult identifications, unusual range
+                    records, conflicting literature, or sensitive
+                    conservation claims.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Schema Validation
+                    </h3>
+
+                    <p>
+
+                        Ensures that records follow the required data
+                        structure and field constraints.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Referential Integrity
+                    </h3>
+
+                    <p>
+
+                        Ensures that linked records exist and that
+                        relationships are valid for their entity types.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Geographic Validation
+                    </h3>
+
+                    <p>
+
+                        Checks coordinate ranges, geometry validity, country
+                        consistency, elevation, uncertainty, and spatial
+                        relationships.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Taxonomic Validation
+                    </h3>
+
+                    <p>
+
+                        Checks ranks, parentage, nomenclature, authorities,
+                        source identifiers, and classification structure.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Media Validation
+                    </h3>
+
+                    <p>
+
+                        Checks file integrity, declared type, dimensions,
+                        metadata, license, attribution, and linked records.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Review Workflow
+                    </h3>
+
+                    <p>
+
+                        Records can be marked pending, accepted, disputed,
+                        rejected, superseded, restricted, or requiring expert
+                        review.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Normalization
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="normalization-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Consistent Structure
+                </p>
+
+                <h2 id="normalization-title">
+                    Normalization Engine
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    Normalization converts source-specific values into
+                    consistent structures without deleting the original
+                    source representation.
+
+                </p>
+
+                <p>
+
+                    Dates may be normalized into machine-readable formats,
+                    coordinates into standard reference systems, languages
+                    into recognized codes, licenses into controlled values,
+                    and measurements into consistent units.
+
+                </p>
+
+                <p>
+
+                    Names may be parsed into genus, specific epithet,
+                    infraspecific rank, authorship, annotations, and
+                    nomenclatural qualifiers.
+
+                </p>
+
+                <p>
+
+                    Normalization rules must be versioned because changes in
+                    parsing logic can alter derived output.
+
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Reconciliation
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="reconciliation-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Record Matching
+                </p>
+
+                <h2 id="reconciliation-title">
+                    Reconciliation Engine
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    Reconciliation determines whether two source records
+                    refer to the same entity, related entities, or different
+                    entities with similar labels.
+
+                </p>
+
+                <p>
+
+                    Exact identifiers provide strong evidence, but many
+                    sources do not share identifiers.
+
+                </p>
+
+                <p>
+
+                    Matching may therefore consider scientific name,
+                    authorship, rank, parent classification, locality,
+                    specimen number, publication, source history, geometry,
+                    media metadata, and other contextual evidence.
+
+                </p>
+
+                <p>
+
+                    Automated matching can assign confidence scores, but
+                    uncertain cases should remain reviewable and reversible.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Exact Matches
+                    </h3>
+
+                    <p>
+
+                        Records share a recognized identifier or a complete,
+                        verified set of equivalent attributes.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Probable Matches
+                    </h3>
+
+                    <p>
+
+                        Records strongly resemble one another but require
+                        confirmation before merging or linking.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Related Records
+                    </h3>
+
+                    <p>
+
+                        Records may represent a synonym, parent taxon,
+                        specimen, observation, former classification, or
+                        overlapping concept.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Conflicting Records
+                    </h3>
+
+                    <p>
+
+                        Records may disagree in ways that should remain visible
+                        rather than being silently collapsed.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Search
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="search-engine-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Discovery Infrastructure
+                </p>
+
+                <h2 id="search-engine-title">
+                    Search and Indexing Engine
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Full-Text Search
+                    </h3>
+
+                    <p>
+
+                        Searches scientific names, common names, descriptions,
+                        references, locations, notes, organizations, and other
+                        indexed text.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Taxonomic Search
+                    </h3>
+
+                    <p>
+
+                        Supports searching within classifications, descendants,
+                        ancestors, ranks, accepted names, synonyms, and
+                        source-specific taxonomies.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Faceted Search
+                    </h3>
+
+                    <p>
+
+                        Filters results by kingdom, rank, country, habitat,
+                        conservation status, source, media availability,
+                        observation period, and other structured fields.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Geographic Search
+                    </h3>
+
+                    <p>
+
+                        Finds records within points, bounding boxes, regions,
+                        protected areas, ecoregions, watersheds, or custom
+                        geometry.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Identifier Search
+                    </h3>
+
+                    <p>
+
+                        Resolves Speciedex identifiers, source IDs, specimen
+                        codes, accession numbers, publication identifiers,
+                        and other exact references.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Multilingual Search
+                    </h3>
+
+                    <p>
+
+                        Supports common names and interface terms across
+                        multiple languages, scripts, transliterations,
+                        diacritics, and regional variants.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Synonym Expansion
+                    </h3>
+
+                    <p>
+
+                        Searches can include accepted names, historical names,
+                        alternate spellings, misspellings, and former
+                        combinations.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Ranking
+                    </h3>
+
+                    <p>
+
+                        Results may be ranked by exactness, taxonomic status,
+                        source authority, data completeness, recency,
+                        geographic relevance, and review confidence.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Geography
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="geography-engine-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Spatial Data
+                </p>
+
+                <h2 id="geography-engine-title">
+                    Geography and Mapping Engine
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore stores geographic information as structured
+                    records rather than plain text alone.
+
+                </p>
+
+                <p>
+
+                    Geographic entities can include countries, territories,
+                    administrative regions, islands, oceans, seas, rivers,
+                    watersheds, mountain ranges, caves, protected areas,
+                    ecoregions, habitats, localities, and custom research
+                    regions.
+
+                </p>
+
+                <p>
+
+                    Observation and specimen records may include coordinates,
+                    coordinate uncertainty, elevation, depth, locality text,
+                    georeferencing method, precision, date, and source.
+
+                </p>
+
+                <p>
+
+                    Sensitive locations may be obscured, generalized,
+                    delayed, or restricted according to conservation and
+                    privacy policies.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Point Records
+                    </h3>
+
+                    <p>
+
+                        Individual coordinates can represent observations,
+                        specimens, nests, recordings, photographs, or sample
+                        locations.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Range Geometry
+                    </h3>
+
+                    <p>
+
+                        Polygons and multipolygons can represent known,
+                        estimated, seasonal, historical, or modeled ranges.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Spatial Relationships
+                    </h3>
+
+                    <p>
+
+                        Records can be tested for intersection, containment,
+                        distance, overlap, proximity, and regional membership.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Environmental Layers
+                    </h3>
+
+                    <p>
+
+                        Climate, elevation, land cover, hydrology, protected
+                        areas, and habitat layers may support analysis and
+                        visualization.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Observations
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="observations-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Evidence of Occurrence
+                </p>
+
+                <h2 id="observations-title">
+                    Observation Records
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    An observation records evidence that an organism or
+                    biological event was detected at a particular time and
+                    place.
+
+                </p>
+
+                <p>
+
+                    Evidence may include photographs, sound recordings,
+                    video, field notes, sensor output, environmental DNA,
+                    specimen collection, satellite imagery, tracks, scat,
+                    nests, feeding signs, or expert reports.
+
+                </p>
+
+                <p>
+
+                    Observation records can preserve observer identity,
+                    source platform, date, time, location, uncertainty,
+                    identification, review status, method, equipment,
+                    associated media, license, and comments.
+
+                </p>
+
+                <p>
+
+                    Identifications can change without deleting the original
+                    observation event.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Identification State
+                    </h3>
+
+                    <p>
+
+                        Records may be unidentified, tentatively identified,
+                        community identified, expert reviewed, disputed, or
+                        rejected.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Evidence Quality
+                    </h3>
+
+                    <p>
+
+                        Evidence can be scored or described according to
+                        visibility, diagnostic detail, recording quality,
+                        metadata completeness, and independent confirmation.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Duplicate Detection
+                    </h3>
+
+                    <p>
+
+                        Similar records can be compared using timestamps,
+                        location, media hashes, source IDs, and observer
+                        information.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Sensitive Observations
+                    </h3>
+
+                    <p>
+
+                        Location or observer information may be restricted
+                        when disclosure creates conservation, privacy, or
+                        safety concerns.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Specimens
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="specimens-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Collection Records
+                </p>
+
+                <h2 id="specimens-title">
+                    Specimens and Collections
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    Specimen records connect biological material with
+                    institutions, collectors, collection events, preparation
+                    methods, catalogue numbers, identifications, media,
+                    genetic samples, and publications.
+
+                </p>
+
+                <p>
+
+                    A specimen may be a preserved organism, herbarium sheet,
+                    tissue sample, slide, fossil, skeletal element, culture,
+                    environmental sample, image-based voucher, or other
+                    recognized research object.
+
+                </p>
+
+                <p>
+
+                    Identifications and taxonomic placements may change over
+                    time while the underlying specimen record remains stable.
+
+                </p>
+
+                <p>
+
+                    SpeciedexCore can preserve determination history, loan
+                    status, institution codes, collection names, storage
+                    location, type status, preparation, associated sequences,
+                    and digital representations where available.
+
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Conservation
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="conservation-engine-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Protection Data
+                </p>
+
+                <h2 id="conservation-engine-title">
+                    Conservation Engine
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Assessments
+                    </h3>
+
+                    <p>
+
+                        Stores conservation category, assessment authority,
+                        publication date, geographic scope, criteria,
+                        population trend, confidence, and supporting evidence.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Threats
+                    </h3>
+
+                    <p>
+
+                        Links taxa and places with habitat loss, exploitation,
+                        pollution, invasive species, disease, climate change,
+                        conflict, infrastructure, bycatch, and other pressures.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Legal Protection
+                    </h3>
+
+                    <p>
+
+                        Tracks applicable national, regional, international,
+                        trade, wildlife, habitat, and protected-species
+                        frameworks.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Recovery Actions
+                    </h3>
+
+                    <p>
+
+                        Records restoration programs, breeding initiatives,
+                        protected areas, monitoring plans, reintroductions,
+                        and conservation organizations.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Population Records
+                    </h3>
+
+                    <p>
+
+                        Stores population estimates, subpopulations, trends,
+                        survey methods, uncertainty, and effective dates.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Sensitive Data Controls
+                    </h3>
+
+                    <p>
+
+                        Applies restrictions to locations, trade-sensitive
+                        records, nesting areas, collection sites, and other
+                        information at risk of misuse.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Media
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="media-engine-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Digital Assets
+                </p>
+
+                <h2 id="media-engine-title">
+                    Media Management Engine
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore can manage photographs, illustrations,
+                    audio, video, maps, diagrams, three-dimensional models,
+                    scans, radiographs, specimen images, and other scientific
+                    media.
+
+                </p>
+
+                <p>
+
+                    Each asset can preserve its source, creator, copyright,
+                    license, attribution text, original URL, checksum,
+                    dimensions, duration, format, capture date, location,
+                    equipment, linked taxa, and review state.
+
+                </p>
+
+                <p>
+
+                    Derivative files such as thumbnails, previews, normalized
+                    audio, transcodes, and web-ready images are linked to the
+                    original rather than replacing it.
+
+                </p>
+
+                <p>
+
+                    Media processing should occur in isolated workflows with
+                    type verification, resource limits, metadata inspection,
+                    and protection against malformed or hostile files.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Original Preservation
+                    </h3>
+
+                    <p>
+
+                        Original files can be stored immutably with checksums
+                        and source metadata.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Derivatives
+                    </h3>
+
+                    <p>
+
+                        Resized images, previews, waveforms, transcodes, and
+                        alternate formats can be regenerated from originals.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Attribution
+                    </h3>
+
+                    <p>
+
+                        Required creator, source, license, and usage
+                        information travels with the asset.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Duplicate Detection
+                    </h3>
+
+                    <p>
+
+                        Cryptographic hashes and perceptual comparisons can
+                        identify exact and near-duplicate media.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    References
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="references-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Scientific Literature
+                </p>
+
+                <h2 id="references-title">
+                    References and Evidence
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    Publications and datasets are modeled as first-class
+                    records rather than unstructured citation text alone.
+
+                </p>
+
+                <p>
+
+                    References may include journal articles, monographs,
+                    taxonomic descriptions, government reports, museum
+                    catalogues, theses, field reports, datasets, conservation
+                    assessments, websites, archived pages, and audiovisual
+                    sources.
+
+                </p>
+
+                <p>
+
+                    Structured fields can include title, authors, editors,
+                    publication date, journal, publisher, volume, issue,
+                    pages, language, identifiers, URLs, archive locations,
+                    license, and access date.
+
+                </p>
+
+                <p>
+
+                    Assertions throughout SpeciedexCore can link directly to
+                    the references that support or dispute them.
+
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Genetic Data
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="genetics-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Molecular Records
+                </p>
+
+                <h2 id="genetics-title">
+                    Genetic and Molecular Data
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore may link taxa, specimens, observations, and
+                    publications with sequence accessions, barcodes, genomes,
+                    genes, markers, assemblies, proteins, and molecular
+                    datasets.
+
+                </p>
+
+                <p>
+
+                    Molecular identifiers remain linked to their external
+                    repository and source metadata.
+
+                </p>
+
+                <p>
+
+                    Sequence similarity alone does not always determine
+                    taxonomic identity. Records may involve contamination,
+                    misidentification, hybrids, cryptic species, incomplete
+                    lineage sorting, or provisional annotations.
+
+                </p>
+
+                <p>
+
+                    Genetic relationships should therefore be presented with
+                    source context, method, specimen linkage, confidence, and
+                    scientific interpretation.
+
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Ecological Relationships
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="ecology-engine-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Biological Networks
+                </p>
+
+                <h2 id="ecology-engine-title">
+                    Ecological Relationship Engine
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    Ecological interactions are stored as attributable,
+                    typed relationships between organisms, habitats, places,
+                    or environmental conditions.
+
+                </p>
+
+                <p>
+
+                    Relationship types may include predation, herbivory,
+                    pollination, seed dispersal, parasitism, infection,
+                    mutualism, commensalism, competition, symbiosis, host
+                    association, nesting, decomposition, habitat engineering,
+                    and food-web connections.
+
+                </p>
+
+                <p>
+
+                    Each relationship can include direction, life stage,
+                    geography, season, method, certainty, observation,
+                    publication, and explanatory notes.
+
+                </p>
+
+                <p>
+
+                    This structure allows relationships to be queried and
+                    visualized without presenting every interaction as
+                    universal across all populations or environments.
+
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Versioning
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="versioning-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Change History
+                </p>
+
+                <h2 id="versioning-title">
+                    Versioning and Audit History
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    Scientific records change as new sources are published,
+                    classifications are revised, errors are corrected, and
+                    observations are reviewed.
+
+                </p>
+
+                <p>
+
+                    SpeciedexCore is designed to preserve revision history
+                    rather than overwriting important changes without
+                    explanation.
+
+                </p>
+
+                <p>
+
+                    Each revision can record the changed fields, previous
+                    values, new values, actor, timestamp, source, reason,
+                    review state, software version, and associated import job.
+
+                </p>
+
+                <p>
+
+                    Releases may be assigned version identifiers so that
+                    datasets, analyses, publications, and exports can cite
+                    the exact state of the platform used.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Record History
+                    </h3>
+
+                    <p>
+
+                        Tracks changes to individual taxa, observations,
+                        places, media, references, and relationships.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Import History
+                    </h3>
+
+                    <p>
+
+                        Records which source release, adapter version, and
+                        transformation rules created or changed a record.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Release Snapshots
+                    </h3>
+
+                    <p>
+
+                        Produces reproducible snapshots for archival,
+                        scientific, and deployment use.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Reversion
+                    </h3>
+
+                    <p>
+
+                        Authorized operators can restore prior states when an
+                        import, edit, or automated process produces incorrect
+                        results.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    API
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="api-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Application Interfaces
+                </p>
+
+                <h2 id="api-title">
+                    SpeciedexCore APIs
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Read API
+                    </h3>
+
+                    <p>
+
+                        Provides structured access to taxa, names,
+                        classifications, observations, places, media,
+                        references, conservation, and related records.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Search API
+                    </h3>
+
+                    <p>
+
+                        Exposes full-text, faceted, taxonomic, identifier,
+                        multilingual, and geographic queries.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Import API
+                    </h3>
+
+                    <p>
+
+                        Allows authorized systems to submit datasets, source
+                        manifests, media, validation requests, and import
+                        jobs.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Contribution API
+                    </h3>
+
+                    <p>
+
+                        Supports corrections, proposed records, review notes,
+                        evidence, and moderated public submissions.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Export API
+                    </h3>
+
+                    <p>
+
+                        Produces machine-readable subsets in documented
+                        formats subject to licenses and access controls.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Administrative API
+                    </h3>
+
+                    <p>
+
+                        Provides restricted operations for sources, imports,
+                        users, permissions, releases, audits, and system
+                        maintenance.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+            <div class="button-group">
+
+                <a
+                    class="button"
+                    href="../api/">
+                    View API Information
+                </a>
+
+                <a
+                    class="button button-secondary"
+                    href="../developers/">
+                    Developer Resources
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Authentication
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="authentication-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Access Control
+                </p>
+
+                <h2 id="authentication-title">
+                    Authentication and Authorization
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    Public biodiversity data may be readable without an
+                    account, while contribution, moderation, import,
+                    administration, and sensitive-data access require
+                    authenticated permissions.
+
+                </p>
+
+                <p>
+
+                    Access should follow least-privilege principles. A user or
+                    service receives only the permissions required for its
+                    role.
+
+                </p>
+
+                <p>
+
+                    Administrative credentials, signing keys, API secrets,
+                    database credentials, backup keys, and storage tokens
+                    must remain outside public repositories and web-accessible
+                    directories.
+
+                </p>
+
+                <p>
+
+                    Sensitive actions should be logged and may require
+                    stronger authentication, secondary approval, or signed
+                    release workflows.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Public Reader
+                    </h3>
+
+                    <p>
+
+                        Reads unrestricted records, searches the index, and
+                        accesses public exports.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Contributor
+                    </h3>
+
+                    <p>
+
+                        Submits corrections, sources, media, observations, or
+                        proposed records for review.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Reviewer
+                    </h3>
+
+                    <p>
+
+                        Evaluates submissions within assigned scientific or
+                        technical scopes.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Curator
+                    </h3>
+
+                    <p>
+
+                        Approves structured changes, resolves conflicts, and
+                        manages selected data domains.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Import Operator
+                    </h3>
+
+                    <p>
+
+                        Configures and runs approved import pipelines without
+                        unrestricted administrative access.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Administrator
+                    </h3>
+
+                    <p>
+
+                        Manages system configuration, security, permissions,
+                        releases, infrastructure, and recovery.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Synchronization
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="synchronization-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Distributed Infrastructure
+                </p>
+
+                <h2 id="synchronization-title">
+                    Synchronization and Mirrors
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore is intended to support independent mirrors,
+                    institutional deployments, offline archives, regional
+                    nodes, and specialized research copies.
+
+                </p>
+
+                <p>
+
+                    Synchronization can operate through signed releases,
+                    incremental change feeds, content-addressed files,
+                    database replication, export packages, or documented
+                    import workflows.
+
+                </p>
+
+                <p>
+
+                    Mirrors may replicate the entire public dataset or only
+                    selected taxonomic, geographic, media, or institutional
+                    subsets.
+
+                </p>
+
+                <p>
+
+                    Sensitive records, private submissions, credentials, and
+                    restricted conservation data should not be included in
+                    public replication streams.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Full Mirrors
+                    </h3>
+
+                    <p>
+
+                        Replicate the complete public release and associated
+                        indexes.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Regional Mirrors
+                    </h3>
+
+                    <p>
+
+                        Prioritize biodiversity records, maps, and media for a
+                        defined geographic area.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Institutional Mirrors
+                    </h3>
+
+                    <p>
+
+                        Integrate public Speciedex data with local museum,
+                        university, government, or conservation records.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Offline Releases
+                    </h3>
+
+                    <p>
+
+                        Package data, indexes, documentation, and selected
+                        media for disconnected environments.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Offline Operation
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="offline-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Disconnected Access
+                </p>
+
+                <h2 id="offline-title">
+                    Offline and Field Operation
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    Biodiversity work often occurs in locations with limited,
+                    expensive, intermittent, or unavailable connectivity.
+
+                </p>
+
+                <p>
+
+                    SpeciedexCore can support offline datasets, local search
+                    indexes, cached maps, field forms, media collection, and
+                    delayed synchronization.
+
+                </p>
+
+                <p>
+
+                    Field devices may create observations, photographs,
+                    recordings, notes, specimens, and geographic records
+                    locally before transferring them to a connected system.
+
+                </p>
+
+                <p>
+
+                    Synchronization workflows should preserve the original
+                    field identifiers, timestamps, device information,
+                    evidence, and edit history while resolving conflicts
+                    safely.
+
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Backup and Recovery
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="backup-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Resilience
+                </p>
+
+                <h2 id="backup-title">
+                    Backup and Recovery
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore separates production data, original source
+                    files, media originals, indexes, configuration, secrets,
+                    logs, and generated derivatives so that each can be
+                    protected appropriately.
+
+                </p>
+
+                <p>
+
+                    Backups should include versioned database snapshots,
+                    source archives, media manifests, checksums, encryption,
+                    off-site copies, restore documentation, and periodic
+                    recovery tests.
+
+                </p>
+
+                <p>
+
+                    Search indexes and media derivatives may be rebuilt from
+                    authoritative data, while source files and original media
+                    require stronger preservation.
+
+                </p>
+
+                <p>
+
+                    A backup is not considered reliable until restoration has
+                    been tested.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Database Backups
+                    </h3>
+
+                    <p>
+
+                        Preserve structured records, revisions, relationships,
+                        permissions, and system configuration.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Source Archives
+                    </h3>
+
+                    <p>
+
+                        Preserve the exact source files used to create each
+                        imported release.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Media Originals
+                    </h3>
+
+                    <p>
+
+                        Preserve original media independently from generated
+                        previews and transcodes.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Recovery Drills
+                    </h3>
+
+                    <p>
+
+                        Verify that documented procedures can restore a usable
+                        system on independent infrastructure.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Performance
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="performance-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Scale and Reliability
+                </p>
+
+                <h2 id="performance-title">
+                    Performance Architecture
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore is designed to separate durable data storage
+                    from search indexes, caches, media delivery, background
+                    jobs, and public request handling.
+
+                </p>
+
+                <p>
+
+                    Expensive import, reconciliation, image processing,
+                    geospatial analysis, and index-building tasks can run as
+                    controlled background jobs rather than blocking public
+                    requests.
+
+                </p>
+
+                <p>
+
+                    Frequently accessed public records may be cached while
+                    preserving clear invalidation rules and version
+                    identifiers.
+
+                </p>
+
+                <p>
+
+                    Performance improvements should not bypass access
+                    controls, scientific provenance, record versioning, or
+                    source traceability.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Pagination
+                    </h3>
+
+                    <p>
+
+                        Large result sets are paginated or streamed rather
+                        than loaded into memory at once.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Background Jobs
+                    </h3>
+
+                    <p>
+
+                        Imports, exports, media processing, and indexing run
+                        through controlled queues.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Caching
+                    </h3>
+
+                    <p>
+
+                        Public records and derived views can be cached with
+                        explicit version and expiration policies.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Incremental Indexing
+                    </h3>
+
+                    <p>
+
+                        Only changed records need to be reindexed after
+                        ordinary updates.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Security
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="security-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Defensive Engineering
+                </p>
+
+                <h2 id="security-title">
+                    Security Architecture
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore processes data, files, media, and user
+                    submissions from many sources. Every external input must
+                    be treated as untrusted until validated.
+
+                </p>
+
+                <p>
+
+                    Public services should be separated from administrative
+                    systems, import workers, databases, signing keys, backup
+                    storage, and sensitive conservation records.
+
+                </p>
+
+                <p>
+
+                    File processing should use allowlisted formats, type
+                    verification, size limits, timeouts, resource controls,
+                    isolated workers, and secure temporary storage.
+
+                </p>
+
+                <p>
+
+                    Logs should support incident investigation without
+                    exposing credentials, private data, restricted
+                    coordinates, or unnecessary personal information.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Least Privilege
+                    </h3>
+
+                    <p>
+
+                        Services and users receive only the permissions
+                        required for their assigned tasks.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Network Segmentation
+                    </h3>
+
+                    <p>
+
+                        Public, administrative, database, storage, and backup
+                        systems can be isolated from one another.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Input Validation
+                    </h3>
+
+                    <p>
+
+                        API input, uploads, URLs, archives, markup, queries,
+                        and metadata are validated before use.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Secret Management
+                    </h3>
+
+                    <p>
+
+                        Credentials, signing keys, tokens, and encryption keys
+                        remain outside source code and public files.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Audit Logging
+                    </h3>
+
+                    <p>
+
+                        Privileged actions, imports, releases, permission
+                        changes, and data restrictions are recorded.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Dependency Review
+                    </h3>
+
+                    <p>
+
+                        Libraries, runtimes, parsers, codecs, and plugins are
+                        maintained, pinned, reviewed, and updated.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Privacy
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="privacy-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Responsible Data Use
+                </p>
+
+                <h2 id="privacy-title">
+                    Privacy and Sensitive Data
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore may process observer names, contributor
+                    accounts, institutional contacts, private localities,
+                    unpublished research, restricted specimen data, and
+                    sensitive conservation records.
+
+                </p>
+
+                <p>
+
+                    The platform should collect only the personal information
+                    required for its legitimate scientific, operational, and
+                    security purposes.
+
+                </p>
+
+                <p>
+
+                    Public exports should omit private credentials, internal
+                    notes, restricted coordinates, unpublished submissions,
+                    security metadata, and personal information not approved
+                    for release.
+
+                </p>
+
+                <p>
+
+                    Access to sensitive records should be attributable,
+                    reviewable, limited by role, and revocable.
+
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Plugins
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="plugins-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Extensibility
+                </p>
+
+                <h2 id="plugins-title">
+                    Adapter and Plugin System
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore can support modular adapters for data
+                    sources, storage systems, search backends, mapping tools,
+                    authentication providers, media processors, exporters,
+                    and scientific workflows.
+
+                </p>
+
+                <p>
+
+                    Plugins should use documented interfaces and receive only
+                    the permissions and data required for their function.
+
+                </p>
+
+                <p>
+
+                    Third-party extensions must not be treated as trusted
+                    merely because they are compatible with the platform.
+
+                </p>
+
+                <p>
+
+                    Installations should review plugin source, dependencies,
+                    maintenance history, licenses, network access, file
+                    access, data access, and update practices before use.
+
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    AI and ML
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="ai-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Assisted Analysis
+                </p>
+
+                <h2 id="ai-title">
+                    AI and Machine-Learning Integration
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore may use machine learning to assist with
+                    image classification, acoustic recognition, literature
+                    extraction, metadata normalization, duplicate detection,
+                    taxonomic reconciliation, translation, anomaly detection,
+                    and quality review.
+
+                </p>
+
+                <p>
+
+                    Machine-generated results are stored as attributed model
+                    output with version, confidence, input, date, and review
+                    status.
+
+                </p>
+
+                <p>
+
+                    AI output should not silently replace expert
+                    identifications, source data, conservation assessments,
+                    or taxonomic decisions.
+
+                </p>
+
+                <p>
+
+                    Models can inherit errors from mislabeled training data,
+                    geographic bias, incomplete taxonomic coverage, poor media
+                    quality, or outdated classifications.
+
+                </p>
+
+            </article>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Classification Assistance
+                    </h3>
+
+                    <p>
+
+                        Suggests possible taxa for images, sounds, specimens,
+                        or field observations.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Metadata Extraction
+                    </h3>
+
+                    <p>
+
+                        Extracts candidate names, dates, coordinates,
+                        references, labels, and structured fields from source
+                        material.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Reconciliation Support
+                    </h3>
+
+                    <p>
+
+                        Scores potential matches among names, records,
+                        specimens, observations, and publications.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Human Review
+                    </h3>
+
+                    <p>
+
+                        Presents suggestions for validation without hiding the
+                        model, confidence, or source evidence.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Command Line and Tools
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="tools-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Operator Tools
+                </p>
+
+                <h2 id="tools-title">
+                    Command-Line and Administrative Tools
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Import Commands
+                    </h3>
+
+                    <p>
+
+                        Register sources, inspect manifests, validate files,
+                        stage imports, preview changes, and publish approved
+                        releases.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Database Commands
+                    </h3>
+
+                    <p>
+
+                        Initialize schemas, apply migrations, verify
+                        integrity, create snapshots, restore backups, and
+                        inspect record counts.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Search Commands
+                    </h3>
+
+                    <p>
+
+                        Build indexes, update changed records, inspect
+                        analyzers, verify query behavior, and compare index
+                        versions.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Export Commands
+                    </h3>
+
+                    <p>
+
+                        Produce filtered datasets, release archives,
+                        checksums, manifests, and machine-readable packages.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Audit Commands
+                    </h3>
+
+                    <p>
+
+                        Review recent imports, privileged actions, failed
+                        validations, source changes, and restricted-data
+                        access.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Maintenance Commands
+                    </h3>
+
+                    <p>
+
+                        Clean temporary files, verify media, rebuild
+                        derivatives, check storage, rotate logs, and test
+                        dependencies.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Developer Experience
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="developer-experience-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Development
+                </p>
+
+                <h2 id="developer-experience-title">
+                    Developer Experience
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore is intended to provide reproducible local
+                    development, documented configuration, test fixtures,
+                    migrations, example data, API schemas, validation tools,
+                    and automated test coverage.
+
+                </p>
+
+                <p>
+
+                    Developers should be able to run a small local instance
+                    without downloading the entire production dataset.
+
+                </p>
+
+                <p>
+
+                    Test environments may use compact taxonomic trees,
+                    synthetic observations, sample media, regional geometry,
+                    and controlled source fixtures.
+
+                </p>
+
+                <p>
+
+                    Production credentials, restricted data, and private
+                    backups must never be required for ordinary development
+                    or testing.
+
+                </p>
+
+            </article>
+
+            <div class="button-group">
+
+                <a
+                    class="button"
+                    href="../developers/">
+                    Developer Documentation
+                </a>
+
+                <a
+                    class="button button-secondary"
+                    href="../software/">
+                    View Software
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Testing
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="testing-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Reliability
+                </p>
+
+                <h2 id="testing-title">
+                    Testing and Verification
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Unit Tests
+                    </h3>
+
+                    <p>
+
+                        Verify parsers, validators, mappings, identifiers,
+                        calculations, permissions, and utility functions.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Integration Tests
+                    </h3>
+
+                    <p>
+
+                        Verify behavior across storage, search, APIs, imports,
+                        media, authentication, and background jobs.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Import Fixtures
+                    </h3>
+
+                    <p>
+
+                        Preserve representative source files and expected
+                        normalized output.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Migration Tests
+                    </h3>
+
+                    <p>
+
+                        Confirm that schema changes preserve existing data and
+                        remain reversible where practical.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Security Tests
+                    </h3>
+
+                    <p>
+
+                        Review authentication, authorization, input handling,
+                        uploads, query limits, secrets, and dependency risks.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Recovery Tests
+                    </h3>
+
+                    <p>
+
+                        Restore databases, source archives, media, and indexes
+                        on clean infrastructure.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Deployment
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="deployment-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Installation Models
+                </p>
+
+                <h2 id="deployment-title">
+                    Deployment Options
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Public Platform
+                    </h3>
+
+                    <p>
+
+                        Supports the primary Speciedex website, search,
+                        explorer, public APIs, media, and documentation.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Institutional Installation
+                    </h3>
+
+                    <p>
+
+                        Allows museums, universities, agencies, and
+                        conservation groups to combine Speciedex records with
+                        local data.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Regional Node
+                    </h3>
+
+                    <p>
+
+                        Prioritizes a country, territory, protected area,
+                        habitat, watershed, or other geographic region.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Research Installation
+                    </h3>
+
+                    <p>
+
+                        Supports controlled datasets, experiments,
+                        annotations, unpublished records, and analysis.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Offline Archive
+                    </h3>
+
+                    <p>
+
+                        Provides a self-contained data and search package for
+                        disconnected or low-connectivity environments.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Developer Sandbox
+                    </h3>
+
+                    <p>
+
+                        Provides sample data and non-production services for
+                        testing integrations and extensions.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Open Standards
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="standards-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Interoperability
+                </p>
+
+                <h2 id="standards-title">
+                    Open Standards and Data Formats
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore is intended to use established scientific
+                    and technical standards where they accurately represent
+                    the required data.
+
+                </p>
+
+                <p>
+
+                    Supported structures may include Darwin Core, controlled
+                    vocabularies, recognized geographic formats, standard
+                    date and language codes, common publication identifiers,
+                    documented JSON schemas, delimited exports, and
+                    interoperable media metadata.
+
+                </p>
+
+                <p>
+
+                    No single standard represents every scientific concept
+                    required by SpeciedexCore.
+
+                </p>
+
+                <p>
+
+                    Extensions should remain documented, versioned,
+                    exportable, and mapped to existing standards where
+                    practical.
+
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Licensing
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="licensing-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Rights and Attribution
+                </p>
+
+                <h2 id="licensing-title">
+                    Licensing and Source Terms
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore software, project documentation, imported
+                    datasets, media, scientific publications, source records,
+                    and generated exports may each be governed by different
+                    licenses and usage terms.
+
+                </p>
+
+                <p>
+
+                    The presence of a record inside SpeciedexCore does not
+                    automatically place the underlying source material into
+                    the public domain.
+
+                </p>
+
+                <p>
+
+                    Exports should preserve required attribution, source
+                    identifiers, license notices, and restrictions.
+
+                </p>
+
+                <p>
+
+                    Restricted, non-redistributable, confidential, embargoed,
+                    or private records should not be included in public
+                    releases without authorization.
+
+                </p>
+
+            </article>
+
+            <div class="button-group">
+
+                <a
+                    class="button"
+                    href="../license/">
+                    View Licensing
+                </a>
+
+                <a
+                    class="button button-secondary"
+                    href="../credits/">
+                    View Credits
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Open Source
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="open-source-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Public Infrastructure
+                </p>
+
+                <h2 id="open-source-title">
+                    Open-Source Philosophy
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    Biodiversity knowledge should not depend entirely upon a
+                    proprietary interface, closed vendor, inaccessible file
+                    format, or single institution.
+
+                </p>
+
+                <p>
+
+                    Open-source software allows researchers, institutions,
+                    developers, educators, and independent operators to
+                    inspect, adapt, preserve, and improve the technical
+                    infrastructure.
+
+                </p>
+
+                <p>
+
+                    Public code does not guarantee secure or scientifically
+                    accurate operation by itself. Review, testing,
+                    documentation, governance, maintenance, and responsible
+                    deployment remain necessary.
+
+                </p>
+
+                <p>
+
+                    SpeciedexCore is intended to combine open software with
+                    source attribution, scientific transparency, operational
+                    discipline, and long-term preservation.
+
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Project Ecosystem
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="ecosystem-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Speciedex Ecosystem
+                </p>
+
+                <h2 id="ecosystem-title">
+                    Related Project Components
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Speciedex
+                    </h3>
+
+                    <p>
+
+                        The public biodiversity platform for species,
+                        taxonomy, conservation, habitats, media, and
+                        education.
+
+                    </p>
+
+                    <p>
+
+                        <a
+                            class="text-link"
+                            href="../speciedex/">
+                            Explore Speciedex
+                        </a>
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        SpeciedexCore
+                    </h3>
+
+                    <p>
+
+                        The central data, taxonomy, validation, indexing,
+                        API, synchronization, and storage infrastructure.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        SpeciedexExplorer
+                    </h3>
+
+                    <p>
+
+                        Search, compare, visualize, map, and navigate records
+                        maintained through SpeciedexCore.
+
+                    </p>
+
+                    <p>
+
+                        <a
+                            class="text-link"
+                            href="../speciedexexplorer/">
+                            Explore SpeciedexExplorer
+                        </a>
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        SpeciedexNet
+                    </h3>
+
+                    <p>
+
+                        Distributed mirrors, synchronization, archival nodes,
+                        regional services, and resilient data exchange.
+
+                    </p>
+
+                    <p>
+
+                        <a
+                            class="text-link"
+                            href="../speciedexnet/">
+                            Explore SpeciedexNet
+                        </a>
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Roadmap
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="roadmap-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Development Direction
+                </p>
+
+                <h2 id="roadmap-title">
+                    SpeciedexCore Roadmap
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Core Schema
+                    </h3>
+
+                    <p>
+
+                        Establish stable models for taxonomy, sources,
+                        records, places, media, observations, references,
+                        conservation, and audit history.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Source Adapters
+                    </h3>
+
+                    <p>
+
+                        Build documented importers for major biodiversity,
+                        taxonomy, observation, conservation, and collection
+                        systems.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Search Platform
+                    </h3>
+
+                    <p>
+
+                        Implement multilingual, taxonomic, faceted,
+                        geographic, and identifier-based discovery.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Public APIs
+                    </h3>
+
+                    <p>
+
+                        Publish stable interfaces, schemas, examples,
+                        authentication methods, and usage policies.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Media Infrastructure
+                    </h3>
+
+                    <p>
+
+                        Add secure ingestion, preservation, attribution,
+                        derivatives, duplicate detection, and delivery.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Distributed Releases
+                    </h3>
+
+                    <p>
+
+                        Produce signed exports, mirrors, offline archives,
+                        regional subsets, and synchronization tools.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Scientific Review
+                    </h3>
+
+                    <p>
+
+                        Expand moderation, expert review, provenance,
+                        disputes, confidence, and revision workflows.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Research Integration
+                    </h3>
+
+                    <p>
+
+                        Support analysis, reproducible datasets, model output,
+                        mapping, comparisons, and scientific exports.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Contributions
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-accent"
+        aria-labelledby="contribute-title">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Participate
+                </p>
+
+                <h2 id="contribute-title">
+                    Contributing to SpeciedexCore
+                </h2>
+
+            </div>
+
+            <div class="content-grid content-grid-two-column">
+
+                <article class="content-card">
+
+                    <h3>
+                        Software Development
+                    </h3>
+
+                    <p>
+
+                        Contribute backend services, parsers, validators,
+                        schemas, APIs, tests, migrations, search tools, and
+                        documentation.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Data Engineering
+                    </h3>
+
+                    <p>
+
+                        Build source adapters, reconciliation rules,
+                        transformation pipelines, identifiers, and quality
+                        checks.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Scientific Review
+                    </h3>
+
+                    <p>
+
+                        Evaluate taxonomy, nomenclature, ecology, range,
+                        observations, conservation, references, and source
+                        reliability.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Security Review
+                    </h3>
+
+                    <p>
+
+                        Review authentication, permissions, parsers, uploads,
+                        dependencies, deployment, secrets, and network
+                        architecture.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Documentation
+                    </h3>
+
+                    <p>
+
+                        Improve installation guides, API references, source
+                        specifications, data dictionaries, examples, and
+                        operational procedures.
+
+                    </p>
+
+                </article>
+
+                <article class="content-card">
+
+                    <h3>
+                        Testing
+                    </h3>
+
+                    <p>
+
+                        Create fixtures, regression tests, compatibility
+                        tests, performance benchmarks, and recovery drills.
+
+                    </p>
+
+                </article>
+
+            </div>
+
+            <div class="button-group">
+
+                <a
+                    class="button"
+                    href="../contribute/">
+                    Contribute
+                </a>
+
+                <a
+                    class="button button-secondary"
+                    href="../contact/">
+                    Contact the Project
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Creator
+    ========================================================================
+    -->
+
+    <section
+        class="content-section"
+        aria-labelledby="creator-title">
+
+        <div class="container container-narrow">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">
+                    Creator and Lead Architect
+                </p>
+
+                <h2 id="creator-title">
+                    Created by [0xdeadbeef]
+                </h2>
+
+            </div>
+
+            <article class="content-card">
+
+                <p>
+
+                    SpeciedexCore was created by [0xdeadbeef], founder,
+                    principal architect, principal software engineer,
+                    principal data engineer, principal research engineer, and
+                    project director of the Speciedex ecosystem.
+
+                </p>
+
+                <p>
+
+                    The system architecture, original data model, taxonomy
+                    model, identifier strategy, indexing structure, source
+                    integration design, synchronization model, security
+                    direction, documentation structure, and project identity
+                    are credited to [0xdeadbeef] except where third-party work
+                    is separately identified.
+
+                </p>
+
+                <p>
+
+                    SpeciedexCore is developed through ZZX-Labs R&amp;D,
+                    [0xdeadbeef] Consulting, BitTechIn, and the wider
+                    Speciedex project.
+
+                </p>
+
+            </article>
+
+            <div class="button-group">
+
+                <a
+                    class="button"
+                    href="../creator/">
+                    About the Creator
+                </a>
+
+                <a
+                    class="button button-secondary"
+                    href="../credits/">
+                    View Credits
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Accuracy and Technical Notice
+    ========================================================================
+    -->
+
+    <section
+        class="content-section section-muted"
+        aria-labelledby="notice-title">
+
+        <div class="container container-narrow">
+
+            <h2 id="notice-title">
+                Scientific and Technical Notice
+            </h2>
+
+            <p>
+
+                SpeciedexCore is an evolving research and software platform.
+
+            </p>
+
+            <p>
+
+                Biological classification, conservation status, geographic
+                range, scientific interpretation, source availability,
+                identifiers, and technical interfaces may change.
+
+            </p>
+
+            <p>
+
+                Records may be incomplete, provisional, disputed,
+                machine-assisted, outdated, source-limited, or awaiting
+                scientific review.
+
+            </p>
+
+            <p>
+
+                Software defects, import errors, source changes,
+                configuration mistakes, dependency failures, incomplete
+                backups, or incorrect permissions may affect operation.
+
+            </p>
+
+            <p>
+
+                Users should verify important scientific information through
+                current primary literature, recognized authorities, source
+                databases, qualified specialists, and appropriate
+                institutional procedures.
+
+            </p>
+
+            <p>
+
+                SpeciedexCore should not be used as the sole basis for
+                medical, veterinary, legal, regulatory, quarantine, wildlife
+                enforcement, trade, public-safety, or conservation decisions.
+
+            </p>
+
+            <div class="button-group">
+
+                <a
+                    class="button"
+                    href="../disclaimer/">
+                    Read the Disclaimer
+                </a>
+
+                <a
+                    class="button button-secondary"
+                    href="../legal/">
+                    Legal Information
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!--
+    ========================================================================
+    Call to Action
+    ========================================================================
+    -->
+
+    <section
+        class="call-to-action"
+        aria-labelledby="speciedexcore-cta-title">
+
+        <div class="container">
+
+            <div class="call-to-action-inner">
+
+                <div>
+
+                    <h2 id="speciedexcore-cta-title">
+                        Build Open Biodiversity Infrastructure
+                    </h2>
+
+                    <p>
+
+                        Develop source adapters, improve validation, review
+                        taxonomy, document APIs, preserve scientific
+                        provenance, and help build a resilient core for
+                        biodiversity knowledge.
+
+                    </p>
+
+                </div>
+
+                <div class="button-group">
+
+                    <a
+                        class="button"
+                        href="../developers/">
+                        Developer Resources
+                    </a>
+
+                    <a
+                        class="button button-secondary"
+                        href="../speciedex/">
+                        Explore Speciedex
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<div data-include="footer"></div>
+
+<script
+    src="../static/script.js"
+    defer>
+</script>
+
+</body>
+</html>
