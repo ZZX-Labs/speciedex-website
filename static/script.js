@@ -8,11 +8,37 @@ Public JavaScript Entry Point
 
 This is the only JavaScript file loaded directly by site pages.
 
-It loads all internal JavaScript modules in dependency order and then loads:
+Responsibilities:
+
+    • Resolve the /static/ asset root
+    • Load the internal site bootstrap
+    • Expose minimal public loader helpers
+    • Dispatch loader errors
+
+The internal bootstrap:
 
     /static/js/script.js
 
-The final script is the internal site bootstrap.
+is responsible for loading and initializing all remaining JavaScript modules.
+
+Dependency flow:
+
+    HTML
+        |
+        v
+    /static/script.js
+        |
+        v
+    /static/js/script.js
+        |
+        +--> includes.js
+        +--> data.js
+        +--> header.js
+        +--> splash.js
+        +--> nav.js
+        +--> footer.js
+        +--> statistics.js
+        +--> future modules
 
 ==============================================================================
 */
@@ -29,35 +55,23 @@ The final script is the internal site bootstrap.
     Speciedex.publicEntryPointLoaded = true;
 
     /*
-    --------------------------------------------------------------------------
-    Internal scripts.
-
-    The bootstrap must load last because it initializes the modules registered
-    by the preceding files.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Configuration
+    ==========================================================================
     */
 
-    const MODULES = [
-        "data.js",
-        "includes.js",
-        "header.js",
-        "splash.js",
-        "nav.js",
-        "footer.js",
-        "statistics.js",
-        "script.js"
-    ];
+    const BOOTSTRAP_FILE =
+        "js/script.js";
 
     /*
-    --------------------------------------------------------------------------
-    Resolve /static/ from this public entry point.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Resolve Static Root
+    ==========================================================================
     */
 
     function getStaticRootURL() {
         if (
-            Speciedex.staticRootURL
-            instanceof URL
+            Speciedex.staticRootURL instanceof URL
         ) {
             return Speciedex.staticRootURL;
         }
@@ -65,37 +79,62 @@ The final script is the internal site bootstrap.
         const currentScript =
             document.currentScript;
 
-        Speciedex.staticRootURL =
-            currentScript?.src
-                ? new URL(
+        if (currentScript?.src) {
+            Speciedex.staticRootURL =
+                new URL(
                     "./",
                     currentScript.src
-                )
-                : new URL(
-                    "/static/",
-                    window.location.origin
                 );
+
+            return Speciedex.staticRootURL;
+        }
+
+        Speciedex.staticRootURL =
+            new URL(
+                "/static/",
+                window.location.origin
+            );
 
         return Speciedex.staticRootURL;
     }
 
     /*
-    --------------------------------------------------------------------------
-    Resolve an internal JavaScript file.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Resolve Static Asset
+    ==========================================================================
     */
 
-    function getModuleURL(filename) {
+    function getStaticURL(path) {
+        const value =
+            String(path ?? "")
+                .trim()
+                .replace(/^\/+/, "");
+
+        if (!value) {
+            throw new TypeError(
+                "A static asset path is required."
+            );
+        }
+
+        if (
+            value.includes("..") ||
+            value.includes("\\")
+        ) {
+            throw new TypeError(
+                `Invalid static asset path: ${path}`
+            );
+        }
+
         return new URL(
-            `js/${filename}`,
+            value,
             getStaticRootURL()
         ).href;
     }
 
     /*
-    --------------------------------------------------------------------------
-    Find an existing script element.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Find Existing Script
+    ==========================================================================
     */
 
     function findExistingScript(url) {
@@ -104,18 +143,18 @@ The final script is the internal site bootstrap.
         ).find(
             (script) =>
                 script.src === url
-        );
+        ) || null;
     }
 
     /*
-    --------------------------------------------------------------------------
-    Load one script.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Load Script
+    ==========================================================================
     */
 
-    function loadModule(filename) {
+    function loadScript(path) {
         const url =
-            getModuleURL(filename);
+            getStaticURL(path);
 
         const existing =
             findExistingScript(url);
@@ -152,7 +191,7 @@ The final script is the internal site bootstrap.
                         () => {
                             reject(
                                 new Error(
-                                    `Unable to load JavaScript module: ${url}`
+                                    `Unable to load JavaScript file: ${url}`
                                 )
                             );
                         },
@@ -175,8 +214,8 @@ The final script is the internal site bootstrap.
                 script.async = false;
 
                 script.dataset
-                    .speciedexModule =
-                    filename;
+                    .speciedexEntry =
+                    path;
 
                 script.addEventListener(
                     "load",
@@ -199,7 +238,7 @@ The final script is the internal site bootstrap.
 
                         reject(
                             new Error(
-                                `Unable to load JavaScript module: ${url}`
+                                `Unable to load JavaScript file: ${url}`
                             )
                         );
                     },
@@ -216,59 +255,93 @@ The final script is the internal site bootstrap.
     }
 
     /*
-    --------------------------------------------------------------------------
-    Load all modules sequentially.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Load Bootstrap
+    ==========================================================================
     */
 
-    async function loadModules() {
-        for (const filename of MODULES) {
-            await loadModule(filename);
+    async function loadBootstrap() {
+        if (Speciedex.bootstrapEntryLoaded) {
+            return;
+        }
+
+        Speciedex.bootstrapEntryLoaded = true;
+
+        try {
+            await loadScript(
+                BOOTSTRAP_FILE
+            );
+
+            document.dispatchEvent(
+                new CustomEvent(
+                    "speciedex:bootstrap-loaded",
+                    {
+                        detail: {
+                            url:
+                                getStaticURL(
+                                    BOOTSTRAP_FILE
+                                )
+                        }
+                    }
+                )
+            );
+        } catch (error) {
+            Speciedex.bootstrapEntryLoaded =
+                false;
+
+            console.error(
+                "Speciedex JavaScript bootstrap loading failed:",
+                error
+            );
+
+            document.dispatchEvent(
+                new CustomEvent(
+                    "speciedex:error",
+                    {
+                        detail: {
+                            phase:
+                                "bootstrap-loading",
+                            error
+                        }
+                    }
+                )
+            );
+
+            throw error;
         }
     }
 
     /*
-    --------------------------------------------------------------------------
-    Begin loading.
-    --------------------------------------------------------------------------
-    */
-
-    loadModules().catch((error) => {
-        console.error(
-            "Speciedex JavaScript loading failed:",
-            error
-        );
-
-        document.dispatchEvent(
-            new CustomEvent(
-                "speciedex:error",
-                {
-                    detail: {
-                        phase:
-                            "module-loading",
-
-                        error
-                    }
-                }
-            )
-        );
-    });
-
-    /*
-    --------------------------------------------------------------------------
-    Public entry-point API.
-    --------------------------------------------------------------------------
+    ==========================================================================
+    Public Entry-Point API
+    ==========================================================================
     */
 
     Speciedex.getStaticRootURL =
         getStaticRootURL;
 
-    Speciedex.getModuleURL =
-        getModuleURL;
+    Speciedex.getStaticURL =
+        getStaticURL;
 
-    Speciedex.loadModule =
-        loadModule;
+    Speciedex.loadScript =
+        loadScript;
 
-    Speciedex.loadModules =
-        loadModules;
+    Speciedex.loadBootstrap =
+        loadBootstrap;
+
+    /*
+    ==========================================================================
+    Start
+    ==========================================================================
+    */
+
+    loadBootstrap().catch(
+        () => {
+            /*
+            ------------------------------------------------------------------
+            Error already reported and dispatched above.
+            ------------------------------------------------------------------
+            */
+        }
+    );
 })();
