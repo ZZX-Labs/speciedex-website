@@ -11,7 +11,6 @@ Typography
 Headings
 ========================================================================
 */
-
 h1,
 h2,
 h3,
@@ -64,7 +63,6 @@ h6 {
 Body Text
 ========================================================================
 */
-
 p {
     margin-top: 0;
     margin-bottom: 1.25rem;
@@ -74,9 +72,9 @@ p {
 
 .lead {
     max-width: 60rem;
+    color: var(--color-text);
     font-size: var(--font-size-xl);
     line-height: var(--line-height-relaxed);
-    color: var(--color-text);
 }
 
 .small {
@@ -92,7 +90,6 @@ p {
 Lists
 ========================================================================
 */
-
 ul,
 ol {
     margin-top: 0;
@@ -114,7 +111,6 @@ li + li {
 Definition Lists
 ========================================================================
 */
-
 dl {
     margin: 0 0 1.5rem;
 }
@@ -134,7 +130,6 @@ dd {
 Horizontal Rule
 ========================================================================
 */
-
 hr {
     height: 1px;
     margin: 3rem 0;
@@ -147,7 +142,6 @@ hr {
 Code
 ========================================================================
 */
-
 code,
 pre,
 kbd,
@@ -190,7 +184,6 @@ pre code {
 Tables
 ========================================================================
 */
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -219,7 +212,6 @@ td {
 Quotes
 ========================================================================
 */
-
 blockquote {
     margin: 2rem 0;
     padding: 1rem 1.5rem;
@@ -237,7 +229,6 @@ blockquote > :last-child {
 Inline Text
 ========================================================================
 */
-
 strong,
 b {
     font-weight: var(--font-weight-bold);
@@ -268,7 +259,6 @@ abbr[title] {
 Text Utilities
 ========================================================================
 */
-
 .text-left {
     text-align: left;
 }
@@ -349,7 +339,6 @@ Text Utilities
 Readable Text Widths
 ========================================================================
 */
-
 .prose {
     max-width: var(--article-width);
 }
@@ -373,7 +362,6 @@ Readable Text Widths
 Responsive Typography
 ========================================================================
 */
-
 @media (max-width: 768px) {
     h1 {
         font-size: clamp(2rem,8vw,3rem);
