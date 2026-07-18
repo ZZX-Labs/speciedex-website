@@ -1,4159 +1,1970 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-    <meta
-        name="robots"
-        content="index,follow">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index,follow">
     <meta
         name="description"
         content="Explore SpeciedexExplorer, the interactive biodiversity search, mapping, comparison, visualization, taxonomy, conservation, habitat, observation, media, and research interface for the Speciedex ecosystem.">
-
-    <title>
-        SpeciedexExplorer | Speciedex.org
-    </title>
-
-    <link
-        rel="icon"
-        href="../static/icons/favicon.ico"
-        type="image/x-icon">
-
-    <link
-        rel="stylesheet"
-        href="../static/styles.css">
-
+    <title>SpeciedexExplorer | Speciedex.org</title>
+    <link rel="icon" href="../static/icons/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../static/styles.css">
 </head>
-
 <body>
-
-<a
-    class="skip-link"
-    href="#main-content">
-    Skip to main content
-</a>
-
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <div data-include="header"></div>
-
 <div data-include="splash"></div>
-
 <main
     id="main-content"
     class="site-main">
-
     <!--
     ========================================================================
     Page Header
     ========================================================================
     -->
-
-    <section
-        class="page-header"
-        aria-labelledby="speciedexexplorer-page-title">
-
+    <section class="page-header" aria-labelledby="speciedexexplorer-page-title">
         <div class="container">
-
-            <p class="eyebrow">
-                Interactive Biodiversity Discovery
-            </p>
-
-            <h1 id="speciedexexplorer-page-title">
-                SpeciedexExplorer
-            </h1>
-
+            <p class="eyebrow">Interactive Biodiversity Discovery</p>
+            <h1 id="speciedexexplorer-page-title">SpeciedexExplorer</h1>
             <p class="page-introduction">
-
-                SpeciedexExplorer is the interactive search, mapping,
-                comparison, visualization, and research interface for the
-                Speciedex biodiversity platform.
-
+                SpeciedexExplorer is the interactive search, mapping, comparison, visualization, and
+                research interface for the Speciedex biodiversity platform.
             </p>
-
             <p class="page-introduction">
-
-                It allows users to explore species, taxa, habitats,
-                geographic regions, observations, specimens, conservation
-                records, ecological relationships, scientific references,
-                images, audio, video, and other linked biological data.
-
+                It allows users to explore species, taxa, habitats, geographic regions,
+                observations, specimens, conservation records, ecological relationships, scientific
+                references, images, audio, video, and other linked biological data.
             </p>
-
             <p class="page-introduction">
-
-                The interface is designed for researchers, students,
-                educators, conservationists, naturalists, institutions,
-                developers, field teams, and anyone seeking a structured way
-                to explore life on Earth.
-
+                The interface is designed for researchers, students, educators, conservationists,
+                naturalists, institutions, developers, field teams, and anyone seeking a structured
+                way to explore life on Earth.
             </p>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Overview
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="overview-title">
-
+    <section class="content-section" aria-labelledby="overview-title">
         <div class="container">
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h2 id="overview-title">
-                        What SpeciedexExplorer Is
-                    </h2>
-
+                    <h2 id="overview-title">What SpeciedexExplorer Is</h2>
                     <p>
-
-                        SpeciedexExplorer is the public discovery layer built
-                        upon SpeciedexCore.
-
+                        SpeciedexExplorer is the public discovery layer built upon SpeciedexCore.
                     </p>
-
                     <p>
-
-                        It transforms structured biodiversity records into
-                        searchable pages, maps, tables, filters, taxonomic
-                        trees, relationship networks, timelines, galleries,
-                        comparisons, and downloadable research views.
-
+                        It transforms structured biodiversity records into searchable pages, maps,
+                        tables, filters, taxonomic trees, relationship networks, timelines,
+                        galleries, comparisons, and downloadable research views.
                     </p>
-
                     <p>
-
-                        The interface is intended to make complex scientific
-                        information easier to navigate without hiding source
-                        attribution, uncertainty, disagreement, or revision
-                        history.
-
+                        The interface is intended to make complex scientific information easier to
+                        navigate without hiding source attribution, uncertainty, disagreement, or
+                        revision history.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h2>
-                        Why an Explorer Is Needed
-                    </h2>
-
+                    <h2>Why an Explorer Is Needed</h2>
                     <p>
-
                         Biodiversity information is highly connected.
-
                     </p>
-
                     <p>
-
-                        A single species may have several names, multiple
-                        geographic populations, different conservation
-                        assessments, hundreds of observations, many media
-                        records, changing classifications, and numerous
-                        ecological relationships.
-
+                        A single species may have several names, multiple geographic populations,
+                        different conservation assessments, hundreds of observations, many media
+                        records, changing classifications, and numerous ecological relationships.
                     </p>
-
                     <p>
-
-                        SpeciedexExplorer provides a visual and interactive
-                        way to move through these connected records rather
-                        than requiring users to search separate databases
-                        independently.
-
+                        SpeciedexExplorer provides a visual and interactive way to move through
+                        these connected records rather than requiring users to search separate
+                        databases independently.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Core Capabilities
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="capabilities-title">
-
+    <section class="content-section section-accent" aria-labelledby="capabilities-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Explorer Capabilities
-                </p>
-
-                <h2 id="capabilities-title">
-                    Discover, Compare, Map, and Analyze
-                </h2>
-
+                <p class="eyebrow">Explorer Capabilities</p>
+                <h2 id="capabilities-title">Discover, Compare, Map, and Analyze</h2>
             </div>
-
             <div class="card-grid card-grid-four">
-
                 <article class="content-card">
-
-                    <h3>
-                        Species Search
-                    </h3>
-
+                    <h3>Species Search</h3>
                     <p>
-
-                        Search scientific names, common names, synonyms,
-                        identifiers, descriptions, locations, references, and
-                        structured biological fields.
-
+                        Search scientific names, common names, synonyms, identifiers, descriptions,
+                        locations, references, and structured biological fields.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Taxonomy Browser
-                    </h3>
-
+                    <h3>Taxonomy Browser</h3>
                     <p>
-
-                        Navigate biological classifications from broad
-                        lineages to species, subspecies, populations, and
-                        source-specific taxonomic concepts.
-
+                        Navigate biological classifications from broad lineages to species,
+                        subspecies, populations, and source-specific taxonomic concepts.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Geographic Maps
-                    </h3>
-
+                    <h3>Geographic Maps</h3>
                     <p>
-
-                        Explore observations, ranges, habitats, protected
-                        areas, regions, migration routes, and environmental
-                        layers.
-
+                        Explore observations, ranges, habitats, protected areas, regions, migration
+                        routes, and environmental layers.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Species Comparison
-                    </h3>
-
+                    <h3>Species Comparison</h3>
                     <p>
-
-                        Compare taxonomy, traits, morphology, range,
-                        conservation status, media, ecology, and supporting
-                        evidence.
-
+                        Compare taxonomy, traits, morphology, range, conservation status, media,
+                        ecology, and supporting evidence.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Conservation Explorer
-                    </h3>
-
+                    <h3>Conservation Explorer</h3>
                     <p>
-
-                        Filter taxa by conservation category, threat,
-                        population trend, protection, geography, and
-                        assessment authority.
-
+                        Filter taxa by conservation category, threat, population trend, protection,
+                        geography, and assessment authority.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Observation Explorer
-                    </h3>
-
+                    <h3>Observation Explorer</h3>
                     <p>
-
-                        Review occurrence records by date, place, observer,
-                        evidence, identification state, source, and confidence.
-
+                        Review occurrence records by date, place, observer, evidence, identification
+                        state, source, and confidence.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Media Explorer
-                    </h3>
-
+                    <h3>Media Explorer</h3>
                     <p>
-
-                        Browse photographs, illustrations, audio, video,
-                        specimen scans, maps, and three-dimensional media.
-
+                        Browse photographs, illustrations, audio, video, specimen scans, maps, and
+                        three-dimensional media.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Research Tools
-                    </h3>
-
+                    <h3>Research Tools</h3>
                     <p>
-
-                        Build filtered views, inspect sources, export records,
-                        compare datasets, and preserve reproducible queries.
-
+                        Build filtered views, inspect sources, export records, compare datasets, and
+                        preserve reproducible queries.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Search
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="search-title">
-
+    <section class="content-section" aria-labelledby="search-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Search
-                </p>
-
-                <h2 id="search-title">
-                    Unified Biodiversity Search
-                </h2>
-
+                <p class="eyebrow">Search</p>
+                <h2 id="search-title">Unified Biodiversity Search</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer is designed to search across the linked
-                    entities maintained by SpeciedexCore.
-
+                    SpeciedexExplorer is designed to search across the linked entities maintained by
+                    SpeciedexCore.
                 </p>
-
                 <p>
-
-                    A single search may return taxa, scientific names, common
-                    names, synonyms, places, habitats, observations,
-                    specimens, references, media, conservation assessments,
-                    organizations, and related records.
-
+                    A single search may return taxa, scientific names, common names, synonyms,
+                    places, habitats, observations, specimens, references, media, conservation
+                    assessments, organizations, and related records.
                 </p>
-
                 <p>
-
-                    Results can be grouped by record type and refined using
-                    structured filters.
-
+                    Results can be grouped by record type and refined using structured filters.
                 </p>
-
                 <p>
-
-                    Search behavior should preserve alternate spellings,
-                    historical classifications, transliterations, diacritics,
-                    multilingual names, abbreviations, and source-specific
-                    identifiers.
-
+                    Search behavior should preserve alternate spellings, historical classifications,
+                    transliterations, diacritics, multilingual names, abbreviations, and
+                    source-specific identifiers.
                 </p>
-
             </article>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Exact Search
-                    </h3>
-
+                    <h3>Exact Search</h3>
                     <p>
-
-                        Find records by scientific name, common name,
-                        identifier, specimen code, accession number,
-                        publication identifier, or exact phrase.
-
+                        Find records by scientific name, common name, identifier, specimen code,
+                        accession number, publication identifier, or exact phrase.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Expanded Search
-                    </h3>
-
+                    <h3>Expanded Search</h3>
                     <p>
-
-                        Include synonyms, former combinations, alternate
-                        spellings, accepted names, historical names, and
-                        multilingual terms.
-
+                        Include synonyms, former combinations, alternate spellings, accepted names,
+                        historical names, and multilingual terms.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Field Search
-                    </h3>
-
+                    <h3>Field Search</h3>
                     <p>
-
-                        Restrict queries to taxonomy, description, locality,
-                        habitat, authority, reference, identifier, or another
-                        structured field.
-
+                        Restrict queries to taxonomy, description, locality, habitat, authority,
+                        reference, identifier, or another structured field.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Ranked Results
-                    </h3>
-
+                    <h3>Ranked Results</h3>
                     <p>
-
-                        Rank results according to exactness, accepted status,
-                        source authority, completeness, confidence, geography,
-                        and relevance.
-
+                        Rank results according to exactness, accepted status, source authority,
+                        completeness, confidence, geography, and relevance.
                     </p>
-
                 </article>
-
             </div>
-
             <div class="button-group">
-
-                <a
-                    class="button"
-                    href="../search/">
-                    Search Speciedex
-                </a>
-
-                <a
-                    class="button button-secondary"
-                    href="../browse/">
-                    Browse Records
-                </a>
-
+                <a class="button" href="../search/">Search Speciedex</a>
+                <a class="button button-secondary" href="../browse/">Browse Records</a>
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Advanced Filtering
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="filters-title">
-
+    <section class="content-section section-muted" aria-labelledby="filters-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Refine Results
-                </p>
-
-                <h2 id="filters-title">
-                    Advanced Filters
-                </h2>
-
+                <p class="eyebrow">Refine Results</p>
+                <h2 id="filters-title">Advanced Filters</h2>
             </div>
-
             <div class="card-grid card-grid-four">
-
                 <article class="content-card">
-
-                    <h3>
-                        Taxonomy
-                    </h3>
-
+                    <h3>Taxonomy</h3>
                     <p>
-
-                        Filter by kingdom, phylum, class, order, family,
-                        genus, species, rank, clade, or selected taxonomic
-                        branch.
-
+                        Filter by kingdom, phylum, class, order, family, genus, species, rank,
+                        clade, or selected taxonomic branch.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Geography
-                    </h3>
-
+                    <h3>Geography</h3>
                     <p>
-
-                        Filter by country, territory, region, protected area,
-                        ecoregion, watershed, ocean, island, or map boundary.
-
+                        Filter by country, territory, region, protected area, ecoregion, watershed,
+                        ocean, island, or map boundary.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Habitat
-                    </h3>
-
+                    <h3>Habitat</h3>
                     <p>
-
-                        Filter by forest, grassland, wetland, marine,
-                        freshwater, desert, mountain, cave, urban, or other
-                        habitat classifications.
-
+                        Filter by forest, grassland, wetland, marine, freshwater, desert, mountain,
+                        cave, urban, or other habitat classifications.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Conservation
-                    </h3>
-
+                    <h3>Conservation</h3>
                     <p>
-
-                        Filter by assessment category, threat type,
-                        population trend, protection status, or recovery
-                        action.
-
+                        Filter by assessment category, threat type, population trend, protection
+                        status, or recovery action.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Time
-                    </h3>
-
+                    <h3>Time</h3>
                     <p>
-
-                        Filter observations, publications, assessments, and
-                        records by date, period, season, or revision range.
-
+                        Filter observations, publications, assessments, and records by date, period,
+                        season, or revision range.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Evidence
-                    </h3>
-
+                    <h3>Evidence</h3>
                     <p>
-
-                        Filter by photograph, audio, video, specimen,
-                        environmental DNA, literature, or other evidence type.
-
+                        Filter by photograph, audio, video, specimen, environmental DNA, literature,
+                        or other evidence type.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Source
-                    </h3>
-
+                    <h3>Source</h3>
                     <p>
-
-                        Restrict results to selected institutions, databases,
-                        publications, collections, or source releases.
-
+                        Restrict results to selected institutions, databases, publications,
+                        collections, or source releases.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Review State
-                    </h3>
-
+                    <h3>Review State</h3>
                     <p>
-
-                        Filter by verified, expert reviewed, community
-                        identified, provisional, disputed, restricted, or
-                        unresolved records.
-
+                        Filter by verified, expert reviewed, community identified, provisional,
+                        disputed, restricted, or unresolved records.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Species Pages
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="species-pages-title">
-
+    <section class="content-section section-accent" aria-labelledby="species-pages-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Species Profiles
-                </p>
-
-                <h2 id="species-pages-title">
-                    Interactive Species Pages
-                </h2>
-
+                <p class="eyebrow">Species Profiles</p>
+                <h2 id="species-pages-title">Interactive Species Pages</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    Each species page is designed as a structured portal into
-                    the records associated with a taxon.
-
+                    Each species page is designed as a structured portal into the records associated
+                    with a taxon.
                 </p>
-
                 <p>
-
-                    A page may include accepted scientific name, authority,
-                    common names, synonyms, classification, descriptions,
-                    morphology, life history, behavior, ecology, habitat,
-                    range, conservation status, threats, population trend,
-                    media, observations, specimens, genetic records,
-                    ecological interactions, references, and revision
-                    history.
-
+                    A page may include accepted scientific name, authority, common names, synonyms,
+                    classification, descriptions, morphology, life history, behavior, ecology,
+                    habitat, range, conservation status, threats, population trend, media,
+                    observations, specimens, genetic records, ecological interactions, references,
+                    and revision history.
                 </p>
-
                 <p>
-
-                    The interface can separate concise summaries from detailed
-                    technical sections so that general users and specialists
-                    can work from the same underlying record.
-
+                    The interface can separate concise summaries from detailed technical sections so
+                    that general users and specialists can work from the same underlying record.
                 </p>
-
                 <p>
-
-                    Source citations, confidence labels, disputed fields, and
-                    update dates should remain visible throughout the page.
-
+                    Source citations, confidence labels, disputed fields, and update dates should
+                    remain visible throughout the page.
                 </p>
-
             </article>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Summary View
-                    </h3>
-
+                    <h3>Summary View</h3>
                     <p>
-
-                        Presents key identification, range, habitat,
-                        conservation, and classification information.
-
+                        Presents key identification, range, habitat, conservation, and
+                        classification information.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Scientific View
-                    </h3>
-
+                    <h3>Scientific View</h3>
                     <p>
-
-                        Presents detailed records, authorities, synonyms,
-                        source assertions, identifiers, and revision history.
-
+                        Presents detailed records, authorities, synonyms, source assertions,
+                        identifiers, and revision history.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Geographic View
-                    </h3>
-
+                    <h3>Geographic View</h3>
                     <p>
-
-                        Presents known range, observations, protected areas,
-                        habitats, migration, elevation, and regional records.
-
+                        Presents known range, observations, protected areas, habitats, migration,
+                        elevation, and regional records.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Media View
-                    </h3>
-
+                    <h3>Media View</h3>
                     <p>
-
-                        Presents photographs, audio, video, illustrations,
-                        specimen images, maps, and licensed derivatives.
-
+                        Presents photographs, audio, video, illustrations, specimen images, maps,
+                        and licensed derivatives.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Taxonomy Browser
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="taxonomy-browser-title">
-
+    <section class="content-section" aria-labelledby="taxonomy-browser-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Tree of Life
-                </p>
-
-                <h2 id="taxonomy-browser-title">
-                    Taxonomy Browser
-                </h2>
-
+                <p class="eyebrow">Tree of Life</p>
+                <h2 id="taxonomy-browser-title">Taxonomy Browser</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    The taxonomy browser allows users to move through
-                    biological classification as an expandable hierarchy.
-
+                    The taxonomy browser allows users to move through biological classification as
+                    an expandable hierarchy.
                 </p>
-
                 <p>
-
-                    Users may begin with a domain, kingdom, phylum, class,
-                    order, family, genus, species, or another recognized
-                    grouping and inspect its descendants, parent lineages,
-                    accepted names, synonyms, and alternate classifications.
-
+                    Users may begin with a domain, kingdom, phylum, class, order, family, genus,
+                    species, or another recognized grouping and inspect its descendants, parent
+                    lineages, accepted names, synonyms, and alternate classifications.
                 </p>
-
                 <p>
-
-                    Source-specific taxonomies can be compared without
-                    presenting one authority as universally correct in every
-                    case.
-
+                    Source-specific taxonomies can be compared without presenting one authority as
+                    universally correct in every case.
                 </p>
-
                 <p>
-
-                    Taxonomic changes such as splits, mergers, transfers,
-                    rank changes, and synonymization can be displayed as
-                    linked historical events.
-
+                    Taxonomic changes such as splits, mergers, transfers, rank changes, and
+                    synonymization can be displayed as linked historical events.
                 </p>
-
             </article>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Expandable Tree
-                    </h3>
-
+                    <h3>Expandable Tree</h3>
                     <p>
-
-                        Open and collapse branches while preserving the
-                        user's current taxonomic context.
-
+                        Open and collapse branches while preserving the user's current taxonomic
+                        context.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Breadcrumb Lineage
-                    </h3>
-
+                    <h3>Breadcrumb Lineage</h3>
                     <p>
-
-                        Display the full path from the selected record to its
-                        broader classification.
-
+                        Display the full path from the selected record to its broader
+                        classification.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Alternate Taxonomies
-                    </h3>
-
+                    <h3>Alternate Taxonomies</h3>
                     <p>
-
-                        Switch between or compare classifications maintained
-                        by different authorities.
-
+                        Switch between or compare classifications maintained by different
+                        authorities.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Change History
-                    </h3>
-
+                    <h3>Change History</h3>
                     <p>
-
-                        Review former names, former placements, splits,
-                        mergers, and revision sources.
-
+                        Review former names, former placements, splits, mergers, and revision
+                        sources.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Mapping
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="mapping-title">
-
+    <section class="content-section section-muted" aria-labelledby="mapping-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Spatial Exploration
-                </p>
-
-                <h2 id="mapping-title">
-                    Interactive Biodiversity Maps
-                </h2>
-
+                <p class="eyebrow">Spatial Exploration</p>
+                <h2 id="mapping-title">Interactive Biodiversity Maps</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer maps can display species ranges,
-                    observations, specimen localities, habitats, protected
-                    areas, migration routes, environmental layers, and
-                    conservation boundaries.
-
+                    SpeciedexExplorer maps can display species ranges, observations, specimen
+                    localities, habitats, protected areas, migration routes, environmental layers,
+                    and conservation boundaries.
                 </p>
-
                 <p>
-
-                    Users may pan, zoom, filter, select features, inspect
-                    records, compare layers, and change the geographic scale
-                    of analysis.
-
+                    Users may pan, zoom, filter, select features, inspect records, compare layers,
+                    and change the geographic scale of analysis.
                 </p>
-
                 <p>
-
-                    Maps should distinguish observed occurrence from modeled
-                    range, historical range, seasonal range, introduced
-                    presence, uncertain presence, and locally extinct
-                    records.
-
+                    Maps should distinguish observed occurrence from modeled range, historical
+                    range, seasonal range, introduced presence, uncertain presence, and locally
+                    extinct records.
                 </p>
-
                 <p>
-
-                    Sensitive coordinates may be generalized, withheld,
-                    delayed, or replaced with broader geographic summaries.
-
+                    Sensitive coordinates may be generalized, withheld, delayed, or replaced with
+                    broader geographic summaries.
                 </p>
-
             </article>
-
             <div class="card-grid card-grid-four">
-
                 <article class="content-card">
-
-                    <h3>
-                        Observation Points
-                    </h3>
-
+                    <h3>Observation Points</h3>
                     <p>
-
-                        Display dated occurrence records with evidence,
-                        confidence, source, and uncertainty.
-
+                        Display dated occurrence records with evidence, confidence, source, and
+                        uncertainty.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Range Polygons
-                    </h3>
-
+                    <h3>Range Polygons</h3>
                     <p>
-
-                        Display known, estimated, modeled, seasonal,
-                        historical, or source-specific species ranges.
-
+                        Display known, estimated, modeled, seasonal, historical, or source-specific
+                        species ranges.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Habitat Layers
-                    </h3>
-
+                    <h3>Habitat Layers</h3>
                     <p>
-
-                        Display forests, wetlands, reefs, grasslands,
-                        freshwater systems, elevation, climate, and land
-                        cover.
-
+                        Display forests, wetlands, reefs, grasslands, freshwater systems, elevation,
+                        climate, and land cover.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Protected Areas
-                    </h3>
-
+                    <h3>Protected Areas</h3>
                     <p>
-
-                        Display parks, reserves, sanctuaries, marine protected
-                        areas, conservation zones, and other managed regions.
-
+                        Display parks, reserves, sanctuaries, marine protected areas, conservation
+                        zones, and other managed regions.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Time Filtering
-                    </h3>
-
+                    <h3>Time Filtering</h3>
                     <p>
-
-                        Filter map records by observation date, season,
-                        historical period, assessment date, or publication
-                        range.
-
+                        Filter map records by observation date, season, historical period,
+                        assessment date, or publication range.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Regional Summaries
-                    </h3>
-
+                    <h3>Regional Summaries</h3>
                     <p>
-
-                        Summarize species richness, observations, threatened
-                        taxa, endemic taxa, and habitat coverage.
-
+                        Summarize species richness, observations, threatened taxa, endemic taxa, and
+                        habitat coverage.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Layer Comparison
-                    </h3>
-
+                    <h3>Layer Comparison</h3>
                     <p>
-
-                        Compare range, habitat, climate, protection, land use,
-                        or observation effort.
-
+                        Compare range, habitat, climate, protection, land use, or observation
+                        effort.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Exported Views
-                    </h3>
-
+                    <h3>Exported Views</h3>
                     <p>
-
-                        Export permitted geographic data, map images,
-                        filtered records, or reproducible layer definitions.
-
+                        Export permitted geographic data, map images, filtered records, or
+                        reproducible layer definitions.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Compare
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="compare-title">
-
+    <section class="content-section section-accent" aria-labelledby="compare-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Comparative Biology
-                </p>
-
-                <h2 id="compare-title">
-                    Species and Taxon Comparison
-                </h2>
-
+                <p class="eyebrow">Comparative Biology</p>
+                <h2 id="compare-title">Species and Taxon Comparison</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer can compare two or more taxa using a
-                    structured side-by-side view.
-
+                    SpeciedexExplorer can compare two or more taxa using a structured side-by-side
+                    view.
                 </p>
-
                 <p>
-
-                    Comparisons may include classification, scientific names,
-                    common names, morphology, diagnostic characteristics,
-                    range, habitat, behavior, ecology, reproduction, diet,
-                    conservation status, threats, media, observations,
-                    genetic identifiers, and references.
-
+                    Comparisons may include classification, scientific names, common names,
+                    morphology, diagnostic characteristics, range, habitat, behavior, ecology,
+                    reproduction, diet, conservation status, threats, media, observations, genetic
+                    identifiers, and references.
                 </p>
-
                 <p>
-
-                    Missing information should remain visibly different from
-                    confirmed absence.
-
+                    Missing information should remain visibly different from confirmed absence.
                 </p>
-
                 <p>
-
-                    Conflicting source values should be displayed with their
-                    source and effective date rather than reduced to an
-                    unexplained single value.
-
+                    Conflicting source values should be displayed with their source and effective
+                    date rather than reduced to an unexplained single value.
                 </p>
-
             </article>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Taxonomic Comparison
-                    </h3>
-
+                    <h3>Taxonomic Comparison</h3>
                     <p>
-
-                        Compare lineage, rank, synonyms, authorities,
-                        taxonomic opinions, and classification differences.
-
+                        Compare lineage, rank, synonyms, authorities, taxonomic opinions, and
+                        classification differences.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Trait Comparison
-                    </h3>
-
+                    <h3>Trait Comparison</h3>
                     <p>
-
-                        Compare size, anatomy, coloration, behavior, diet,
-                        reproduction, lifespan, and ecological role.
-
+                        Compare size, anatomy, coloration, behavior, diet, reproduction, lifespan,
+                        and ecological role.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Geographic Comparison
-                    </h3>
-
+                    <h3>Geographic Comparison</h3>
                     <p>
-
-                        Compare ranges, habitats, countries, elevations,
-                        observations, migration, and overlap.
-
+                        Compare ranges, habitats, countries, elevations, observations, migration,
+                        and overlap.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Conservation Comparison
-                    </h3>
-
+                    <h3>Conservation Comparison</h3>
                     <p>
-
-                        Compare status, population trend, threats,
-                        protections, assessments, and recovery actions.
-
+                        Compare status, population trend, threats, protections, assessments, and
+                        recovery actions.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Observations
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="observations-title">
-
+    <section class="content-section" aria-labelledby="observations-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Occurrence Evidence
-                </p>
-
-                <h2 id="observations-title">
-                    Observation Explorer
-                </h2>
-
+                <p class="eyebrow">Occurrence Evidence</p>
+                <h2 id="observations-title">Observation Explorer</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    The observation explorer allows users to inspect records
-                    documenting where and when organisms were observed.
-
+                    The observation explorer allows users to inspect records documenting where and
+                    when organisms were observed.
                 </p>
-
                 <p>
-
-                    Each observation may include date, time, location,
-                    coordinate uncertainty, observer, source platform,
-                    identification, review state, method, equipment, notes,
-                    media, and supporting evidence.
-
+                    Each observation may include date, time, location, coordinate uncertainty,
+                    observer, source platform, identification, review state, method, equipment,
+                    notes, media, and supporting evidence.
                 </p>
-
                 <p>
-
-                    Users can filter observations by taxon, region, date,
-                    evidence type, source, identification state, observer,
-                    habitat, or confidence.
-
+                    Users can filter observations by taxon, region, date, evidence type, source,
+                    identification state, observer, habitat, or confidence.
                 </p>
-
                 <p>
-
-                    Observation counts should not automatically be interpreted
-                    as population counts because observation effort varies by
-                    place, time, accessibility, species visibility, and user
-                    activity.
-
+                    Observation counts should not automatically be interpreted as population counts
+                    because observation effort varies by place, time, accessibility, species
+                    visibility, and user activity.
                 </p>
-
             </article>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Timeline View
-                    </h3>
-
+                    <h3>Timeline View</h3>
                     <p>
-
-                        Display observations chronologically to identify
-                        seasonal activity, historical records, and recent
-                        change.
-
+                        Display observations chronologically to identify seasonal activity,
+                        historical records, and recent change.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Map View
-                    </h3>
-
+                    <h3>Map View</h3>
                     <p>
-
-                        Display permitted observations geographically with
-                        uncertainty and sensitive-data controls.
-
+                        Display permitted observations geographically with uncertainty and
+                        sensitive-data controls.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Evidence View
-                    </h3>
-
+                    <h3>Evidence View</h3>
                     <p>
-
-                        Review associated photographs, audio, video, specimens,
-                        notes, tracks, environmental DNA, or other evidence.
-
+                        Review associated photographs, audio, video, specimens, notes, tracks,
+                        environmental DNA, or other evidence.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Identification History
-                    </h3>
-
+                    <h3>Identification History</h3>
                     <p>
-
-                        Review proposed identifications, corrections,
-                        reviewers, disagreements, and final review state.
-
+                        Review proposed identifications, corrections, reviewers, disagreements, and
+                        final review state.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Conservation Explorer
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="conservation-title">
-
+    <section class="content-section section-muted" aria-labelledby="conservation-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Conservation
-                </p>
-
-                <h2 id="conservation-title">
-                    Conservation Explorer
-                </h2>
-
+                <p class="eyebrow">Conservation</p>
+                <h2 id="conservation-title">Conservation Explorer</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    The conservation explorer connects species assessments,
-                    population trends, geographic scope, threats, legal
-                    protections, protected areas, recovery actions, and
-                    supporting references.
-
+                    The conservation explorer connects species assessments, population trends,
+                    geographic scope, threats, legal protections, protected areas, recovery actions,
+                    and supporting references.
                 </p>
-
                 <p>
-
-                    Users can search or filter species by conservation
-                    category, assessment authority, threat type, population
-                    trend, region, habitat, endemism, protection, or review
-                    date.
-
+                    Users can search or filter species by conservation category, assessment
+                    authority, threat type, population trend, region, habitat, endemism, protection,
+                    or review date.
                 </p>
-
                 <p>
-
-                    A species may have different statuses under global,
-                    national, regional, and local assessment systems.
-
+                    A species may have different statuses under global, national, regional, and
+                    local assessment systems.
                 </p>
-
                 <p>
-
-                    SpeciedexExplorer should display the authority, date,
-                    geographic scope, criteria, confidence, and source for
-                    each assessment.
-
+                    SpeciedexExplorer should display the authority, date, geographic scope,
+                    criteria, confidence, and source for each assessment.
                 </p>
-
             </article>
-
             <div class="card-grid card-grid-four">
-
                 <article class="content-card">
-
-                    <h3>
-                        Threatened Species
-                    </h3>
-
+                    <h3>Threatened Species</h3>
                     <p>
-
-                        Explore taxa categorized as vulnerable, endangered,
-                        critically endangered, threatened, or similarly
-                        classified.
-
+                        Explore taxa categorized as vulnerable, endangered, critically endangered,
+                        threatened, or similarly classified.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Endemic Species
-                    </h3>
-
+                    <h3>Endemic Species</h3>
                     <p>
-
-                        Identify taxa restricted to a country, island,
-                        mountain range, habitat, watershed, or other region.
-
+                        Identify taxa restricted to a country, island, mountain range, habitat,
+                        watershed, or other region.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Threat Explorer
-                    </h3>
-
+                    <h3>Threat Explorer</h3>
                     <p>
-
-                        Explore species and places affected by habitat loss,
-                        trade, pollution, disease, climate, conflict,
-                        invasive species, or exploitation.
-
+                        Explore species and places affected by habitat loss, trade, pollution,
+                        disease, climate, conflict, invasive species, or exploitation.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Recovery Explorer
-                    </h3>
-
+                    <h3>Recovery Explorer</h3>
                     <p>
-
-                        Review restoration, breeding, reintroduction,
-                        protection, monitoring, and recovery initiatives.
-
+                        Review restoration, breeding, reintroduction, protection, monitoring, and
+                        recovery initiatives.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Habitat Explorer
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="habitat-title">
-
+    <section class="content-section section-accent" aria-labelledby="habitat-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Ecosystems
-                </p>
-
-                <h2 id="habitat-title">
-                    Habitat Explorer
-                </h2>
-
+                <p class="eyebrow">Ecosystems</p>
+                <h2 id="habitat-title">Habitat Explorer</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    The habitat explorer allows users to begin with an
-                    environment and discover the organisms associated with
-                    it.
-
+                    The habitat explorer allows users to begin with an environment and discover the
+                    organisms associated with it.
                 </p>
-
                 <p>
-
-                    Habitat pages may describe climate, geography,
-                    vegetation, hydrology, substrate, depth, elevation,
-                    seasonality, ecological processes, human pressure, and
+                    Habitat pages may describe climate, geography, vegetation, hydrology, substrate,
+                    depth, elevation, seasonality, ecological processes, human pressure, and
                     conservation importance.
-
                 </p>
-
                 <p>
-
-                    Species records can be connected to breeding habitat,
-                    feeding habitat, refuge habitat, migration habitat,
-                    seasonal habitat, nursery habitat, and other functional
-                    associations.
-
+                    Species records can be connected to breeding habitat, feeding habitat, refuge
+                    habitat, migration habitat, seasonal habitat, nursery habitat, and other
+                    functional associations.
                 </p>
-
                 <p>
-
-                    Habitat classifications may vary among sources and should
-                    remain attributable.
-
+                    Habitat classifications may vary among sources and should remain attributable.
                 </p>
-
             </article>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Terrestrial Habitats
-                    </h3>
-
+                    <h3>Terrestrial Habitats</h3>
                     <p>
-
-                        Forests, grasslands, deserts, mountains, shrublands,
-                        tundra, caves, agricultural areas, and urban
-                        environments.
-
+                        Forests, grasslands, deserts, mountains, shrublands, tundra, caves,
+                        agricultural areas, and urban environments.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Freshwater Habitats
-                    </h3>
-
+                    <h3>Freshwater Habitats</h3>
                     <p>
-
-                        Rivers, lakes, ponds, wetlands, springs, floodplains,
-                        groundwater, and seasonal waters.
-
+                        Rivers, lakes, ponds, wetlands, springs, floodplains, groundwater, and
+                        seasonal waters.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Marine Habitats
-                    </h3>
-
+                    <h3>Marine Habitats</h3>
                     <p>
-
-                        Reefs, kelp forests, seagrass beds, coasts, open
-                        ocean, polar seas, deep sea, and hydrothermal vents.
-
+                        Reefs, kelp forests, seagrass beds, coasts, open ocean, polar seas, deep
+                        sea, and hydrothermal vents.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Human-Modified Habitats
-                    </h3>
-
+                    <h3>Human-Modified Habitats</h3>
                     <p>
-
-                        Farms, plantations, gardens, cities, reservoirs,
-                        roadsides, restored areas, and industrial landscapes.
-
+                        Farms, plantations, gardens, cities, reservoirs, roadsides, restored areas,
+                        and industrial landscapes.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Ecological Relationships
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="relationships-title">
-
+    <section class="content-section" aria-labelledby="relationships-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Ecological Networks
-                </p>
-
-                <h2 id="relationships-title">
-                    Relationship Explorer
-                </h2>
-
+                <p class="eyebrow">Ecological Networks</p>
+                <h2 id="relationships-title">Relationship Explorer</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer can visualize biological relationships
-                    as a network of linked organisms, places, habitats, and
-                    evidence.
-
+                    SpeciedexExplorer can visualize biological relationships as a network of linked
+                    organisms, places, habitats, and evidence.
                 </p>
-
                 <p>
-
-                    Relationship types may include predation, herbivory,
-                    pollination, seed dispersal, parasitism, disease,
-                    symbiosis, mutualism, commensalism, competition,
-                    decomposition, host association, nesting, and habitat
-                    engineering.
-
+                    Relationship types may include predation, herbivory, pollination, seed
+                    dispersal, parasitism, disease, symbiosis, mutualism, commensalism, competition,
+                    decomposition, host association, nesting, and habitat engineering.
                 </p>
-
                 <p>
-
-                    Each relationship should remain linked to its supporting
-                    observation, publication, geographic context, life stage,
-                    season, and confidence.
-
+                    Each relationship should remain linked to its supporting observation,
+                    publication, geographic context, life stage, season, and confidence.
                 </p>
-
                 <p>
-
-                    A relationship documented in one locality or life stage
-                    should not automatically be presented as universal across
-                    the species' entire range.
-
+                    A relationship documented in one locality or life stage should not automatically
+                    be presented as universal across the species' entire range.
                 </p>
-
             </article>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Food-Web View
-                    </h3>
-
+                    <h3>Food-Web View</h3>
                     <p>
-
-                        Explore predators, prey, herbivores, hosts,
-                        parasites, and decomposers.
-
+                        Explore predators, prey, herbivores, hosts, parasites, and decomposers.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Pollination View
-                    </h3>
-
+                    <h3>Pollination View</h3>
                     <p>
-
-                        Explore plants, pollinators, floral resources,
-                        geography, and seasonal interaction records.
-
+                        Explore plants, pollinators, floral resources, geography, and seasonal
+                        interaction records.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Host Association View
-                    </h3>
-
+                    <h3>Host Association View</h3>
                     <p>
-
-                        Explore parasites, pathogens, symbionts, nesting
-                        associates, and dependent organisms.
-
+                        Explore parasites, pathogens, symbionts, nesting associates, and dependent
+                        organisms.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Ecosystem Role View
-                    </h3>
-
+                    <h3>Ecosystem Role View</h3>
                     <p>
-
-                        Explore seed dispersers, ecosystem engineers,
-                        scavengers, decomposers, and nutrient-cycling roles.
-
+                        Explore seed dispersers, ecosystem engineers, scavengers, decomposers, and
+                        nutrient-cycling roles.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Media Explorer
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="media-title">
-
+    <section class="content-section section-muted" aria-labelledby="media-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Biodiversity Media
-                </p>
-
-                <h2 id="media-title">
-                    Media Explorer
-                </h2>
-
+                <p class="eyebrow">Biodiversity Media</p>
+                <h2 id="media-title">Media Explorer</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    The media explorer organizes photographs, illustrations,
-                    audio, video, maps, diagrams, specimen images,
-                    radiographs, scans, and three-dimensional models.
-
+                    The media explorer organizes photographs, illustrations, audio, video, maps,
+                    diagrams, specimen images, radiographs, scans, and three-dimensional models.
                 </p>
-
                 <p>
-
-                    Media may be filtered by taxon, creator, license, source,
-                    geography, date, life stage, sex, behavior, habitat,
-                    evidence type, or associated specimen.
-
+                    Media may be filtered by taxon, creator, license, source, geography, date, life
+                    stage, sex, behavior, habitat, evidence type, or associated specimen.
                 </p>
-
                 <p>
-
-                    Each item should display creator, source, attribution,
-                    license, original record, capture information, linked
-                    taxa, and available technical metadata.
-
+                    Each item should display creator, source, attribution, license, original record,
+                    capture information, linked taxa, and available technical metadata.
                 </p>
-
                 <p>
-
-                    Media identification may be provisional or disputed and
-                    should remain linked to its review history.
-
+                    Media identification may be provisional or disputed and should remain linked to
+                    its review history.
                 </p>
-
             </article>
-
             <div class="card-grid card-grid-four">
-
                 <article class="content-card">
-
-                    <h3>
-                        Photography
-                    </h3>
-
+                    <h3>Photography</h3>
                     <p>
-
-                        Browse field photographs, habitat images, behavioral
-                        records, and diagnostic views.
-
+                        Browse field photographs, habitat images, behavioral records, and diagnostic
+                        views.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Illustration
-                    </h3>
-
+                    <h3>Illustration</h3>
                     <p>
-
-                        Browse scientific plates, anatomical diagrams,
-                        reconstructions, and educational artwork.
-
+                        Browse scientific plates, anatomical diagrams, reconstructions, and
+                        educational artwork.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Audio
-                    </h3>
-
+                    <h3>Audio</h3>
                     <p>
-
-                        Browse calls, songs, stridulation, echolocation,
-                        movement sounds, and environmental recordings.
-
+                        Browse calls, songs, stridulation, echolocation, movement sounds, and
+                        environmental recordings.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Video
-                    </h3>
-
+                    <h3>Video</h3>
                     <p>
-
-                        Browse movement, courtship, feeding, migration,
-                        nesting, predation, and social behavior.
-
+                        Browse movement, courtship, feeding, migration, nesting, predation, and
+                        social behavior.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Specimens
-                    </h3>
-
+                    <h3>Specimens</h3>
                     <p>
-
-                        Browse collection images, herbarium sheets, fossils,
-                        slides, skeletal material, and type specimens.
-
+                        Browse collection images, herbarium sheets, fossils, slides, skeletal
+                        material, and type specimens.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Three-Dimensional Media
-                    </h3>
-
+                    <h3>Three-Dimensional Media</h3>
                     <p>
-
-                        Explore scans, models, photogrammetry, computed
-                        tomography, and reconstructed structures.
-
+                        Explore scans, models, photogrammetry, computed tomography, and
+                        reconstructed structures.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Maps
-                    </h3>
-
+                    <h3>Maps</h3>
                     <p>
-
-                        Browse range maps, habitat maps, survey maps, and
-                        conservation geography.
-
+                        Browse range maps, habitat maps, survey maps, and conservation geography.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Licensed Downloads
-                    </h3>
-
+                    <h3>Licensed Downloads</h3>
                     <p>
-
-                        Download media only where source licenses and
-                        permissions allow redistribution.
-
+                        Download media only where source licenses and permissions allow
+                        redistribution.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Specimen Explorer
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="specimens-title">
-
+    <section class="content-section section-accent" aria-labelledby="specimens-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Natural-History Collections
-                </p>
-
-                <h2 id="specimens-title">
-                    Specimen Explorer
-                </h2>
-
+                <p class="eyebrow">Natural-History Collections</p>
+                <h2 id="specimens-title">Specimen Explorer</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    The specimen explorer connects biological collection
-                    records with institutions, collection events,
-                    identifications, images, publications, genetic accessions,
+                    The specimen explorer connects biological collection records with institutions,
+                    collection events, identifications, images, publications, genetic accessions,
                     and taxonomic history.
-
                 </p>
-
                 <p>
-
-                    Users may search by institution code, collection,
-                    catalogue number, collector, locality, date, type status,
-                    preparation method, taxon, or associated publication.
-
+                    Users may search by institution code, collection, catalogue number, collector,
+                    locality, date, type status, preparation method, taxon, or associated
+                    publication.
                 </p>
-
                 <p>
-
-                    The same specimen may have several historical
-                    identifications without losing its persistent collection
-                    identity.
-
+                    The same specimen may have several historical identifications without losing its
+                    persistent collection identity.
                 </p>
-
                 <p>
-
-                    Specimen availability, loans, physical location, and
-                    reproduction rights remain governed by the holding
-                    institution.
-
+                    Specimen availability, loans, physical location, and reproduction rights remain
+                    governed by the holding institution.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Literature Explorer
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="literature-title">
-
+    <section class="content-section" aria-labelledby="literature-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Scientific Evidence
-                </p>
-
-                <h2 id="literature-title">
-                    Literature and Reference Explorer
-                </h2>
-
+                <p class="eyebrow">Scientific Evidence</p>
+                <h2 id="literature-title">Literature and Reference Explorer</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    The reference explorer connects taxa and biological
-                    assertions with journal articles, monographs, taxonomic
-                    descriptions, reports, datasets, museum catalogues,
-                    theses, archived websites, and other supporting sources.
-
+                    The reference explorer connects taxa and biological assertions with journal
+                    articles, monographs, taxonomic descriptions, reports, datasets, museum
+                    catalogues, theses, archived websites, and other supporting sources.
                 </p>
-
                 <p>
-
-                    Users can search by title, author, publication year,
-                    journal, publisher, identifier, taxon, geography,
-                    conservation topic, or linked record.
-
+                    Users can search by title, author, publication year, journal, publisher,
+                    identifier, taxon, geography, conservation topic, or linked record.
                 </p>
-
                 <p>
-
-                    References can be grouped according to whether they
-                    support, revise, dispute, or historically document a
-                    particular claim.
-
+                    References can be grouped according to whether they support, revise, dispute, or
+                    historically document a particular claim.
                 </p>
-
                 <p>
-
-                    Access to full text depends upon the publication license,
-                    repository, publisher, institution, or archive.
-
+                    Access to full text depends upon the publication license, repository, publisher,
+                    institution, or archive.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Regional Explorer
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="regional-title">
-
+    <section class="content-section section-muted" aria-labelledby="regional-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Place-Based Discovery
-                </p>
-
-                <h2 id="regional-title">
-                    Regional Explorer
-                </h2>
-
+                <p class="eyebrow">Place-Based Discovery</p>
+                <h2 id="regional-title">Regional Explorer</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    Regional pages allow users to begin with a country,
-                    territory, island, ecoregion, watershed, mountain range,
-                    protected area, ocean, sea, or custom geographic region.
-
+                    Regional pages allow users to begin with a country, territory, island,
+                    ecoregion, watershed, mountain range, protected area, ocean, sea, or custom
+                    geographic region.
                 </p>
-
                 <p>
-
-                    A regional page may summarize native species, endemic
-                    species, introduced species, threatened taxa,
-                    observations, habitats, protected areas, research
-                    institutions, conservation programs, and major data
-                    sources.
-
+                    A regional page may summarize native species, endemic species, introduced
+                    species, threatened taxa, observations, habitats, protected areas, research
+                    institutions, conservation programs, and major data sources.
                 </p>
-
                 <p>
-
-                    Species richness and observation totals should be
-                    interpreted in relation to survey effort, geographic
-                    size, season, accessibility, and source coverage.
-
+                    Species richness and observation totals should be interpreted in relation to
+                    survey effort, geographic size, season, accessibility, and source coverage.
                 </p>
-
                 <p>
-
-                    Regional boundaries may overlap and may be defined
-                    differently by political, ecological, hydrological, and
-                    scientific authorities.
-
+                    Regional boundaries may overlap and may be defined differently by political,
+                    ecological, hydrological, and scientific authorities.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Timeline
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="timeline-title">
-
+    <section class="content-section section-accent" aria-labelledby="timeline-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Change Through Time
-                </p>
-
-                <h2 id="timeline-title">
-                    Timeline Explorer
-                </h2>
-
+                <p class="eyebrow">Change Through Time</p>
+                <h2 id="timeline-title">Timeline Explorer</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    Timeline views can present observations, taxonomic
-                    revisions, publications, conservation assessments,
-                    specimen collections, range changes, extinctions,
+                    Timeline views can present observations, taxonomic revisions, publications,
+                    conservation assessments, specimen collections, range changes, extinctions,
                     rediscoveries, and project updates.
-
                 </p>
-
                 <p>
-
-                    Users may examine a single species, taxonomic group,
-                    region, habitat, source, or conservation issue across a
-                    selected period.
-
+                    Users may examine a single species, taxonomic group, region, habitat, source, or
+                    conservation issue across a selected period.
                 </p>
-
                 <p>
-
-                    Historical records should retain the names and
-                    classifications used at the time while linking to current
-                    interpretations.
-
+                    Historical records should retain the names and classifications used at the time
+                    while linking to current interpretations.
                 </p>
-
                 <p>
-
-                    Gaps in a timeline may reflect missing data rather than
-                    absence of the species or event.
-
+                    Gaps in a timeline may reflect missing data rather than absence of the species
+                    or event.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Research Workspace
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="workspace-title">
-
+    <section class="content-section" aria-labelledby="workspace-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Research Tools
-                </p>
-
-                <h2 id="workspace-title">
-                    Research Workspace
-                </h2>
-
+                <p class="eyebrow">Research Tools</p>
+                <h2 id="workspace-title">Research Workspace</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer may provide a workspace for saving
-                    searches, assembling record collections, comparing taxa,
-                    selecting map layers, creating exports, and preserving
-                    reproducible research views.
-
+                    SpeciedexExplorer may provide a workspace for saving searches, assembling record
+                    collections, comparing taxa, selecting map layers, creating exports, and
+                    preserving reproducible research views.
                 </p>
-
                 <p>
-
-                    A workspace can record the selected filters, query terms,
-                    source releases, date, software version, taxonomic
-                    authority, and export configuration used to generate a
-                    result.
-
+                    A workspace can record the selected filters, query terms, source releases, date,
+                    software version, taxonomic authority, and export configuration used to generate
+                    a result.
                 </p>
-
                 <p>
-
-                    Private workspaces may contain unpublished notes,
-                    restricted records, or draft analyses and should remain
-                    separate from public project pages.
-
+                    Private workspaces may contain unpublished notes, restricted records, or draft
+                    analyses and should remain separate from public project pages.
                 </p>
-
                 <p>
-
-                    Shared workspaces should clearly identify authorship,
-                    permissions, source versions, and whether the content has
-                    received scientific review.
-
+                    Shared workspaces should clearly identify authorship, permissions, source
+                    versions, and whether the content has received scientific review.
                 </p>
-
             </article>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Saved Searches
-                    </h3>
-
+                    <h3>Saved Searches</h3>
                     <p>
-
-                        Preserve query terms, filters, sort order, taxonomy,
-                        geography, and source selection.
-
+                        Preserve query terms, filters, sort order, taxonomy, geography, and source
+                        selection.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Record Collections
-                    </h3>
-
+                    <h3>Record Collections</h3>
                     <p>
-
-                        Assemble curated groups of taxa, observations,
-                        specimens, references, or media.
-
+                        Assemble curated groups of taxa, observations, specimens, references, or
+                        media.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Comparison Sets
-                    </h3>
-
+                    <h3>Comparison Sets</h3>
                     <p>
-
-                        Save reusable sets of species or regions for repeated
-                        analysis.
-
+                        Save reusable sets of species or regions for repeated analysis.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Reproducible Exports
-                    </h3>
-
+                    <h3>Reproducible Exports</h3>
                     <p>
-
-                        Preserve the release, schema, filters, fields, and
-                        license information associated with an export.
-
+                        Preserve the release, schema, filters, fields, and license information
+                        associated with an export.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Data Export
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="export-title">
-
+    <section class="content-section section-muted" aria-labelledby="export-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Data Access
-                </p>
-
-                <h2 id="export-title">
-                    Export and Download Tools
-                </h2>
-
+                <p class="eyebrow">Data Access</p>
+                <h2 id="export-title">Export and Download Tools</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer may allow users to export selected
-                    public records in documented machine-readable formats.
-
+                    SpeciedexExplorer may allow users to export selected public records in
+                    documented machine-readable formats.
                 </p>
-
                 <p>
-
-                    Exports may include taxa, names, identifiers,
-                    observations, places, references, conservation records,
-                    ecological relationships, and media metadata.
-
+                    Exports may include taxa, names, identifiers, observations, places, references,
+                    conservation records, ecological relationships, and media metadata.
                 </p>
-
                 <p>
-
-                    Every export should preserve source identifiers,
-                    attribution, license information, retrieval date,
-                    Speciedex release, schema version, and relevant
+                    Every export should preserve source identifiers, attribution, license
+                    information, retrieval date, Speciedex release, schema version, and relevant
                     restrictions.
-
                 </p>
-
                 <p>
-
-                    Sensitive locations, private submissions,
-                    non-redistributable media, embargoed records, and
-                    restricted data should not be included in ordinary public
-                    exports.
-
+                    Sensitive locations, private submissions, non-redistributable media, embargoed
+                    records, and restricted data should not be included in ordinary public exports.
                 </p>
-
             </article>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        CSV and TSV
-                    </h3>
-
+                    <h3>CSV and TSV</h3>
                     <p>
-
-                        Export tabular records for spreadsheets, scripts,
-                        databases, and statistical analysis.
-
+                        Export tabular records for spreadsheets, scripts, databases, and statistical
+                        analysis.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        JSON and JSON Lines
-                    </h3>
-
+                    <h3>JSON and JSON Lines</h3>
                     <p>
-
-                        Export structured records for applications, APIs,
-                        scripts, and data pipelines.
-
+                        Export structured records for applications, APIs, scripts, and data
+                        pipelines.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Geographic Formats
-                    </h3>
-
+                    <h3>Geographic Formats</h3>
                     <p>
-
-                        Export permitted points, ranges, and regional geometry
-                        in documented mapping formats.
-
+                        Export permitted points, ranges, and regional geometry in documented mapping
+                        formats.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Citation Packages
-                    </h3>
-
+                    <h3>Citation Packages</h3>
                     <p>
-
-                        Export references, source identifiers, release
-                        information, and reproducibility metadata.
-
+                        Export references, source identifiers, release information, and
+                        reproducibility metadata.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     API Integration
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="api-title">
-
+    <section class="content-section section-accent" aria-labelledby="api-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Programmatic Access
-                </p>
-
-                <h2 id="api-title">
-                    API-Powered Exploration
-                </h2>
-
+                <p class="eyebrow">Programmatic Access</p>
+                <h2 id="api-title">API-Powered Exploration</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer uses documented SpeciedexCore interfaces
-                    to retrieve records, run searches, load maps, resolve
-                    identifiers, compare taxa, and generate exports.
-
+                    SpeciedexExplorer uses documented SpeciedexCore interfaces to retrieve records,
+                    run searches, load maps, resolve identifiers, compare taxa, and generate
+                    exports.
                 </p>
-
                 <p>
-
-                    Separating the interface from the core API allows other
-                    websites, desktop tools, mobile applications, field
-                    systems, and institutional portals to use the same public
-                    data.
-
+                    Separating the interface from the core API allows other websites, desktop tools,
+                    mobile applications, field systems, and institutional portals to use the same
+                    public data.
                 </p>
-
                 <p>
-
-                    Client applications should not receive administrative
-                    credentials or unrestricted database access.
-
+                    Client applications should not receive administrative credentials or
+                    unrestricted database access.
                 </p>
-
                 <p>
-
-                    Public API use may be subject to rate limits, caching,
-                    attribution, licensing, and access policies.
-
+                    Public API use may be subject to rate limits, caching, attribution, licensing,
+                    and access policies.
                 </p>
-
             </article>
-
             <div class="button-group">
-
-                <a
-                    class="button"
-                    href="../api/">
-                    View API Information
-                </a>
-
-                <a
-                    class="button button-secondary"
-                    href="../developers/">
-                    Developer Resources
-                </a>
-
+                <a class="button" href="../api/">View API Information</a>
+                <a class="button button-secondary" href="../developers/">Developer Resources</a>
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Accessibility
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="accessibility-title">
-
+    <section class="content-section" aria-labelledby="accessibility-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Inclusive Design
-                </p>
-
-                <h2 id="accessibility-title">
-                    Accessibility
-                </h2>
-
+                <p class="eyebrow">Inclusive Design</p>
+                <h2 id="accessibility-title">Accessibility</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer is intended to remain usable with
-                    keyboards, screen readers, zoom, high-contrast settings,
-                    reduced motion, and alternative input devices.
-
+                    SpeciedexExplorer is intended to remain usable with keyboards, screen readers,
+                    zoom, high-contrast settings, reduced motion, and alternative input devices.
                 </p>
-
                 <p>
-
-                    Interactive maps, charts, galleries, and taxonomic trees
-                    should provide text alternatives and structured data
-                    views.
-
+                    Interactive maps, charts, galleries, and taxonomic trees should provide text
+                    alternatives and structured data views.
                 </p>
-
                 <p>
-
-                    Color should not be the only method used to communicate
-                    conservation status, confidence, category, warning, or
-                    selected state.
-
+                    Color should not be the only method used to communicate conservation status,
+                    confidence, category, warning, or selected state.
                 </p>
-
                 <p>
-
-                    Scientific names, abbreviations, icons, controls, and
-                    complex visualizations should include understandable
-                    labels and supporting descriptions.
-
+                    Scientific names, abbreviations, icons, controls, and complex visualizations
+                    should include understandable labels and supporting descriptions.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Responsive Interface
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="responsive-title">
-
+    <section class="content-section section-muted" aria-labelledby="responsive-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Multi-Device Access
-                </p>
-
-                <h2 id="responsive-title">
-                    Responsive and Field-Ready Interface
-                </h2>
-
+                <p class="eyebrow">Multi-Device Access</p>
+                <h2 id="responsive-title">Responsive and Field-Ready Interface</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer is designed for desktop, tablet, mobile,
-                    large displays, and field-oriented devices.
-
+                    SpeciedexExplorer is designed for desktop, tablet, mobile, large displays, and
+                    field-oriented devices.
                 </p>
-
                 <p>
-
-                    Dense tables and complex comparisons should adapt to
-                    smaller screens through stacked records, expandable
-                    sections, horizontal data views, or simplified summary
-                    modes.
-
+                    Dense tables and complex comparisons should adapt to smaller screens through
+                    stacked records, expandable sections, horizontal data views, or simplified
+                    summary modes.
                 </p>
-
                 <p>
-
-                    Map controls, filters, galleries, and search tools should
-                    remain usable through touch input without preventing
-                    keyboard operation.
-
+                    Map controls, filters, galleries, and search tools should remain usable through
+                    touch input without preventing keyboard operation.
                 </p>
-
                 <p>
-
-                    Low-bandwidth modes may reduce media loading, simplify map
-                    layers, limit automatic requests, and prioritize text and
-                    cached records.
-
+                    Low-bandwidth modes may reduce media loading, simplify map layers, limit
+                    automatic requests, and prioritize text and cached records.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Offline Mode
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="offline-title">
-
+    <section class="content-section section-accent" aria-labelledby="offline-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Disconnected Use
-                </p>
-
-                <h2 id="offline-title">
-                    Offline Explorer
-                </h2>
-
+                <p class="eyebrow">Disconnected Use</p>
+                <h2 id="offline-title">Offline Explorer</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer may support offline datasets and local
-                    search interfaces for field stations, schools, archives,
-                    research vessels, remote communities, and low-connectivity
-                    environments.
-
+                    SpeciedexExplorer may support offline datasets and local search interfaces for
+                    field stations, schools, archives, research vessels, remote communities, and
+                    low-connectivity environments.
                 </p>
-
                 <p>
-
-                    Offline packages may contain selected taxa, regional
-                    maps, taxonomic indexes, educational records, references,
-                    and licensed media.
-
+                    Offline packages may contain selected taxa, regional maps, taxonomic indexes,
+                    educational records, references, and licensed media.
                 </p>
-
                 <p>
-
-                    Local observations and notes can be stored until a
-                    trusted connection becomes available.
-
+                    Local observations and notes can be stored until a trusted connection becomes
+                    available.
                 </p>
-
                 <p>
-
-                    Synchronization should preserve timestamps, identifiers,
-                    evidence, user edits, and conflict history.
-
+                    Synchronization should preserve timestamps, identifiers, evidence, user edits,
+                    and conflict history.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Personalization
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="personalization-title">
-
+    <section class="content-section" aria-labelledby="personalization-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    User Experience
-                </p>
-
-                <h2 id="personalization-title">
-                    Personalization Without Data Lock-In
-                </h2>
-
+                <p class="eyebrow">User Experience</p>
+                <h2 id="personalization-title">Personalization Without Data Lock-In</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    Users may choose preferred language, taxonomy, units,
-                    map layers, region, display density, accessibility
-                    settings, saved searches, and frequently used filters.
-
+                    Users may choose preferred language, taxonomy, units, map layers, region,
+                    display density, accessibility settings, saved searches, and frequently used
+                    filters.
                 </p>
-
                 <p>
-
-                    Personalization should remain exportable and should not
-                    prevent users from accessing the underlying public
-                    records through standard interfaces.
-
+                    Personalization should remain exportable and should not prevent users from
+                    accessing the underlying public records through standard interfaces.
                 </p>
-
                 <p>
-
-                    Anonymous or local preferences may be used where an
-                    account is unnecessary.
-
+                    Anonymous or local preferences may be used where an account is unnecessary.
                 </p>
-
                 <p>
-
-                    Private research notes, saved collections, and account
-                    settings should not be exposed publicly without explicit
-                    user action.
-
+                    Private research notes, saved collections, and account settings should not be
+                    exposed publicly without explicit user action.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Multilingual Support
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="languages-title">
-
+    <section class="content-section section-muted" aria-labelledby="languages-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Global Access
-                </p>
-
-                <h2 id="languages-title">
-                    Multilingual Exploration
-                </h2>
-
+                <p class="eyebrow">Global Access</p>
+                <h2 id="languages-title">Multilingual Exploration</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer is intended to support multilingual
-                    interfaces, common names, educational text, regional
-                    terminology, and search.
-
+                    SpeciedexExplorer is intended to support multilingual interfaces, common names,
+                    educational text, regional terminology, and search.
                 </p>
-
                 <p>
-
-                    Scientific names remain available across languages, while
-                    common names may vary by country, region, community,
-                    language, and writing system.
-
+                    Scientific names remain available across languages, while common names may vary
+                    by country, region, community, language, and writing system.
                 </p>
-
                 <p>
-
-                    Transliteration, diacritics, alternate spellings, and
-                    multiple scripts should be considered in search and
-                    display.
-
+                    Transliteration, diacritics, alternate spellings, and multiple scripts should be
+                    considered in search and display.
                 </p>
-
                 <p>
-
-                    Translated summaries should identify their language,
-                    source, translator or process, review state, and update
-                    date where practical.
-
+                    Translated summaries should identify their language, source, translator or
+                    process, review state, and update date where practical.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Privacy
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="privacy-title">
-
+    <section class="content-section section-accent" aria-labelledby="privacy-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Responsible Data Access
-                </p>
-
-                <h2 id="privacy-title">
-                    Privacy and Sensitive Records
-                </h2>
-
+                <p class="eyebrow">Responsible Data Access</p>
+                <h2 id="privacy-title">Privacy and Sensitive Records</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    Some biodiversity records contain personal information,
-                    private localities, unpublished observations,
-                    institution-only notes, or sensitive conservation data.
-
+                    Some biodiversity records contain personal information, private localities,
+                    unpublished observations, institution-only notes, or sensitive conservation
+                    data.
                 </p>
-
                 <p>
-
-                    SpeciedexExplorer should expose only the fields approved
-                    for the current user and context.
-
+                    SpeciedexExplorer should expose only the fields approved for the current user
+                    and context.
                 </p>
-
                 <p>
-
-                    Public pages and exports should not reveal private
-                    observer details, restricted specimen locations,
-                    unpublished research, administrative notes, credentials,
-                    or exact locations of vulnerable species when disclosure
-                    creates credible risk.
-
+                    Public pages and exports should not reveal private observer details, restricted
+                    specimen locations, unpublished research, administrative notes, credentials, or
+                    exact locations of vulnerable species when disclosure creates credible risk.
                 </p>
-
                 <p>
-
-                    Access to restricted records should be logged, limited,
-                    attributable, and revocable.
-
+                    Access to restricted records should be logged, limited, attributable, and
+                    revocable.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Security
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="security-title">
-
+    <section class="content-section" aria-labelledby="security-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Defensive Interface Design
-                </p>
-
-                <h2 id="security-title">
-                    Explorer Security
-                </h2>
-
+                <p class="eyebrow">Defensive Interface Design</p>
+                <h2 id="security-title">Explorer Security</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer is a public-facing application and must
-                    treat queries, uploads, URLs, filters, imported text,
-                    embedded media, and user input as untrusted.
-
+                    SpeciedexExplorer is a public-facing application and must treat queries,
+                    uploads, URLs, filters, imported text, embedded media, and user input as
+                    untrusted.
                 </p>
-
                 <p>
-
-                    The interface should use strict output encoding, validated
-                    parameters, controlled file handling, limited query
-                    complexity, secure sessions, least-privilege APIs, and
-                    protected administrative routes.
-
+                    The interface should use strict output encoding, validated parameters,
+                    controlled file handling, limited query complexity, secure sessions,
+                    least-privilege APIs, and protected administrative routes.
                 </p>
-
                 <p>
-
-                    Public clients should never contain database passwords,
-                    storage credentials, signing keys, administrative tokens,
-                    backup keys, or unrestricted API secrets.
-
+                    Public clients should never contain database passwords, storage credentials,
+                    signing keys, administrative tokens, backup keys, or unrestricted API secrets.
                 </p>
-
                 <p>
-
-                    Security controls should prevent unauthorized record
-                    modification, private-data disclosure, malicious media
-                    execution, cross-site scripting, injection, request
+                    Security controls should prevent unauthorized record modification, private-data
+                    disclosure, malicious media execution, cross-site scripting, injection, request
                     forgery, and abusive automated extraction.
-
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Performance
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="performance-title">
-
+    <section class="content-section section-muted" aria-labelledby="performance-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Efficient Discovery
-                </p>
-
-                <h2 id="performance-title">
-                    Performance and Scale
-                </h2>
-
+                <p class="eyebrow">Efficient Discovery</p>
+                <h2 id="performance-title">Performance and Scale</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer may search and display millions of
-                    linked records, but it should not attempt to load every
-                    matching record into the browser simultaneously.
-
+                    SpeciedexExplorer may search and display millions of linked records, but it
+                    should not attempt to load every matching record into the browser
+                    simultaneously.
                 </p>
-
                 <p>
-
-                    Results should use pagination, cursor-based loading,
-                    filtering, summary records, cached queries, and
-                    progressively loaded detail.
-
+                    Results should use pagination, cursor-based loading, filtering, summary records,
+                    cached queries, and progressively loaded detail.
                 </p>
-
                 <p>
-
-                    Large maps should cluster observations, simplify geometry,
-                    limit visible layers, and retrieve data according to the
-                    current geographic view.
-
+                    Large maps should cluster observations, simplify geometry, limit visible layers,
+                    and retrieve data according to the current geographic view.
                 </p>
-
                 <p>
-
-                    Media should load responsively through appropriate
-                    derivatives rather than forcing every user to download
-                    original files.
-
+                    Media should load responsively through appropriate derivatives rather than
+                    forcing every user to download original files.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Data Quality
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="quality-title">
-
+    <section class="content-section section-accent" aria-labelledby="quality-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Scientific Transparency
-                </p>
-
-                <h2 id="quality-title">
-                    Data Quality Indicators
-                </h2>
-
+                <p class="eyebrow">Scientific Transparency</p>
+                <h2 id="quality-title">Data Quality Indicators</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer should present indicators describing the
-                    quality, completeness, source, age, and review state of a
-                    record.
-
+                    SpeciedexExplorer should present indicators describing the quality,
+                    completeness, source, age, and review state of a record.
                 </p>
-
                 <p>
-
-                    A highly complete record is not automatically correct, and
-                    a sparse record is not automatically unreliable.
-
+                    A highly complete record is not automatically correct, and a sparse record is
+                    not automatically unreliable.
                 </p>
-
                 <p>
-
-                    Quality indicators may describe source authority,
-                    identification confidence, geographic precision,
-                    evidence type, citation coverage, review status,
-                    conflict, age, and completeness.
-
+                    Quality indicators may describe source authority, identification confidence,
+                    geographic precision, evidence type, citation coverage, review status, conflict,
+                    age, and completeness.
                 </p>
-
                 <p>
-
-                    Users should be able to inspect the evidence and source
-                    history behind important claims.
-
+                    Users should be able to inspect the evidence and source history behind important
+                    claims.
                 </p>
-
             </article>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Verified
-                    </h3>
-
+                    <h3>Verified</h3>
                     <p>
-
-                        Reviewed against supporting evidence or an approved
-                        authoritative source.
-
+                        Reviewed against supporting evidence or an approved authoritative source.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Provisional
-                    </h3>
-
+                    <h3>Provisional</h3>
                     <p>
-
-                        Available for discovery but awaiting further review or
-                        stronger evidence.
-
+                        Available for discovery but awaiting further review or stronger evidence.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Disputed
-                    </h3>
-
+                    <h3>Disputed</h3>
                     <p>
-
-                        Subject to conflicting evidence, interpretation,
-                        taxonomy, or source opinion.
-
+                        Subject to conflicting evidence, interpretation, taxonomy, or source
+                        opinion.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Incomplete
-                    </h3>
-
+                    <h3>Incomplete</h3>
                     <p>
-
-                        Missing expected fields, evidence, geography,
-                        references, or review.
-
+                        Missing expected fields, evidence, geography, references, or review.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Saved and Shareable Views
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="share-title">
-
+    <section class="content-section" aria-labelledby="share-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Reproducible Discovery
-                </p>
-
-                <h2 id="share-title">
-                    Saved and Shareable Views
-                </h2>
-
+                <p class="eyebrow">Reproducible Discovery</p>
+                <h2 id="share-title">Saved and Shareable Views</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    Search results, comparisons, maps, taxonomic branches,
-                    galleries, and research collections may be represented by
-                    stable links or saved configurations.
-
+                    Search results, comparisons, maps, taxonomic branches, galleries, and research
+                    collections may be represented by stable links or saved configurations.
                 </p>
-
                 <p>
-
-                    A shareable view should preserve the relevant filters,
-                    record identifiers, taxonomic authority, geographic
-                    extent, sort order, and visible layers.
-
+                    A shareable view should preserve the relevant filters, record identifiers,
+                    taxonomic authority, geographic extent, sort order, and visible layers.
                 </p>
-
                 <p>
-
-                    Where exact reproducibility is required, the view should
-                    also identify the Speciedex release or data snapshot used.
-
+                    Where exact reproducibility is required, the view should also identify the
+                    Speciedex release or data snapshot used.
                 </p>
-
                 <p>
-
-                    Private notes and restricted records must not become
-                    public merely because a user shares an otherwise public
-                    search or map.
-
+                    Private notes and restricted records must not become public merely because a
+                    user shares an otherwise public search or map.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Education
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="education-title">
-
+    <section class="content-section section-muted" aria-labelledby="education-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Learning
-                </p>
-
-                <h2 id="education-title">
-                    Educational Exploration
-                </h2>
-
+                <p class="eyebrow">Learning</p>
+                <h2 id="education-title">Educational Exploration</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer can provide guided experiences for
-                    students, educators, families, museums, libraries, field
-                    courses, and independent learners.
-
+                    SpeciedexExplorer can provide guided experiences for students, educators,
+                    families, museums, libraries, field courses, and independent learners.
                 </p>
-
                 <p>
-
-                    Educational views may simplify technical presentation
-                    while preserving access to scientific names, sources, and
-                    deeper records.
-
+                    Educational views may simplify technical presentation while preserving access to
+                    scientific names, sources, and deeper records.
                 </p>
-
                 <p>
-
-                    Guided topics may include the tree of life, evolution,
-                    ecosystems, food webs, conservation, migration,
-                    adaptation, biodiversity hotspots, local wildlife, and
+                    Guided topics may include the tree of life, evolution, ecosystems, food webs,
+                    conservation, migration, adaptation, biodiversity hotspots, local wildlife, and
                     scientific classification.
-
                 </p>
-
                 <p>
-
-                    Educational summaries should remain clearly distinguished
-                    from primary records and specialist interpretations.
-
+                    Educational summaries should remain clearly distinguished from primary records
+                    and specialist interpretations.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Citizen Science
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="citizen-science-title">
-
+    <section class="content-section section-accent" aria-labelledby="citizen-science-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Community Participation
-                </p>
-
-                <h2 id="citizen-science-title">
-                    Citizen-Science Integration
-                </h2>
-
+                <p class="eyebrow">Community Participation</p>
+                <h2 id="citizen-science-title">Citizen-Science Integration</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer may connect public observation records
-                    with taxonomic, geographic, conservation, and ecological
-                    information.
-
+                    SpeciedexExplorer may connect public observation records with taxonomic,
+                    geographic, conservation, and ecological information.
                 </p>
-
                 <p>
-
-                    Users may review evidence, propose identifications, report
-                    incorrect metadata, add context, and identify relevant
-                    sources through moderated workflows.
-
+                    Users may review evidence, propose identifications, report incorrect metadata,
+                    add context, and identify relevant sources through moderated workflows.
                 </p>
-
                 <p>
-
-                    Community agreement is useful but does not replace
-                    specialist review for difficult, cryptic, rare, or
-                    consequential identifications.
-
+                    Community agreement is useful but does not replace specialist review for
+                    difficult, cryptic, rare, or consequential identifications.
                 </p>
-
                 <p>
-
-                    Sensitive records should receive appropriate geographic
-                    and privacy protection before public display.
-
+                    Sensitive records should receive appropriate geographic and privacy protection
+                    before public display.
                 </p>
-
             </article>
-
             <div class="button-group">
-
-                <a
-                    class="button"
-                    href="../contribute/">
-                    Contribute
-                </a>
-
-                <a
-                    class="button button-secondary"
-                    href="../observations/">
-                    Explore Observations
-                </a>
-
+                <a class="button" href="../contribute/">Contribute</a>
+                <a class="button button-secondary" href="../observations/">Explore Observations</a>
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     AI Assistance
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="ai-title">
-
+    <section class="content-section" aria-labelledby="ai-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Assisted Discovery
-                </p>
-
-                <h2 id="ai-title">
-                    AI-Assisted Exploration
-                </h2>
-
+                <p class="eyebrow">Assisted Discovery</p>
+                <h2 id="ai-title">AI-Assisted Exploration</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer may use machine learning to assist with
-                    image search, acoustic matching, metadata extraction,
-                    record recommendations, duplicate detection, translation,
-                    taxonomic reconciliation, and anomaly review.
-
+                    SpeciedexExplorer may use machine learning to assist with image search, acoustic
+                    matching, metadata extraction, record recommendations, duplicate detection,
+                    translation, taxonomic reconciliation, and anomaly review.
                 </p>
-
                 <p>
-
-                    AI-generated suggestions should display model version,
-                    confidence, input type, review state, and relevant
-                    limitations.
-
+                    AI-generated suggestions should display model version, confidence, input type,
+                    review state, and relevant limitations.
                 </p>
-
                 <p>
-
-                    Machine output should not be presented as a final
-                    scientific determination when evidence is uncertain.
-
+                    Machine output should not be presented as a final scientific determination when
+                    evidence is uncertain.
                 </p>
-
                 <p>
-
-                    Users should remain able to inspect the source records,
-                    evidence, and human review behind an accepted result.
-
+                    Users should remain able to inspect the source records, evidence, and human
+                    review behind an accepted result.
                 </p>
-
             </article>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Speciedex Ecosystem
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="ecosystem-title">
-
+    <section class="content-section section-muted" aria-labelledby="ecosystem-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Project Ecosystem
-                </p>
-
-                <h2 id="ecosystem-title">
-                    Speciedex Project Components
-                </h2>
-
+                <p class="eyebrow">Project Ecosystem</p>
+                <h2 id="ecosystem-title">Speciedex Project Components</h2>
             </div>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Speciedex
-                    </h3>
-
+                    <h3>Speciedex</h3>
                     <p>
-
-                        The public biodiversity, taxonomy, conservation,
-                        education, and species-information platform.
-
+                        The public biodiversity, taxonomy, conservation, education, and
+                        species-information platform.
                     </p>
-
                     <p>
-
-                        <a
-                            class="text-link"
-                            href="../speciedex/">
-                            Explore Speciedex
-                        </a>
-
+                        <a class="text-link" href="../speciedex/">Explore Speciedex</a>
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        SpeciedexCore
-                    </h3>
-
+                    <h3>SpeciedexCore</h3>
                     <p>
-
-                        The data, taxonomy, validation, indexing, storage,
-                        synchronization, and API foundation.
-
+                        The data, taxonomy, validation, indexing, storage, synchronization, and API
+                        foundation.
                     </p>
-
                     <p>
-
-                        <a
-                            class="text-link"
-                            href="../speciedexcore/">
-                            Explore SpeciedexCore
-                        </a>
-
+                        <a class="text-link" href="../speciedexcore/">Explore SpeciedexCore</a>
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        SpeciedexExplorer
-                    </h3>
-
+                    <h3>SpeciedexExplorer</h3>
                     <p>
-
-                        The interactive interface for searching, mapping,
-                        comparing, visualizing, and analyzing biodiversity
-                        records.
-
+                        The interactive interface for searching, mapping, comparing, visualizing,
+                        and analyzing biodiversity records.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        SpeciedexNet
-                    </h3>
-
+                    <h3>SpeciedexNet</h3>
                     <p>
-
-                        Distributed mirrors, archival nodes, synchronization,
-                        regional services, and resilient data delivery.
-
+                        Distributed mirrors, archival nodes, synchronization, regional services, and
+                        resilient data delivery.
                     </p>
-
                     <p>
-
-                        <a
-                            class="text-link"
-                            href="../speciedexnet/">
-                            Explore SpeciedexNet
-                        </a>
-
+                        <a class="text-link" href="../speciedexnet/">Explore SpeciedexNet</a>
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Open Source
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="open-source-title">
-
+    <section class="content-section section-accent" aria-labelledby="open-source-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Open Infrastructure
-                </p>
-
-                <h2 id="open-source-title">
-                    Open-Source Explorer
-                </h2>
-
+                <p class="eyebrow">Open Infrastructure</p>
+                <h2 id="open-source-title">Open-Source Explorer</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer is intended to use open-source software,
-                    documented interfaces, accessible markup, interoperable
-                    data formats, and reproducible development practices.
-
+                    SpeciedexExplorer is intended to use open-source software, documented
+                    interfaces, accessible markup, interoperable data formats, and reproducible
+                    development practices.
                 </p>
-
                 <p>
-
-                    An open interface allows institutions and independent
-                    developers to inspect, adapt, translate, deploy, and
-                    improve the explorer.
-
+                    An open interface allows institutions and independent developers to inspect,
+                    adapt, translate, deploy, and improve the explorer.
                 </p>
-
                 <p>
-
-                    Open code does not remove the need for security review,
-                    scientific validation, maintenance, documentation, and
-                    responsible deployment.
-
+                    Open code does not remove the need for security review, scientific validation,
+                    maintenance, documentation, and responsible deployment.
                 </p>
-
                 <p>
-
-                    Third-party libraries, maps, media, fonts, and datasets
-                    remain subject to their respective licenses and
-                    attribution requirements.
-
+                    Third-party libraries, maps, media, fonts, and datasets remain subject to their
+                    respective licenses and attribution requirements.
                 </p>
-
             </article>
-
             <div class="button-group">
-
-                <a
-                    class="button"
-                    href="../software/">
-                    Explore Software
-                </a>
-
-                <a
-                    class="button button-secondary"
-                    href="../license/">
-                    View Licensing
-                </a>
-
+                <a class="button" href="../software/">Explore Software</a>
+                <a class="button button-secondary" href="../license/">View Licensing</a>
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Roadmap
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="roadmap-title">
-
+    <section class="content-section" aria-labelledby="roadmap-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Development Direction
-                </p>
-
-                <h2 id="roadmap-title">
-                    SpeciedexExplorer Roadmap
-                </h2>
-
+                <p class="eyebrow">Development Direction</p>
+                <h2 id="roadmap-title">SpeciedexExplorer Roadmap</h2>
             </div>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Unified Search
-                    </h3>
-
+                    <h3>Unified Search</h3>
                     <p>
-
-                        Deliver fast search across taxa, names, places,
-                        habitats, observations, references, media, and
-                        identifiers.
-
+                        Deliver fast search across taxa, names, places, habitats, observations,
+                        references, media, and identifiers.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Taxonomy Browser
-                    </h3>
-
+                    <h3>Taxonomy Browser</h3>
                     <p>
-
-                        Build expandable classifications, alternate taxonomy
-                        views, lineage navigation, and revision history.
-
+                        Build expandable classifications, alternate taxonomy views, lineage
+                        navigation, and revision history.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Geographic Explorer
-                    </h3>
-
+                    <h3>Geographic Explorer</h3>
                     <p>
-
-                        Build observation maps, range layers, habitat maps,
-                        protected areas, and regional summaries.
-
+                        Build observation maps, range layers, habitat maps, protected areas, and
+                        regional summaries.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Comparison Tools
-                    </h3>
-
+                    <h3>Comparison Tools</h3>
                     <p>
-
-                        Add structured comparison of species, taxa, regions,
-                        habitats, and conservation records.
-
+                        Add structured comparison of species, taxa, regions, habitats, and
+                        conservation records.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Research Workspace
-                    </h3>
-
+                    <h3>Research Workspace</h3>
                     <p>
-
-                        Add saved searches, collections, exports, reproducible
-                        views, and collaborative research tools.
-
+                        Add saved searches, collections, exports, reproducible views, and
+                        collaborative research tools.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Media Explorer
-                    </h3>
-
+                    <h3>Media Explorer</h3>
                     <p>
-
-                        Add galleries, audio players, video, specimen views,
-                        metadata, and license-aware downloads.
-
+                        Add galleries, audio players, video, specimen views, metadata, and
+                        license-aware downloads.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Offline Explorer
-                    </h3>
-
+                    <h3>Offline Explorer</h3>
                     <p>
-
-                        Support field-ready regional packages, local search,
-                        cached maps, and delayed synchronization.
-
+                        Support field-ready regional packages, local search, cached maps, and
+                        delayed synchronization.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Accessibility and Translation
-                    </h3>
-
+                    <h3>Accessibility and Translation</h3>
                     <p>
-
-                        Expand keyboard support, alternative visualizations,
-                        screen-reader compatibility, and multilingual access.
-
+                        Expand keyboard support, alternative visualizations, screen-reader
+                        compatibility, and multilingual access.
                     </p>
-
                 </article>
-
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Contributions
     ========================================================================
     -->
-
-    <section
-        class="content-section section-muted"
-        aria-labelledby="contribute-title">
-
+    <section class="content-section section-muted" aria-labelledby="contribute-title">
         <div class="container">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Participate
-                </p>
-
-                <h2 id="contribute-title">
-                    Contributing to SpeciedexExplorer
-                </h2>
-
+                <p class="eyebrow">Participate</p>
+                <h2 id="contribute-title">Contributing to SpeciedexExplorer</h2>
             </div>
-
             <div class="content-grid content-grid-two-column">
-
                 <article class="content-card">
-
-                    <h3>
-                        Interface Development
-                    </h3>
-
+                    <h3>Interface Development</h3>
                     <p>
-
-                        Contribute search, filters, tables, maps, galleries,
-                        taxonomic trees, comparison tools, and research
-                        interfaces.
-
+                        Contribute search, filters, tables, maps, galleries, taxonomic trees,
+                        comparison tools, and research interfaces.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Accessibility
-                    </h3>
-
+                    <h3>Accessibility</h3>
                     <p>
-
-                        Improve keyboard navigation, screen-reader output,
-                        semantic markup, contrast, alternative views, and
-                        reduced-motion behavior.
-
+                        Improve keyboard navigation, screen-reader output, semantic markup,
+                        contrast, alternative views, and reduced-motion behavior.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Mapping
-                    </h3>
-
+                    <h3>Mapping</h3>
                     <p>
-
-                        Contribute geographic layers, spatial filters,
-                        clustering, geometry handling, map legends, and
-                        regional views.
-
+                        Contribute geographic layers, spatial filters, clustering, geometry
+                        handling, map legends, and regional views.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Visualization
-                    </h3>
-
+                    <h3>Visualization</h3>
                     <p>
-
-                        Build taxonomic, ecological, conservation, temporal,
-                        and geographic visualizations.
-
+                        Build taxonomic, ecological, conservation, temporal, and geographic
+                        visualizations.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Translation
-                    </h3>
-
+                    <h3>Translation</h3>
                     <p>
-
-                        Translate interface labels, educational summaries,
-                        documentation, filters, and accessibility text.
-
+                        Translate interface labels, educational summaries, documentation, filters,
+                        and accessibility text.
                     </p>
-
                 </article>
-
                 <article class="content-card">
-
-                    <h3>
-                        Testing
-                    </h3>
-
+                    <h3>Testing</h3>
                     <p>
-
-                        Test browsers, devices, accessibility, search
-                        behavior, large datasets, errors, permissions, and
-                        offline workflows.
-
+                        Test browsers, devices, accessibility, search behavior, large datasets,
+                        errors, permissions, and offline workflows.
                     </p>
-
                 </article>
-
             </div>
-
             <div class="button-group">
-
-                <a
-                    class="button"
-                    href="../contribute/">
-                    Contribute
-                </a>
-
-                <a
-                    class="button button-secondary"
-                    href="../developers/">
-                    Developer Resources
-                </a>
-
+                <a class="button" href="../contribute/">Contribute</a>
+                <a class="button button-secondary" href="../developers/">Developer Resources</a>
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Creator
     ========================================================================
     -->
-
-    <section
-        class="content-section section-accent"
-        aria-labelledby="creator-title">
-
+    <section class="content-section section-accent" aria-labelledby="creator-title">
         <div class="container container-narrow">
-
             <div class="section-heading">
-
-                <p class="eyebrow">
-                    Creator and Lead Designer
-                </p>
-
-                <h2 id="creator-title">
-                    Created by [0xdeadbeef]
-                </h2>
-
+                <p class="eyebrow">Creator and Lead Designer</p>
+                <h2 id="creator-title">Created by [0xdeadbeef]</h2>
             </div>
-
             <article class="content-card">
-
                 <p>
-
-                    SpeciedexExplorer was created by [0xdeadbeef], founder,
-                    principal architect, principal software engineer,
-                    principal data engineer, interface designer, research
-                    engineer, and project director of the Speciedex
-                    ecosystem.
-
+                    SpeciedexExplorer was created by [0xdeadbeef], founder, principal architect,
+                    principal software engineer, principal data engineer, interface designer,
+                    research engineer, and project director of the Speciedex ecosystem.
                 </p>
-
                 <p>
-
-                    The original explorer architecture, interface structure,
-                    search model, comparison model, mapping direction,
-                    visual-navigation system, research-workspace concept,
-                    documentation structure, and project identity are
-                    credited to [0xdeadbeef] except where third-party work is
-                    separately identified.
-
+                    The original explorer architecture, interface structure, search model,
+                    comparison model, mapping direction, visual-navigation system,
+                    research-workspace concept, documentation structure, and project identity are
+                    credited to [0xdeadbeef] except where third-party work is separately identified.
                 </p>
-
                 <p>
-
-                    SpeciedexExplorer is developed through ZZX-Labs
-                    R&amp;D, [0xdeadbeef] Consulting, BitTechIn, and the wider
-                    Speciedex project.
-
+                    SpeciedexExplorer is developed through ZZX-Labs R&amp;D, [0xdeadbeef]
+                    Consulting, BitTechIn, and the wider Speciedex project.
                 </p>
-
             </article>
-
             <div class="button-group">
-
-                <a
-                    class="button"
-                    href="../creator/">
-                    About the Creator
-                </a>
-
-                <a
-                    class="button button-secondary"
-                    href="../credits/">
-                    View Credits
-                </a>
-
+                <a class="button" href="../creator/">About the Creator</a>
+                <a class="button button-secondary" href="../credits/">View Credits</a>
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Scientific Notice
     ========================================================================
     -->
-
-    <section
-        class="content-section"
-        aria-labelledby="notice-title">
-
+    <section class="content-section" aria-labelledby="notice-title">
         <div class="container container-narrow">
-
-            <h2 id="notice-title">
-                Scientific and Technical Notice
-            </h2>
-
+            <h2 id="notice-title">Scientific and Technical Notice</h2>
             <p>
-
-                SpeciedexExplorer is an evolving research, education, and
-                software interface.
-
+                SpeciedexExplorer is an evolving research, education, and software interface.
             </p>
-
             <p>
-
-                Biological classification, scientific names, geographic
-                ranges, observations, conservation assessments, ecological
-                interpretations, and source records may change.
-
+                Biological classification, scientific names, geographic ranges, observations,
+                conservation assessments, ecological interpretations, and source records may change.
             </p>
-
             <p>
-
-                Information may be incomplete, provisional, disputed,
-                machine-assisted, outdated, source-limited, or awaiting
-                review.
-
+                Information may be incomplete, provisional, disputed, machine-assisted, outdated,
+                source-limited, or awaiting review.
             </p>
-
             <p>
-
-                Maps may contain generalized, modeled, uncertain, historical,
-                or restricted data and should not automatically be treated as
-                exact real-time occurrence.
-
+                Maps may contain generalized, modeled, uncertain, historical, or restricted data and
+                should not automatically be treated as exact real-time occurrence.
             </p>
-
             <p>
-
-                Users should verify important information through current
-                primary literature, recognized scientific authorities,
-                source databases, qualified specialists, and official
-                agencies.
-
+                Users should verify important information through current primary literature,
+                recognized scientific authorities, source databases, qualified specialists, and
+                official agencies.
             </p>
-
             <p>
-
-                SpeciedexExplorer should not be used as the sole basis for
-                medical, veterinary, legal, regulatory, wildlife-handling,
-                trade, quarantine, navigation, enforcement, emergency, or
-                public-safety decisions.
-
+                SpeciedexExplorer should not be used as the sole basis for medical, veterinary,
+                legal, regulatory, wildlife-handling, trade, quarantine, navigation, enforcement,
+                emergency, or public-safety decisions.
             </p>
-
             <div class="button-group">
-
-                <a
-                    class="button"
-                    href="../disclaimer/">
-                    Read the Disclaimer
-                </a>
-
-                <a
-                    class="button button-secondary"
-                    href="../legal/">
-                    Legal Information
-                </a>
-
+                <a class="button" href="../disclaimer/">Read the Disclaimer</a>
+                <a class="button button-secondary" href="../legal/">Legal Information</a>
             </div>
-
         </div>
-
     </section>
-
     <!--
     ========================================================================
     Call to Action
     ========================================================================
     -->
-
-    <section
-        class="call-to-action"
-        aria-labelledby="speciedexexplorer-cta-title">
-
+    <section class="call-to-action" aria-labelledby="speciedexexplorer-cta-title">
         <div class="container">
-
             <div class="call-to-action-inner">
-
                 <div>
-
-                    <h2 id="speciedexexplorer-cta-title">
-                        Explore the Living World
-                    </h2>
-
+                    <h2 id="speciedexexplorer-cta-title">Explore the Living World</h2>
                     <p>
-
-                        Search species, navigate taxonomy, compare organisms,
-                        map biodiversity, study habitats, review conservation
-                        data, and examine the evidence behind every record.
-
+                        Search species, navigate taxonomy, compare organisms, map biodiversity,
+                        study habitats, review conservation data, and examine the evidence behind
+                        every record.
                     </p>
-
                 </div>
-
                 <div class="button-group">
-
-                    <a
-                        class="button"
-                        href="../search/">
-                        Search Speciedex
-                    </a>
-
-                    <a
-                        class="button button-secondary"
-                        href="../speciedexcore/">
-                        Explore SpeciedexCore
-                    </a>
-
+                    <a class="button" href="../search/">Search Speciedex</a>
+                    <a class="button button-secondary" href="../speciedexcore/">Explore SpeciedexCore</a>
                 </div>
-
             </div>
-
         </div>
-
     </section>
-
 </main>
-
 <div data-include="footer"></div>
-
-<script
-    src="../static/script.js"
-    defer>
+<script src="../static/script.js" defer>
 </script>
-
 </body>
 </html>
