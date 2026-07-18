@@ -13,182 +13,148 @@ Color Palette & Design Tokens
     Brand Colors
     ========================================================================
     */
+    --color-primary: #c0d674;
+    --color-primary-light: #d8e79a;
+    --color-primary-dark: #8fa64a;
 
-    --color-primary:         #c0d674;
-    --color-primary-light:   #d8e79a;
-    --color-primary-dark:    #8fa64a;
-
-    --color-accent:          #e6a42b;
-    --color-accent-light:    #f0bb55;
-    --color-accent-dark:     #b87914;
+    --color-accent: #e6a42b;
+    --color-accent-light: #f0bb55;
+    --color-accent-dark: #b87914;
 
     /*
     ========================================================================
     Backgrounds
     ========================================================================
     */
+    --color-background: #000000;
+    --color-background-alt: #0a0d0b;
 
-    --color-background:      #000000;
-    --color-background-alt:  #0a0d0b;
-
-    --color-surface:         #111713;
-    --color-surface-alt:     #171f19;
-    --color-surface-light:   #202a22;
+    --color-surface: #111713;
+    --color-surface-alt: #171f19;
+    --color-surface-light: #202a22;
 
     /*
     ========================================================================
     Text
     ========================================================================
     */
-
-    --color-text:            #e8eee3;
-    --color-text-muted:      #a9b5a7;
-    --color-text-subtle:     #7f8c80;
-    --color-text-dark:       #0a0d0b;
+    --color-text: #e8eee3;
+    --color-text-muted: #a9b5a7;
+    --color-text-subtle: #7f8c80;
+    --color-text-dark: #0a0d0b;
 
     /*
     ========================================================================
     Links
     ========================================================================
     */
-
-    --color-link:            var(--color-primary);
-    --color-link-hover:      var(--color-accent);
+    --color-link: var(--color-primary);
+    --color-link-hover: var(--color-accent);
 
     /*
     ========================================================================
     Borders
     ========================================================================
     */
-
-    --color-border:          #344038;
-    --color-border-light:    #506050;
-    --color-border-bright:   #708053;
+    --color-border: #344038;
+    --color-border-light: #506050;
+    --color-border-bright: #708053;
 
     /*
     ========================================================================
     Status Colors
     ========================================================================
     */
-
-    --color-success:         #9ec45e;
-    --color-warning:         #e6a42b;
-    --color-danger:          #d66f6f;
-    --color-info:            #6cb3ff;
+    --color-success: #9ec45e;
+    --color-warning: #e6a42b;
+    --color-danger: #d66f6f;
+    --color-info: #6cb3ff;
 
     /*
     ========================================================================
     Transparent Brand Colors
     ========================================================================
     */
+    --color-primary-025: rgba(192,214,116,.025);
+    --color-primary-050: rgba(192,214,116,.05);
+    --color-primary-060: rgba(192,214,116,.06);
+    --color-primary-080: rgba(192,214,116,.08);
+    --color-primary-100: rgba(192,214,116,.10);
+    --color-primary-150: rgba(192,214,116,.15);
+    --color-primary-200: rgba(192,214,116,.20);
+    --color-primary-250: rgba(192,214,116,.25);
+    --color-primary-350: rgba(192,214,116,.35);
+    --color-primary-400: rgba(192,214,116,.40);
 
-    --color-primary-025:     rgba(192,214,116,.025);
-    --color-primary-050:     rgba(192,214,116,.05);
-    --color-primary-060:     rgba(192,214,116,.06);
-    --color-primary-080:     rgba(192,214,116,.08);
-    --color-primary-100:     rgba(192,214,116,.10);
-    --color-primary-150:     rgba(192,214,116,.15);
-    --color-primary-200:     rgba(192,214,116,.20);
-    --color-primary-250:     rgba(192,214,116,.25);
-    --color-primary-350:     rgba(192,214,116,.35);
-    --color-primary-400:     rgba(192,214,116,.40);
-
-    --color-accent-080:      rgba(230,164,43,.08);
-    --color-accent-100:      rgba(230,164,43,.10);
-    --color-accent-350:      rgba(230,164,43,.35);
+    --color-accent-080: rgba(230,164,43,.08);
+    --color-accent-100: rgba(230,164,43,.10);
+    --color-accent-350: rgba(230,164,43,.35);
 
     /*
     ========================================================================
     Overlays
     ========================================================================
     */
-
-    --overlay-light:         rgba(255,255,255,.05);
-    --overlay-medium:        rgba(255,255,255,.10);
-    --overlay-dark:          rgba(0,0,0,.60);
-    --overlay-heavy:         rgba(0,0,0,.82);
+    --overlay-light: rgba(255,255,255,.05);
+    --overlay-medium: rgba(255,255,255,.10);
+    --overlay-dark: rgba(0,0,0,.60);
+    --overlay-heavy: rgba(0,0,0,.82);
 
     /*
     ========================================================================
     Matrix Grid / Glow
     ========================================================================
     */
-
-    --grid-color:            rgba(192,214,116,.025);
-    --glow-color:            rgba(192,214,116,.14);
+    --grid-color: rgba(192,214,116,.025);
+    --glow-color: rgba(192,214,116,.14);
 
     /*
     ========================================================================
     Shadows
     ========================================================================
     */
-
-    --shadow-small:
-        0 4px 12px rgba(0,0,0,.24);
-
-    --shadow-medium:
-        0 10px 28px rgba(0,0,0,.32);
-
-    --shadow-large:
-        0 18px 45px rgba(0,0,0,.38);
-
-    --shadow-soft:
-        0 18px 45px rgba(0,0,0,.35);
-
-    --shadow-card:
-        0 10px 25px rgba(0,0,0,.25);
-
-    --shadow-header:
-        0 4px 20px rgba(0,0,0,.40);
-
-    --shadow-dropdown:
-        0 14px 34px rgba(0,0,0,.48);
+    --shadow-small: 0 4px 12px rgba(0,0,0,.24);
+    --shadow-medium: 0 10px 28px rgba(0,0,0,.32);
+    --shadow-large: 0 18px 45px rgba(0,0,0,.38);
+    --shadow-soft: 0 18px 45px rgba(0,0,0,.35);
+    --shadow-card: 0 10px 25px rgba(0,0,0,.25);
+    --shadow-header: 0 4px 20px rgba(0,0,0,.40);
+    --shadow-dropdown: 0 14px 34px rgba(0,0,0,.48);
 
     /*
     ========================================================================
     Gradients
     ========================================================================
     */
+    --gradient-background: linear-gradient(
+        180deg,
+        #050806 0%,
+        #000000 45%
+    );
 
-    --gradient-background:
-        linear-gradient(
-            180deg,
-            #050806 0%,
-            #000000 45%
-        );
+    --gradient-surface: linear-gradient(
+        180deg,
+        var(--color-surface) 0%,
+        #0d120f 100%
+    );
 
-    --gradient-surface:
-        linear-gradient(
-            180deg,
-            var(--color-surface) 0%,
-            #0d120f 100%
-        );
+    --gradient-hero: linear-gradient(
+        135deg,
+        rgba(192,214,116,.08),
+        transparent 55%
+    );
 
-    --gradient-hero:
-        linear-gradient(
-            135deg,
-            rgba(192,214,116,.08),
-            transparent 55%
-        );
-
-    --gradient-overlay:
-        linear-gradient(
-            rgba(0,0,0,.60),
-            rgba(0,0,0,.88)
-        );
+    --gradient-overlay: linear-gradient(
+        rgba(0,0,0,.60),
+        rgba(0,0,0,.88)
+    );
 
     /*
     ========================================================================
     Utility Backgrounds
     ========================================================================
     */
-
-    --background-hover:
-        rgba(192,214,116,.06);
-
-    --background-active:
-        rgba(192,214,116,.08);
-
-    --background-highlight:
-        rgba(192,214,116,.10);
+    --background-hover: rgba(192,214,116,.06);
+    --background-active: rgba(192,214,116,.08);
+    --background-highlight: rgba(192,214,116,.10);
 }
