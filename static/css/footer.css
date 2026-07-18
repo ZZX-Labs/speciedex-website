@@ -1,9 +1,16 @@
 /*
 ========================================================================
-Footer Layout
+Speciedex.org
+footer.css
+Site Footer
 ========================================================================
 */
 
+/*
+========================================================================
+Footer Layout
+========================================================================
+*/
 .site-footer,
 .footer {
     margin-top: var(--space-9);
@@ -23,7 +30,6 @@ Footer Layout
 Footer Columns
 ========================================================================
 */
-
 .footer-columns,
 .footer-grid {
     display: grid;
@@ -82,7 +88,6 @@ Footer Columns
 Footer Dividers
 ========================================================================
 */
-
 .footer-divider {
     width: 100%;
     height: 1px;
@@ -100,7 +105,6 @@ Footer Dividers
 Footer Metadata
 ========================================================================
 */
-
 .footer-meta,
 .footer-notes {
     display: flex;
@@ -149,7 +153,6 @@ Footer Metadata
 Tablet
 ========================================================================
 */
-
 @media (max-width: 1024px) {
     .footer-columns,
     .footer-grid {
@@ -162,7 +165,6 @@ Tablet
 Mobile
 ========================================================================
 */
-
 @media (max-width: 640px) {
     .site-footer > .container,
     .footer > .container {
