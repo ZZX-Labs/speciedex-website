@@ -2,8 +2,8 @@
   "generator": "Speciedex Icon Forge",
   "generator_version": "1.0.0",
   "count": 3,
-  "generated": 0,
-  "reused": 3,
+  "generated": 3,
+  "reused": 0,
   "failed": 0,
   "icons": [
     {
@@ -26,7 +26,7 @@
         ]
       },
       "file": "static/images/taxa/master/domain/eukaryota--domain--13139bd8786a.png",
-      "size": 1024,
+      "size": 2048,
       "parameters": {
         "identity_sha256": "13139bd8786a9fe4ff749f325d7541e896bccc01877d6f2d80be62a10c72fac1",
         "lineage_sha256": "9d98d1b84f60f442f30b19059d03dff9dec2bf5a01c6c6a4244681200c052260",
@@ -70,7 +70,7 @@
         "motility": "mobile"
       },
       "file": "static/images/taxa/master/kingdom/animalia--kingdom--c613f3eaa8b2.png",
-      "size": 1024,
+      "size": 2048,
       "parameters": {
         "identity_sha256": "c613f3eaa8b2bcae282e22d4d7fe59ed676c86e568e5a7ac6f3feab271f7b00c",
         "lineage_sha256": "96abf6ce99ab3c6fdc029b913d7f8e53d10aaba78700487425857e1f16ffcd62",
@@ -144,7 +144,7 @@
         "trophic_level": "carnivore"
       },
       "file": "static/images/taxa/master/species/panthera-leo--species--3981b04480f1.png",
-      "size": 1024,
+      "size": 2048,
       "parameters": {
         "identity_sha256": "3981b04480f14caf2052c5d7a86bb4047619fa980a166e6f6a20aa1ec396d89e",
         "lineage_sha256": "1e95f594e37ae1921a35896468fbca99bb7cc25117eca0cbcf409ff0eabcae60",

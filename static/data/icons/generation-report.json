@@ -1,6 +1,6 @@
 {
   "database": "static/data/taxonomy/index.sqlite3",
-  "master_size": 1024,
+  "master_size": 2048,
   "total_taxa": 3,
   "state_counts": {
     "ready": 3
