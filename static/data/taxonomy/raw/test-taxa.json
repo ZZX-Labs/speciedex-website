@@ -1,0 +1,92 @@
+[
+  {
+    "id": "speciedex:domain:eukaryota",
+    "scientific_name": "Eukaryota",
+    "rank": "domain",
+    "status": "accepted",
+    "lineage": [
+      {
+        "rank": "domain",
+        "name": "Eukaryota"
+      }
+    ],
+    "traits": {
+      "cellularity": [
+        "unicellular",
+        "multicellular"
+      ]
+    }
+  },
+  {
+    "id": "speciedex:kingdom:animalia",
+    "scientific_name": "Animalia",
+    "rank": "kingdom",
+    "status": "accepted",
+    "lineage": [
+      {
+        "rank": "domain",
+        "name": "Eukaryota"
+      },
+      {
+        "rank": "kingdom",
+        "name": "Animalia"
+      }
+    ],
+    "traits": {
+      "cellularity": "multicellular",
+      "motility": "mobile"
+    }
+  },
+  {
+    "id": "speciedex:species:panthera-leo",
+    "scientific_name": "Panthera leo",
+    "common_name": "Lion",
+    "rank": "species",
+    "status": "accepted",
+    "lineage": [
+      {
+        "rank": "domain",
+        "name": "Eukaryota"
+      },
+      {
+        "rank": "kingdom",
+        "name": "Animalia"
+      },
+      {
+        "rank": "phylum",
+        "name": "Chordata"
+      },
+      {
+        "rank": "class",
+        "name": "Mammalia"
+      },
+      {
+        "rank": "order",
+        "name": "Carnivora"
+      },
+      {
+        "rank": "family",
+        "name": "Felidae"
+      },
+      {
+        "rank": "genus",
+        "name": "Panthera"
+      },
+      {
+        "rank": "species",
+        "name": "Panthera leo"
+      }
+    ],
+    "traits": {
+      "body_plan": "bilateral",
+      "cellularity": "multicellular",
+      "motility": "mobile",
+      "trophic_level": "carnivore",
+      "habitat": [
+        "terrestrial",
+        "grassland",
+        "forest"
+      ]
+    }
+  }
+]
