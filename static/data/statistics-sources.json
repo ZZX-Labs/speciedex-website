@@ -1,6 +1,17 @@
 {
-  "generated_at": "2026-07-19T08:43:19Z",
+  "generated_at": "2026-07-19T10:16:11Z",
   "providers": [
+    {
+      "provider": "gbif",
+      "fetched": 500,
+      "created": 500,
+      "matched": 0,
+      "revised": 0,
+      "conflicted": 0,
+      "rejected": 0,
+      "requests": 1,
+      "error": null
+    },
     {
       "provider": "itis",
       "fetched": 0,
@@ -33,17 +44,6 @@
       "rejected": 0,
       "requests": 0,
       "error": "Wikispecies API error invalidparammix: \"titles\", \"pageids\" or a generator was used to supply multiple pages, but the \"rvlimit\", \"rvstartid\", \"rvendid\", \"rvdir=newer\", \"rvuser\", \"rvexcludeuser\", \"rvstart\", and \"rvend\" parameters may only be used on a single page."
-    },
-    {
-      "provider": "inaturalist",
-      "fetched": 200,
-      "created": 200,
-      "matched": 0,
-      "revised": 0,
-      "conflicted": 0,
-      "rejected": 0,
-      "requests": 1,
-      "error": null
     }
   ],
   "skipped": [
