@@ -1,5 +1,5 @@
 {
   "provider": "wikispecies",
-  "last_attempt": "2026-07-19T10:16:11Z",
+  "last_attempt": "2026-07-19T12:35:50Z",
   "last_error": "Wikispecies API error invalidparammix: \"titles\", \"pageids\" or a generator was used to supply multiple pages, but the \"rvlimit\", \"rvstartid\", \"rvendid\", \"rvdir=newer\", \"rvuser\", \"rvexcludeuser\", \"rvstart\", and \"rvend\" parameters may only be used on a single page."
 }
