@@ -1,5 +1,11 @@
 {
   "provider": "itis",
   "last_attempt": "2026-07-19T00:09:16Z",
-  "last_error": "https://www.itis.gov/ITISWebService/jsonservice/getFullRecordFromTSN?tsn=1: Expecting value: line 1 column 1 (char 0)"
+  "last_error": null,
+  "cursor": "{\"endpoint\":\"https://www.itis.gov/ITISWebService/jsonservice/getFullRecordFromTSN\",\"tsn\":2}",
+  "bootstrap_complete": false,
+  "last_success": "2026-07-19T03:52:31Z",
+  "last_batch_records": 0,
+  "last_requests": 1,
+  "last_raw_records": 1
 }

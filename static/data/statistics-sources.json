@@ -1,6 +1,17 @@
 {
-  "generated_at": "2026-07-19T00:09:27Z",
+  "generated_at": "2026-07-19T03:52:31Z",
   "providers": [
+    {
+      "provider": "wikispecies",
+      "fetched": 0,
+      "created": 0,
+      "matched": 0,
+      "revised": 0,
+      "conflicted": 0,
+      "rejected": 0,
+      "requests": 0,
+      "error": "Wikispecies API error invalidparammix: \"titles\", \"pageids\" or a generator was used to supply multiple pages, but the \"rvlimit\", \"rvstartid\", \"rvendid\", \"rvdir=newer\", \"rvuser\", \"rvexcludeuser\", \"rvstart\", and \"rvend\" parameters may only be used on a single page."
+    },
     {
       "provider": "inaturalist",
       "fetched": 200,
@@ -31,19 +42,8 @@
       "revised": 0,
       "conflicted": 0,
       "rejected": 0,
-      "requests": 0,
-      "error": "https://www.itis.gov/ITISWebService/jsonservice/getFullRecordFromTSN?tsn=1: Expecting value: line 1 column 1 (char 0)"
-    },
-    {
-      "provider": "worms",
-      "fetched": 0,
-      "created": 0,
-      "matched": 0,
-      "revised": 0,
-      "conflicted": 0,
-      "rejected": 0,
-      "requests": 0,
-      "error": "https://www.marinespecies.org/rest/AphiaRecordsByDate?startdate=0001-01-01T00%3A00%3A00&enddate=9999-12-31T23%3A59%3A59&marine_only=false&offset=1: HTTP Error 400: Bad Request"
+      "requests": 1,
+      "error": null
     }
   ],
   "skipped": [

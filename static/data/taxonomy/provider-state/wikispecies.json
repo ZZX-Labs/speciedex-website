@@ -1,5 +1,5 @@
 {
   "provider": "wikispecies",
-  "last_attempt": "2026-07-19T00:07:26Z",
-  "last_error": "Wikispecies API error params: Use \"gapfilterredir=nonredirects\" instead of \"redirects\" when using \"allpages\" as a generator."
+  "last_attempt": "2026-07-19T03:52:27Z",
+  "last_error": "Wikispecies API error invalidparammix: \"titles\", \"pageids\" or a generator was used to supply multiple pages, but the \"rvlimit\", \"rvstartid\", \"rvendid\", \"rvdir=newer\", \"rvuser\", \"rvexcludeuser\", \"rvstart\", and \"rvend\" parameters may only be used on a single page."
 }
