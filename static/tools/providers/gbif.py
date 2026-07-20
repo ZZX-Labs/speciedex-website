@@ -5,24 +5,30 @@ static/tools/providers/gbif.py
 
 GBIF provider plug-in.
 
-Fetches one page of GBIF taxonomic records with one logical API call per
-provider run. Every field returned for each GBIF record is retained in the
-raw provider payload while core taxonomic fields are normalized for
-Speciedex reconciliation.
+Fetches one page from the GBIF Species API per provider run. Every returned
+record is normalized into providers.common.Taxon while the complete original
+GBIF object is retained under ``extra["raw"]``.
 
-The provider supports both legacy numeric cursors and structured JSON
-cursors. New cursor values preserve the active offset, page size, endpoint,
-and configured filters.
+The provider supports:
+
+- deterministic structured cursors,
+- legacy numeric cursors,
+- configurable Species API base URL,
+- bounded page sizing,
+- optional GBIF search filters,
+- strict cursor progress checks,
+- stable provider identifiers,
+- complete raw-record preservation,
+- one logical API request per fetch call.
 
 Copyright (c) 2026 ZZX-Laboratories
-
 Licensed under the MIT License.
 """
 
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import Any, Mapping
 
 from .common import (
     BaseProvider,
@@ -44,9 +50,10 @@ class Provider(BaseProvider):
     DEFAULT_PAGE_SIZE = 500
     MAX_PAGE_SIZE = 1000
 
-    FILTER_PARAMETERS = {
+    FILTER_PARAMETERS: dict[str, str] = {
         "q": "q",
         "rank": "rank",
+        "higher_taxon_key": "highertaxon_key",
         "highertaxon_key": "highertaxon_key",
         "status": "status",
         "is_extinct": "is_extinct",
@@ -59,14 +66,7 @@ class Provider(BaseProvider):
     }
 
     def fetch(self) -> Batch:
-        """
-        Fetch one GBIF species-search page.
-
-        This method invokes HTTPClient.get_json exactly once. The HTTP client
-        may internally retry a failed transport attempt according to the
-        configured retry policy, but the provider does not issue secondary
-        record, vernacular-name, media, occurrence, or reference requests.
-        """
+        """Fetch and normalize one GBIF species-search page."""
 
         base_url = normalize_space(
             self.definition.get(
@@ -80,13 +80,20 @@ class Provider(BaseProvider):
                 "GBIF base_url is empty."
             )
 
-        endpoint = f"{base_url}/species/search"
+        if not (
+            base_url.startswith("https://")
+            or base_url.startswith("http://")
+        ):
+            raise ProviderError(
+                "GBIF base_url must use HTTP or HTTPS."
+            )
 
+        endpoint = f"{base_url}/species/search"
         cursor = self._decode_cursor(
             self.cursor
         )
 
-        start_offset = safe_int(
+        configured_start = safe_int(
             self.definition.get(
                 "start_offset",
                 0,
@@ -96,7 +103,7 @@ class Provider(BaseProvider):
 
         offset = safe_int(
             cursor.get("offset"),
-            start_offset,
+            configured_start,
         )
 
         configured_page_size = safe_int(
@@ -107,7 +114,7 @@ class Provider(BaseProvider):
             self.DEFAULT_PAGE_SIZE,
         )
 
-        cursor_page_size = safe_int(
+        cursor_limit = safe_int(
             cursor.get("limit"),
             configured_page_size,
         )
@@ -115,22 +122,20 @@ class Provider(BaseProvider):
         limit = max(
             1,
             min(
-                cursor_page_size,
                 configured_page_size,
+                cursor_limit,
                 self.batch_size,
                 self.MAX_PAGE_SIZE,
             ),
         )
 
-        parameters: dict[str, Any] = {
-            "limit": limit,
-            "offset": offset,
-        }
-
         active_filters = self._configured_filters()
 
-        for parameter, value in active_filters.items():
-            parameters[parameter] = value
+        parameters: dict[str, Any] = {
+            "offset": offset,
+            "limit": limit,
+            **active_filters,
+        }
 
         request_count_before = self.http.requests
 
@@ -146,13 +151,12 @@ class Provider(BaseProvider):
 
         if request_count < 1:
             raise ProviderError(
-                "GBIF provider completed without "
-                "performing an HTTP request."
+                "GBIF fetch completed without an HTTP request."
             )
 
         if not isinstance(
             payload,
-            dict,
+            Mapping,
         ):
             raise ProviderError(
                 "GBIF returned a non-object JSON response."
@@ -168,7 +172,7 @@ class Provider(BaseProvider):
             list,
         ):
             raise ProviderError(
-                "GBIF response field `results` is not a list."
+                "GBIF response field 'results' is not a list."
             )
 
         response_offset = safe_int(
@@ -192,16 +196,26 @@ class Provider(BaseProvider):
             )
         )
 
+        if response_offset < 0:
+            raise ProviderError(
+                "GBIF returned a negative response offset."
+            )
+
+        if response_limit < 1:
+            response_limit = limit
+
         retrieved_at = now()
 
         crawl_metadata = {
             "endpoint": endpoint,
-            "offset": response_offset,
-            "limit": response_limit,
+            "requested_offset": offset,
+            "requested_limit": limit,
+            "response_offset": response_offset,
+            "response_limit": response_limit,
             "returned": len(raw_results),
             "count": response_count,
             "end_of_records": end_of_records,
-            "filters": active_filters,
+            "filters": dict(active_filters),
         }
 
         records: list[Taxon] = []
@@ -209,19 +223,21 @@ class Provider(BaseProvider):
         for raw_record in raw_results:
             if not isinstance(
                 raw_record,
-                dict,
+                Mapping,
             ):
                 continue
 
-            record = self._normalize_record(
-                raw_record=raw_record,
+            normalized = self._normalize_record(
+                raw_record=dict(raw_record),
                 base_url=base_url,
                 retrieved_at=retrieved_at,
                 crawl_metadata=crawl_metadata,
             )
 
-            if record is not None:
-                records.append(record)
+            if normalized is not None:
+                records.append(
+                    normalized
+                )
 
         next_offset = (
             response_offset
@@ -234,7 +250,7 @@ class Provider(BaseProvider):
         ):
             raise ProviderError(
                 "GBIF returned no cursor progress while "
-                "`endOfRecords` was false."
+                "endOfRecords was false."
             )
 
         next_cursor = (
@@ -260,14 +276,13 @@ class Provider(BaseProvider):
 
     def _normalize_record(
         self,
+        *,
         raw_record: dict[str, Any],
         base_url: str,
         retrieved_at: str,
-        crawl_metadata: dict[str, Any],
+        crawl_metadata: Mapping[str, Any],
     ) -> Taxon | None:
-        """
-        Normalize one GBIF result while retaining its complete raw payload.
-        """
+        """Normalize one GBIF search result."""
 
         provider_id = self._first_value(
             raw_record,
@@ -306,10 +321,7 @@ class Provider(BaseProvider):
                 "species",
                 "scientificName",
             )
-        )
-
-        if not canonical_name:
-            canonical_name = scientific_name
+        ) or scientific_name
 
         accepted_provider_id = normalize_space(
             self._first_value(
@@ -346,6 +358,14 @@ class Provider(BaseProvider):
             )
         )
 
+        rank = normalize_space(
+            self._first_value(
+                raw_record,
+                "rank",
+                "taxonRank",
+            )
+        ).casefold() or "unknown"
+
         status = self._normalize_status(
             self._first_value(
                 raw_record,
@@ -354,17 +374,10 @@ class Provider(BaseProvider):
             )
         )
 
-        rank = normalize_space(
-            self._first_value(
-                raw_record,
-                "rank",
-                "taxonRank",
-            )
-        ).lower() or "unknown"
-
         synonyms = self._extract_synonyms(
             raw_record,
-            scientific_name,
+            scientific_name=scientific_name,
+            canonical_name=canonical_name,
         )
 
         return Taxon(
@@ -399,7 +412,9 @@ class Provider(BaseProvider):
             genus=normalize_space(
                 raw_record.get("genus")
             ),
-            accepted_provider_id=accepted_provider_id,
+            accepted_provider_id=(
+                accepted_provider_id
+            ),
             source_url=source_url,
             source_modified=source_modified,
             retrieved_at=retrieved_at,
@@ -428,6 +443,9 @@ class Provider(BaseProvider):
                     ),
                     "accepted_key": raw_record.get(
                         "acceptedKey"
+                    ),
+                    "accepted_usage_key": raw_record.get(
+                        "acceptedUsageKey"
                     ),
                     "parent_key": raw_record.get(
                         "parentKey"
@@ -473,12 +491,7 @@ class Provider(BaseProvider):
     def _configured_filters(
         self,
     ) -> dict[str, Any]:
-        """
-        Read optional species-search filters from the provider definition.
-
-        Registry keys and API keys are mapped explicitly so the provider can
-        support aliases later without changing the registry format.
-        """
+        """Return normalized configured GBIF search filters."""
 
         filters: dict[str, Any] = {}
 
@@ -498,7 +511,15 @@ class Provider(BaseProvider):
             ):
                 continue
 
-            filters[api_parameter] = value
+            if (
+                api_parameter
+                in filters
+            ):
+                continue
+
+            filters[
+                api_parameter
+            ] = value
 
         return filters
 
@@ -519,24 +540,27 @@ class Provider(BaseProvider):
             "heterotypic synonym": "synonym",
             "homotypic synonym": "synonym",
             "proparte synonym": "synonym",
+            "pro parte synonym": "synonym",
             "misapplied": "misapplied",
         }
 
-        if status in aliases:
-            return aliases[status]
-
-        return status or "unknown"
+        return aliases.get(
+            status,
+            status or "unknown",
+        )
 
     @classmethod
     def _extract_synonyms(
         cls,
-        raw_record: dict[str, Any],
+        raw_record: Mapping[str, Any],
+        *,
         scientific_name: str,
+        canonical_name: str,
     ) -> list[str]:
         """
-        Extract synonym-like names already present in the search response.
+        Extract synonym-like names present in the search result.
 
-        No secondary GBIF synonym request is performed.
+        No secondary GBIF API request is performed.
         """
 
         values: list[str] = []
@@ -556,31 +580,35 @@ class Provider(BaseProvider):
                 raw_value,
                 str,
             ):
-                value = normalize_space(
+                normalized = normalize_space(
                     raw_value
                 )
 
-                if value:
-                    values.append(value)
+                if normalized:
+                    values.append(
+                        normalized
+                    )
 
             elif isinstance(
                 raw_value,
                 list,
             ):
                 for item in raw_value:
+                    normalized = ""
+
                     if isinstance(
                         item,
                         str,
                     ):
-                        value = normalize_space(
+                        normalized = normalize_space(
                             item
                         )
 
                     elif isinstance(
                         item,
-                        dict,
+                        Mapping,
                     ):
-                        value = normalize_space(
+                        normalized = normalize_space(
                             cls._first_value(
                                 item,
                                 "scientificName",
@@ -590,33 +618,25 @@ class Provider(BaseProvider):
                             )
                         )
 
-                    else:
-                        value = ""
+                    if normalized:
+                        values.append(
+                            normalized
+                        )
 
-                    if value:
-                        values.append(value)
-
-        accepted_name = normalize_space(
-            raw_record.get(
-                "acceptedScientificName"
-            )
-        )
-
-        if accepted_name:
-            values.append(
-                accepted_name
-            )
+        excluded = {
+            scientific_name.casefold(),
+            canonical_name.casefold(),
+        }
 
         unique: list[str] = []
-        seen: set[str] = {
-            scientific_name.casefold()
-        }
+        seen: set[str] = set(
+            excluded
+        )
 
         for value in values:
             normalized = normalize_space(
                 value
             )
-
             key = normalized.casefold()
 
             if (
@@ -625,7 +645,9 @@ class Provider(BaseProvider):
             ):
                 continue
 
-            seen.add(key)
+            seen.add(
+                key
+            )
             unique.append(
                 normalized
             )
@@ -636,9 +658,7 @@ class Provider(BaseProvider):
     def _decode_cursor(
         cursor: str | None,
     ) -> dict[str, Any]:
-        """
-        Decode a structured cursor while supporting legacy numeric offsets.
-        """
+        """Decode a structured or legacy numeric cursor."""
 
         if not cursor:
             return {}
@@ -660,24 +680,59 @@ class Provider(BaseProvider):
             TypeError,
             json.JSONDecodeError,
         ):
-            return {}
+            raise ProviderError(
+                "GBIF cursor is neither a numeric offset "
+                "nor valid JSON."
+            )
 
         if not isinstance(
             decoded,
             dict,
         ):
-            return {}
+            raise ProviderError(
+                "GBIF cursor JSON must decode to an object."
+            )
+
+        offset = decoded.get(
+            "offset"
+        )
+
+        if (
+            offset is not None
+            and safe_int(
+                offset,
+                -1,
+            ) < 0
+        ):
+            raise ProviderError(
+                "GBIF cursor contains an invalid offset."
+            )
+
+        limit = decoded.get(
+            "limit"
+        )
+
+        if (
+            limit is not None
+            and safe_int(
+                limit,
+                -1,
+            ) < 1
+        ):
+            raise ProviderError(
+                "GBIF cursor contains an invalid limit."
+            )
 
         return decoded
 
     @staticmethod
     def _encode_cursor(
-        cursor: dict[str, Any],
+        cursor: Mapping[str, Any],
     ) -> str:
         """Encode provider state as deterministic compact JSON."""
 
         return json.dumps(
-            cursor,
+            dict(cursor),
             ensure_ascii=False,
             sort_keys=True,
             separators=(",", ":"),
@@ -685,10 +740,10 @@ class Provider(BaseProvider):
 
     @staticmethod
     def _first_value(
-        record: dict[str, Any],
+        record: Mapping[str, Any],
         *keys: str,
     ) -> Any:
-        """Return the first nonempty value from the requested keys."""
+        """Return the first nonempty requested value."""
 
         for key in keys:
             value = record.get(
@@ -709,7 +764,7 @@ class Provider(BaseProvider):
     def _optional_int(
         value: Any,
     ) -> int | None:
-        """Return an integer value or None without inventing a default."""
+        """Return an integer or None without inventing a value."""
 
         if value in (
             None,
@@ -718,7 +773,9 @@ class Provider(BaseProvider):
             return None
 
         try:
-            return int(value)
+            return int(
+                value
+            )
         except (
             TypeError,
             ValueError,
