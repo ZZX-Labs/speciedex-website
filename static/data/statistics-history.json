@@ -295,5 +295,18 @@
     "records_archived": 12399,
     "source_assertions": 12400,
     "unresolved_conflicts": 0
+  },
+  {
+    "last_updated": "2026-07-20T13:03:19Z",
+    "species": 3341,
+    "genera": 920,
+    "families": 7131,
+    "orders": 823,
+    "classes": 174,
+    "phyla": 51,
+    "kingdoms": 9,
+    "records_archived": 13099,
+    "source_assertions": 13100,
+    "unresolved_conflicts": 0
   }
 ]
