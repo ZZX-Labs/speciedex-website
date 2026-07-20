@@ -1,48 +1,48 @@
 {
-  "generated_at": "2026-07-20T22:39:39Z",
+  "generated_at": "2026-07-20T22:43:46Z",
   "providers": [
     {
+      "provider": "inaturalist",
+      "fetched": 200,
+      "created": 200,
+      "matched": 0,
+      "revised": 0,
+      "conflicted": 0,
+      "rejected": 0,
+      "requests": 1,
+      "error": null
+    },
+    {
+      "provider": "darwin_core_archive",
+      "fetched": 0,
+      "created": 0,
+      "matched": 0,
+      "revised": 0,
+      "conflicted": 0,
+      "rejected": 0,
+      "requests": 0,
+      "error": "Darwin Core archive not found: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/dwca"
+    },
+    {
+      "provider": "wikipedia",
+      "fetched": 0,
+      "created": 0,
+      "matched": 0,
+      "revised": 0,
+      "conflicted": 0,
+      "rejected": 0,
+      "requests": 1,
+      "error": null
+    },
+    {
       "provider": "wikispecies",
-      "fetched": 15,
-      "created": 15,
+      "fetched": 16,
+      "created": 16,
       "matched": 0,
       "revised": 0,
       "conflicted": 0,
       "rejected": 0,
       "requests": 2,
-      "error": null
-    },
-    {
-      "provider": "gbif",
-      "fetched": 500,
-      "created": 500,
-      "matched": 0,
-      "revised": 0,
-      "conflicted": 0,
-      "rejected": 0,
-      "requests": 1,
-      "error": null
-    },
-    {
-      "provider": "itis",
-      "fetched": 0,
-      "created": 0,
-      "matched": 0,
-      "revised": 0,
-      "conflicted": 0,
-      "rejected": 0,
-      "requests": 1,
-      "error": null
-    },
-    {
-      "provider": "worms",
-      "fetched": 0,
-      "created": 0,
-      "matched": 0,
-      "revised": 0,
-      "conflicted": 0,
-      "rejected": 0,
-      "requests": 1,
       "error": null
     }
   ],
