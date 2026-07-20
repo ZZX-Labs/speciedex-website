@@ -1965,9 +1965,9 @@ Because the website loads HTML partials and JSON resources through standard HTTP
 Clone the public repository using Git.
 
 ```bash
-git clone https://github.com/ZZX-Labs/speciedex-website.git
+git clone https://github.com/ZZX-Labs/speciedex.org-website.git
 
-cd speciedex-website
+cd speciedex.org-website
 ```
 
 After cloning, contributors should review:
@@ -2032,7 +2032,7 @@ A minimal configuration should expose the repository root as the document root w
 Typical document root:
 
 ```text
-/var/www/speciedex-website/
+/var/www/speciedex.org-website/
 ```
 
 Representative configuration:
@@ -2044,7 +2044,7 @@ server {
 
     server_name speciedex.local;
 
-    root /var/www/speciedex-website;
+    root /var/www/speciedex.org-website;
 
     index index.html;
 
@@ -3004,7 +3004,7 @@ https://speciedex.org
 GitHub Repository
 
 ```text
-https://github.com/ZZX-Labs/speciedex-website
+https://github.com/ZZX-Labs/speciedex.org-website
 ```
 
 Additional documentation, protocol specifications, white papers, software releases, APIs, SDKs, datasets, developer resources, and research publications will be published through the official project repositories as development progresses.
