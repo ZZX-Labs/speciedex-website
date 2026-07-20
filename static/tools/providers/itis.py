@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import re
+from time import perf_counter
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -138,6 +139,19 @@ class Provider(BaseProvider):
             )
         )
 
+        self.state["last_request"] = {
+            "tsn": current_tsn,
+            "endpoint": endpoint,
+            "status": response_metadata.get("status"),
+            "format": response_metadata.get("format"),
+            "content_type": response_metadata.get("content_type"),
+            "content_length": response_metadata.get("content_length"),
+            "elapsed_ms": response_metadata.get("elapsed_ms"),
+            "empty_success": response_metadata.get("empty_success", False),
+            "missing_record": response_metadata.get("missing_record", False),
+            "retrieved_at": now(),
+        }
+
         next_tsn = current_tsn + 1
         exhausted = next_tsn > maximum_tsn
 
@@ -235,18 +249,13 @@ class Provider(BaseProvider):
         """
         Request one ITIS record and decode JSON or XML.
 
-        This function performs exactly one call to urlopen. It intentionally
-        bypasses HTTPClient.get_json because that helper rejects non-JSON
-        responses before this provider can inspect a valid ITIS XML response
-        or distinguish an unused TSN from an upstream HTML failure.
+        This method intentionally performs exactly one network request. The
+        provider bypasses HTTPClient.get_json so it can inspect valid XML,
+        distinguish empty successful responses from service failures, and
+        preserve precise response diagnostics.
         """
 
-        query = urlencode(
-            {
-                "tsn": tsn,
-            }
-        )
-
+        query = urlencode({"tsn": tsn})
         url = f"{endpoint}?{query}"
 
         headers = {
@@ -265,6 +274,7 @@ class Provider(BaseProvider):
         )
 
         self.http.requests += 1
+        started_at = perf_counter()
 
         try:
             with urlopen(
@@ -278,22 +288,23 @@ class Provider(BaseProvider):
                         200,
                     )
                 )
-
                 content_type = normalize_space(
                     response.headers.get(
                         "Content-Type",
                         "",
                     )
                 )
-
                 charset = (
                     response.headers.get_content_charset()
                     or "utf-8"
                 )
-
                 body_bytes = response.read()
 
         except HTTPError as error:
+            elapsed_ms = round(
+                (perf_counter() - started_at) * 1000,
+                3,
+            )
             status = int(
                 getattr(
                     error,
@@ -315,20 +326,19 @@ class Provider(BaseProvider):
                 if error.headers
                 else ""
             )
-
+            charset = (
+                error.headers.get_content_charset()
+                if error.headers
+                else None
+            ) or "utf-8"
             body = body_bytes.decode(
-                "utf-8",
+                charset,
                 errors="replace",
-            )
+            ).strip()
 
             if (
-                status in {
-                    400,
-                    404,
-                }
-                and self._is_missing_record_error(
-                    body
-                )
+                status in {400, 404}
+                and self._is_missing_record_error(body)
             ):
                 return (
                     None,
@@ -337,13 +347,15 @@ class Provider(BaseProvider):
                         "status": status,
                         "requests": 1,
                         "content_type": content_type,
+                        "content_length": len(body_bytes),
+                        "elapsed_ms": elapsed_ms,
                         "format": "empty",
+                        "missing_record": True,
                     },
                 )
 
             raise ProviderError(
-                f"ITIS HTTP {status} for TSN "
-                f"{tsn}: "
+                f"ITIS HTTP {status} for TSN {tsn}: "
                 f"{self._response_excerpt(body)}"
             ) from error
 
@@ -352,11 +364,19 @@ class Provider(BaseProvider):
             TimeoutError,
             OSError,
         ) as error:
+            elapsed_ms = round(
+                (perf_counter() - started_at) * 1000,
+                3,
+            )
             raise ProviderError(
-                f"ITIS request failed for TSN "
-                f"{tsn}: {error}"
+                f"ITIS request failed for TSN {tsn} "
+                f"after {elapsed_ms} ms: {error}"
             ) from error
 
+        elapsed_ms = round(
+            (perf_counter() - started_at) * 1000,
+            3,
+        )
         body = body_bytes.decode(
             charset,
             errors="replace",
@@ -367,22 +387,23 @@ class Provider(BaseProvider):
             "status": status,
             "requests": 1,
             "content_type": content_type,
-            "content_length": len(
-                body_bytes
-            ),
+            "content_length": len(body_bytes),
+            "elapsed_ms": elapsed_ms,
             "format": "",
+            "empty_success": False,
+            "missing_record": False,
         }
 
         if not 200 <= status < 300:
             raise ProviderError(
-                f"ITIS HTTP {status} for TSN "
-                f"{tsn}: "
+                f"ITIS HTTP {status} for TSN {tsn}: "
                 f"{self._response_excerpt(body)}"
             )
 
         if not body:
             metadata["format"] = "empty"
             metadata["empty_success"] = True
+            metadata["missing_record"] = True
             return (None, metadata)
 
         if self._looks_like_html(
@@ -390,9 +411,8 @@ class Provider(BaseProvider):
             content_type,
         ):
             raise ProviderError(
-                f"ITIS returned HTML instead of "
-                f"taxonomic data for TSN {tsn}: "
-                f"{self._response_excerpt(body)}"
+                f"ITIS returned HTML instead of taxonomic data "
+                f"for TSN {tsn}: {self._response_excerpt(body)}"
             )
 
         payload = self._decode_response(
@@ -409,10 +429,7 @@ class Provider(BaseProvider):
             else "xml"
         )
 
-        return (
-            payload,
-            metadata,
-        )
+        return (payload, metadata)
 
     def _decode_response(
         self,
@@ -1287,9 +1304,36 @@ class Provider(BaseProvider):
         cls,
         payload: dict[str, Any],
     ) -> bool:
-        """Identify an otherwise empty missing-record response."""
+        """
+        Return True only for an explicit missing-record response.
+
+        Empty successful HTTP bodies are handled before decoding. A decoded
+        empty object or an unusual wrapper is not automatically treated as a
+        missing TSN because that could hide an upstream schema or parser error.
+        """
 
         if not payload:
+            return False
+
+        explicit_error = cls._find_first_recursive(
+            payload,
+            (
+                "error",
+                "errorMessage",
+                "errorDescription",
+                "faultstring",
+                "faultString",
+                "message",
+                "statusMessage",
+            ),
+        )
+
+        if isinstance(
+            explicit_error,
+            (str, int, float),
+        ) and cls._is_missing_record_error(
+            normalize_space(explicit_error)
+        ):
             return True
 
         serialized = json.dumps(
@@ -1297,21 +1341,9 @@ class Provider(BaseProvider):
             ensure_ascii=False,
         )
 
-        if cls._is_missing_record_error(
+        return cls._is_missing_record_error(
             serialized
-        ):
-            return True
-
-        meaningful_values = [
-            value
-            for value
-            in cls._walk_scalar_values(
-                payload
-            )
-            if normalize_space(value)
-        ]
-
-        return not meaningful_values
+        )
 
     @staticmethod
     def _normalize_status(
@@ -1363,7 +1395,6 @@ class Provider(BaseProvider):
 
         return "unknown"
 
-    @staticmethod
     @staticmethod
     def _decode_cursor(
         cursor: str | None,
@@ -1443,7 +1474,6 @@ class Provider(BaseProvider):
             separators=(",", ":"),
         )
 
-    @classmethod
     @classmethod
     def _unwrap_payload(
         cls,
@@ -1539,7 +1569,6 @@ class Provider(BaseProvider):
 
         return {}
 
-    @classmethod
     @classmethod
     def _find_list(
         cls,
