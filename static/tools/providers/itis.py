@@ -381,10 +381,9 @@ class Provider(BaseProvider):
             )
 
         if not body:
-            raise ProviderError(
-                f"ITIS returned an empty successful response "
-                f"for TSN {tsn}; cursor was not advanced."
-            )
+            metadata["format"] = "empty"
+            metadata["empty_success"] = True
+            return (None, metadata)
 
         if self._looks_like_html(
             body,
