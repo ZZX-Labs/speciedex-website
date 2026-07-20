@@ -119,7 +119,169 @@ class Provider(BaseProvider):
     _TEMPLATE_PATTERN = re.compile(r"\{\{([^{}]+)\}\}")
 
     def fetch(self) -> Batch:
-        """Fetch and normalize one resumable Wikispecies page batch."""
+        """Discover, enrich, and normalize one resumable Wikispecies batch.
+
+        MediaWiki does not permit revision-limit parameters such as
+        ``rvlimit`` when a generator, ``titles``, or multiple ``pageids`` supply
+        more than one page. Discovery and enrichment are therefore separated:
+
+        1. ``generator=allpages`` discovers page IDs and stable continuation.
+        2. Explicit page-ID chunks retrieve revisions and supplemental metadata
+           without any single-page-only revision parameters.
+
+        The cursor stores only the discovery continuation token. Enrichment
+        continuation is consumed completely inside this fetch call so a
+        partially enriched discovery page is never committed.
+        """
+
+        api_url = self._api_url()
+        site_url = self._site_url()
+        namespace = safe_int(
+            self.definition.get("namespace", 0),
+            0,
+        )
+        page_size = self._page_size()
+
+        requests_before = self.http.requests
+
+        discovery_parameters: dict[str, Any] = {
+            "action": "query",
+            "format": "json",
+            "formatversion": 2,
+            "generator": "allpages",
+            "gapnamespace": namespace,
+            "gaplimit": page_size,
+            "gapfilterredir": "nonredirects",
+            "prop": "info|pageprops",
+            "inprop": "url|displaytitle",
+        }
+
+        continuation = self._decode_cursor(self.cursor)
+        protected = set(discovery_parameters)
+
+        for key, value in continuation.items():
+            if key not in protected:
+                discovery_parameters[key] = value
+
+        discovery_payload = self._request_api(
+            api_url,
+            discovery_parameters,
+            context="discovery",
+        )
+        discovery_pages = self._response_pages(
+            discovery_payload,
+            context="discovery",
+        )
+
+        raw_continuation = discovery_payload.get("continue")
+
+        if isinstance(raw_continuation, Mapping) and raw_continuation:
+            next_cursor = self._encode_cursor(raw_continuation)
+            exhausted = False
+        else:
+            next_cursor = None
+            exhausted = True
+
+        if (
+            not exhausted
+            and self.cursor
+            and next_cursor == self.cursor
+        ):
+            raise ProviderError(
+                "Wikispecies returned an unchanged discovery cursor."
+            )
+
+        page_ids = [
+            str(page.get("pageid"))
+            for page in discovery_pages
+            if page.get("pageid") not in (None, "")
+        ]
+
+        enriched_by_id: dict[str, dict[str, Any]] = {
+            str(page["pageid"]): dict(page)
+            for page in discovery_pages
+            if page.get("pageid") not in (None, "")
+        }
+
+        enrichment_chunk_size = max(
+            1,
+            min(
+                safe_int(
+                    self.definition.get(
+                        "enrichment_chunk_size",
+                        50,
+                    ),
+                    50,
+                ),
+                50,
+            ),
+        )
+
+        for page_id_chunk in self._chunks(
+            page_ids,
+            enrichment_chunk_size,
+        ):
+            for enriched_page in self._fetch_enrichment_chunk(
+                api_url=api_url,
+                page_ids=page_id_chunk,
+            ):
+                page_id = normalize_space(
+                    enriched_page.get("pageid")
+                )
+
+                if not page_id:
+                    continue
+
+                enriched_by_id[page_id] = self._merge_page_payload(
+                    enriched_by_id.get(page_id, {}),
+                    enriched_page,
+                )
+
+        retrieved_at = now()
+        records: list[Taxon] = []
+
+        for page_id in page_ids:
+            raw_page = enriched_by_id.get(page_id)
+
+            if not isinstance(raw_page, Mapping):
+                continue
+
+            record = self._normalize_page(
+                raw_page=dict(raw_page),
+                api_url=api_url,
+                site_url=site_url,
+                retrieved_at=retrieved_at,
+            )
+
+            if record is not None:
+                records.append(record)
+
+        request_count = self.http.requests - requests_before
+
+        if request_count < 1:
+            raise ProviderError(
+                "Wikispecies fetch completed without an API request."
+            )
+
+        self.state["last_fetch"] = {
+            "discovered_pages": len(discovery_pages),
+            "enriched_pages": len(enriched_by_id),
+            "normalized_records": len(records),
+            "requests": request_count,
+            "next_cursor": next_cursor,
+            "exhausted": exhausted,
+        }
+
+        return Batch(
+            records=records,
+            next_cursor=next_cursor,
+            exhausted=exhausted,
+            requests=request_count,
+            raw=len(discovery_pages),
+        )
+
+    def _api_url(self) -> str:
+        """Return and validate the configured MediaWiki API URL."""
 
         api_url = normalize_space(
             self.definition.get(
@@ -141,6 +303,11 @@ class Provider(BaseProvider):
                 "Wikispecies api_url must use HTTP or HTTPS."
             )
 
+        return api_url
+
+    def _site_url(self) -> str:
+        """Return and validate the configured Wikispecies site URL."""
+
         site_url = normalize_space(
             self.definition.get(
                 "site_url",
@@ -153,13 +320,10 @@ class Provider(BaseProvider):
                 "Wikispecies site_url is empty."
             )
 
-        namespace = safe_int(
-            self.definition.get(
-                "namespace",
-                0,
-            ),
-            0,
-        )
+        return site_url
+
+    def _page_size(self) -> int:
+        """Return the bounded discovery-page size."""
 
         configured_page_size = safe_int(
             self.definition.get(
@@ -169,7 +333,7 @@ class Provider(BaseProvider):
             self.DEFAULT_PAGE_SIZE,
         )
 
-        page_size = max(
+        return max(
             1,
             min(
                 configured_page_size,
@@ -178,14 +342,22 @@ class Provider(BaseProvider):
             ),
         )
 
+    def _fetch_enrichment_chunk(
+        self,
+        *,
+        api_url: str,
+        page_ids: list[str],
+    ) -> list[dict[str, Any]]:
+        """Fetch all continuation pages for one explicit page-ID chunk."""
+
+        if not page_ids:
+            return []
+
         parameters: dict[str, Any] = {
             "action": "query",
             "format": "json",
             "formatversion": 2,
-            "generator": "allpages",
-            "gapnamespace": namespace,
-            "gaplimit": page_size,
-            "gapfilterredir": "nonredirects",
+            "pageids": "|".join(page_ids),
             "prop": "|".join(
                 (
                     "info",
@@ -200,9 +372,12 @@ class Provider(BaseProvider):
                 )
             ),
             "inprop": "url|displaytitle",
-            "rvlimit": 1,
+            # MediaWiki rejects rvlimit whenever multiple pageids are supplied.
             "rvslots": "main",
-            "rvprop": "ids|timestamp|user|userid|comment|flags|size|sha1|contentmodel|content",
+            "rvprop": (
+                "ids|timestamp|user|userid|comment|flags|size|sha1|"
+                "contentmodel|content"
+            ),
             "cllimit": "max",
             "lllimit": "max",
             "pllimit": "max",
@@ -211,132 +386,200 @@ class Provider(BaseProvider):
             "ellimit": "max",
         }
 
-        continuation = self._decode_cursor(
-            self.cursor
-        )
+        merged: dict[str, dict[str, Any]] = {}
+        continuation: dict[str, Any] = {}
+        seen_continuations: set[str] = set()
 
-        protected = set(parameters)
+        while True:
+            request_parameters = dict(parameters)
 
-        for key, value in continuation.items():
-            if key not in protected:
-                parameters[key] = value
+            for key, value in continuation.items():
+                if key not in request_parameters:
+                    request_parameters[key] = value
 
-        requests_before = self.http.requests
-        payload = self.http.get_json(
-            api_url,
-            parameters,
-        )
-        request_count = (
-            self.http.requests
-            - requests_before
-        )
-
-        if request_count < 1:
-            raise ProviderError(
-                "Wikispecies fetch completed without an API request."
+            payload = self._request_api(
+                api_url,
+                request_parameters,
+                context="enrichment",
             )
 
-        if not isinstance(
-            payload,
-            Mapping,
-        ):
-            raise ProviderError(
-                "Wikispecies returned a non-object JSON response."
-            )
-
-        self._raise_api_error(
-            payload
-        )
-        self._remember_api_warnings(
-            payload
-        )
-
-        query = payload.get(
-            "query",
-            {},
-        )
-
-        if not isinstance(
-            query,
-            Mapping,
-        ):
-            query = {}
-
-        raw_pages = query.get(
-            "pages",
-            [],
-        )
-
-        if isinstance(
-            raw_pages,
-            Mapping,
-        ):
-            raw_pages = list(
-                raw_pages.values()
-            )
-
-        if not isinstance(
-            raw_pages,
-            list,
-        ):
-            raise ProviderError(
-                "Wikispecies response field query.pages is not a list."
-            )
-
-        retrieved_at = now()
-        records: list[Taxon] = []
-
-        for raw_page in raw_pages:
-            if not isinstance(
-                raw_page,
-                Mapping,
+            for page in self._response_pages(
+                payload,
+                context="enrichment",
             ):
-                continue
+                page_id = normalize_space(page.get("pageid"))
 
-            record = self._normalize_page(
-                raw_page=dict(raw_page),
-                api_url=api_url,
-                site_url=site_url,
-                retrieved_at=retrieved_at,
-            )
+                if not page_id:
+                    continue
 
-            if record is not None:
-                records.append(
-                    record
+                merged[page_id] = self._merge_page_payload(
+                    merged.get(page_id, {}),
+                    page,
                 )
 
-        raw_continuation = payload.get(
-            "continue"
+            raw_continuation = payload.get("continue")
+
+            if not (
+                isinstance(raw_continuation, Mapping)
+                and raw_continuation
+            ):
+                break
+
+            continuation = {
+                str(key): value
+                for key, value in raw_continuation.items()
+                if value is not None
+            }
+            continuation_key = self._encode_cursor(continuation)
+
+            if continuation_key in seen_continuations:
+                raise ProviderError(
+                    "Wikispecies enrichment returned a repeated "
+                    "continuation token."
+                )
+
+            seen_continuations.add(continuation_key)
+
+        return [
+            merged[page_id]
+            for page_id in page_ids
+            if page_id in merged
+        ]
+
+    def _request_api(
+        self,
+        api_url: str,
+        parameters: Mapping[str, Any],
+        *,
+        context: str,
+    ) -> Mapping[str, Any]:
+        """Execute one MediaWiki request with strict response validation."""
+
+        payload = self.http.get_json(
+            api_url,
+            dict(parameters),
         )
 
-        if isinstance(
-            raw_continuation,
-            Mapping,
-        ) and raw_continuation:
-            next_cursor = self._encode_cursor(
-                raw_continuation
-            )
-            exhausted = False
-        else:
-            next_cursor = None
-            exhausted = True
-
-        if (
-            not exhausted
-            and self.cursor
-            and next_cursor == self.cursor
-        ):
+        if not isinstance(payload, Mapping):
             raise ProviderError(
-                "Wikispecies returned an unchanged continuation cursor."
+                f"Wikispecies {context} returned a non-object JSON response."
             )
 
-        return Batch(
-            records=records,
-            next_cursor=next_cursor,
-            exhausted=exhausted,
-            requests=request_count,
-            raw=len(raw_pages),
-        )
+        self._raise_api_error(payload)
+        self._remember_api_warnings(payload)
+        return payload
+
+    @staticmethod
+    def _response_pages(
+        payload: Mapping[str, Any],
+        *,
+        context: str,
+    ) -> list[dict[str, Any]]:
+        """Extract a stable list of page objects from a MediaWiki response."""
+
+        query = payload.get("query", {})
+
+        if not isinstance(query, Mapping):
+            return []
+
+        raw_pages = query.get("pages", [])
+
+        if isinstance(raw_pages, Mapping):
+            raw_pages = list(raw_pages.values())
+
+        if not isinstance(raw_pages, list):
+            raise ProviderError(
+                f"Wikispecies {context} response field query.pages "
+                "is not a list or object."
+            )
+
+        return [
+            dict(page)
+            for page in raw_pages
+            if isinstance(page, Mapping)
+        ]
+
+    @classmethod
+    def _merge_page_payload(
+        cls,
+        base: Mapping[str, Any],
+        incoming: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        """Merge repeated MediaWiki page fragments without losing arrays."""
+
+        result = dict(base)
+
+        for key, value in incoming.items():
+            if key not in result:
+                result[key] = value
+                continue
+
+            current = result[key]
+
+            if isinstance(current, Mapping) and isinstance(value, Mapping):
+                result[key] = cls._merge_page_payload(
+                    current,
+                    value,
+                )
+                continue
+
+            if isinstance(current, list) and isinstance(value, list):
+                result[key] = cls._merge_list_values(
+                    current,
+                    value,
+                )
+                continue
+
+            if value not in (None, "", [], {}):
+                result[key] = value
+
+        return result
+
+    @staticmethod
+    def _merge_list_values(
+        left: list[Any],
+        right: list[Any],
+    ) -> list[Any]:
+        """Merge API list fragments while preserving order."""
+
+        result = list(left)
+        seen = {
+            json.dumps(
+                item,
+                ensure_ascii=False,
+                sort_keys=True,
+                default=str,
+            )
+            for item in result
+        }
+
+        for item in right:
+            key = json.dumps(
+                item,
+                ensure_ascii=False,
+                sort_keys=True,
+                default=str,
+            )
+
+            if key in seen:
+                continue
+
+            seen.add(key)
+            result.append(item)
+
+        return result
+
+    @staticmethod
+    def _chunks(
+        values: list[str],
+        size: int,
+    ) -> list[list[str]]:
+        """Split a list into deterministic non-empty chunks."""
+
+        return [
+            values[index:index + size]
+            for index in range(0, len(values), size)
+        ]
 
     def _normalize_page(
         self,
