@@ -1,6 +1,17 @@
 {
-  "generated_at": "2026-07-20T01:06:45Z",
+  "generated_at": "2026-07-20T04:51:40Z",
   "providers": [
+    {
+      "provider": "itis",
+      "fetched": 0,
+      "created": 0,
+      "matched": 0,
+      "revised": 0,
+      "conflicted": 0,
+      "rejected": 0,
+      "requests": 1,
+      "error": null
+    },
     {
       "provider": "worms",
       "fetched": 0,
@@ -27,17 +38,6 @@
       "provider": "inaturalist",
       "fetched": 200,
       "created": 200,
-      "matched": 0,
-      "revised": 0,
-      "conflicted": 0,
-      "rejected": 0,
-      "requests": 1,
-      "error": null
-    },
-    {
-      "provider": "gbif",
-      "fetched": 500,
-      "created": 500,
       "matched": 0,
       "revised": 0,
       "conflicted": 0,
