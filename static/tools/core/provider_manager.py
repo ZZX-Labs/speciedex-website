@@ -467,7 +467,7 @@ class ProviderManager:
                 provider=name,
                 available=False,
                 reason=(
-                    "missing environment: "
+                    "missing credentials: "
                     + ", ".join(
                         missing_environment
                     )
@@ -489,7 +489,7 @@ class ProviderManager:
                 provider=name,
                 available=False,
                 reason=(
-                    "missing local source: "
+                    "missing dataset: "
                     + ", ".join(missing_paths)
                 ),
                 module_path=(
@@ -1311,6 +1311,47 @@ class ProviderManager:
         )
 
 
+    def availability_summary(
+        self,
+        definitions: Sequence[Mapping[str, Any]] | None = None,
+    ) -> dict[str, Any]:
+        """Return provider availability totals grouped by skip reason."""
+
+        partition = self.partition_registry(definitions)
+        eligible = partition.get("eligible", [])
+        skipped = partition.get("skipped", [])
+        reasons = {
+            "missing_dataset": 0,
+            "missing_credentials": 0,
+            "missing_dependency": 0,
+            "disabled": 0,
+            "other": 0,
+        }
+
+        for item in skipped:
+            reason = normalize_space(
+                item.get("reason")
+            ).casefold()
+
+            if reason.startswith("missing dataset:"):
+                reasons["missing_dataset"] += 1
+            elif reason.startswith("missing credentials:"):
+                reasons["missing_credentials"] += 1
+            elif reason.startswith("missing dependency:"):
+                reasons["missing_dependency"] += 1
+            elif reason == "disabled":
+                reasons["disabled"] += 1
+            else:
+                reasons["other"] += 1
+
+        return {
+            "configured": len(eligible) + len(skipped),
+            "eligible": len(eligible),
+            "skipped": len(skipped),
+            "skipped_by_reason": reasons,
+        }
+
+
 def provider_available(
     definition: Mapping[str, Any],
     *,
@@ -1391,7 +1432,7 @@ def provider_available(
     if missing:
         return (
             False,
-            "missing environment: "
+            "missing credentials: "
             + ", ".join(missing),
         )
 
@@ -1475,7 +1516,7 @@ def provider_available(
         if missing_paths:
             return (
                 False,
-                "missing local source: "
+                "missing dataset: "
                 + ", ".join(missing_paths),
             )
 
