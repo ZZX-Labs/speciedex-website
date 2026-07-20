@@ -48,6 +48,26 @@ PROVIDER_NAME_PATTERN = re.compile(
     r"^[a-z0-9_]+$"
 )
 
+RANK_ALIASES = {
+    "sp": "species", "sp.": "species", "species": "species",
+    "subsp": "subspecies", "subsp.": "subspecies",
+    "ssp": "subspecies", "ssp.": "subspecies",
+    "gen": "genus", "gen.": "genus", "genus": "genus",
+    "fam": "family", "fam.": "family", "family": "family",
+    "ord": "order", "ord.": "order", "order": "order",
+    "classis": "class", "class": "class",
+    "division": "phylum", "phylum": "phylum",
+    "regnum": "kingdom", "kingdom": "kingdom",
+}
+
+STATUS_ALIASES = {
+    "accepted name": "accepted",
+    "current": "accepted",
+    "valid name": "valid",
+    "provisional": "provisionally accepted",
+    "provisionally accepted": "provisionally accepted",
+}
+
 
 @dataclass(slots=True)
 class ProviderAvailability:
@@ -851,6 +871,8 @@ class ProviderManager:
             Taxon,
         )
 
+        self._normalize_record(record)
+
         result = self.reconciler.resolve(
             self.archive,
             record,
@@ -1063,6 +1085,41 @@ class ProviderManager:
             )
 
         return ""
+
+    @staticmethod
+    def _normalize_record(record: Taxon) -> None:
+        """Normalize identity, rank, status, and lineage fields in place."""
+        record.provider = normalize_key(record.provider)
+        record.provider_id = normalize_space(record.provider_id)
+        record.scientific_name = normalize_space(record.scientific_name)
+        record.canonical_name = (
+            normalize_space(record.canonical_name)
+            or record.scientific_name
+        )
+        raw_rank = normalize_key(record.rank).replace("_", " ").replace("-", " ")
+        raw_rank = " ".join(raw_rank.split())
+        record.rank = RANK_ALIASES.get(
+            raw_rank,
+            raw_rank.replace(" ", "_") or "unknown",
+        )
+        raw_status = normalize_key(record.status).replace("_", " ")
+        raw_status = " ".join(raw_status.split())
+        record.status = STATUS_ALIASES.get(
+            raw_status,
+            raw_status or "unknown",
+        )
+        record.authorship = normalize_space(record.authorship)
+        record.kingdom = normalize_space(record.kingdom)
+        record.phylum = normalize_space(record.phylum)
+        record.class_name = normalize_space(record.class_name)
+        record.order = normalize_space(record.order)
+        record.family = normalize_space(record.family)
+        record.genus = normalize_space(record.genus)
+        record.synonyms = list(dict.fromkeys(
+            normalize_space(value)
+            for value in record.synonyms
+            if normalize_space(value)
+        ))
 
     @staticmethod
     def _enabled(
