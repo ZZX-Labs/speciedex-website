@@ -1,0 +1,5 @@
+{
+  "provider": "wikipedia",
+  "last_attempt": "2026-07-20T22:15:30Z",
+  "last_error": "Wikipedia API error params: Use \"gapfilterredir=nonredirects\" instead of \"redirects\" when using \"allpages\" as a generator."
+}

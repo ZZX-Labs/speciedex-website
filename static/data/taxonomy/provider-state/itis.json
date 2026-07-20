@@ -1,6 +1,6 @@
 {
   "provider": "itis",
-  "last_attempt": "2026-07-20T22:06:17Z",
+  "last_attempt": "2026-07-20T22:15:45Z",
   "last_error": "ITIS returned an empty successful response for TSN 18; cursor was not advanced.",
   "cursor": "{\"endpoint\":\"https://www.itis.gov/ITISWebService/jsonservice/getFullRecordFromTSN\",\"tsn\":18}",
   "bootstrap_complete": false,

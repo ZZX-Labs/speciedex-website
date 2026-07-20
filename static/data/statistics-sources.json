@@ -1,6 +1,28 @@
 {
-  "generated_at": "2026-07-20T22:06:33Z",
+  "generated_at": "2026-07-20T22:15:45Z",
   "providers": [
+    {
+      "provider": "wikipedia",
+      "fetched": 0,
+      "created": 0,
+      "matched": 0,
+      "revised": 0,
+      "conflicted": 0,
+      "rejected": 0,
+      "requests": 0,
+      "error": "Wikipedia API error params: Use \"gapfilterredir=nonredirects\" instead of \"redirects\" when using \"allpages\" as a generator."
+    },
+    {
+      "provider": "wikispecies",
+      "fetched": 0,
+      "created": 0,
+      "matched": 0,
+      "revised": 0,
+      "conflicted": 0,
+      "rejected": 0,
+      "requests": 0,
+      "error": "Wikispecies API error invalidparammix: \"titles\", \"pageids\" or a generator was used to supply multiple pages, but the \"rvlimit\", \"rvstartid\", \"rvendid\", \"rvdir=newer\", \"rvuser\", \"rvexcludeuser\", \"rvstart\", and \"rvend\" parameters may only be used on a single page."
+    },
     {
       "provider": "gbif",
       "fetched": 500,
@@ -22,310 +44,284 @@
       "rejected": 0,
       "requests": 0,
       "error": "ITIS returned an empty successful response for TSN 18; cursor was not advanced."
-    },
-    {
-      "provider": "worms",
-      "fetched": 0,
-      "created": 0,
-      "matched": 0,
-      "revised": 0,
-      "conflicted": 0,
-      "rejected": 0,
-      "requests": 0,
-      "error": "https://www.marinespecies.org/rest/AphiaRecordsByDate?startdate=2000-01-01T00%3A00%3A00&enddate=2000-01-31T23%3A59%3A59&marine_only=false&offset=1: Expecting value: line 1 column 1 (char 0)"
-    },
-    {
-      "provider": "inaturalist",
-      "fetched": 200,
-      "created": 200,
-      "matched": 0,
-      "revised": 0,
-      "conflicted": 0,
-      "rejected": 0,
-      "requests": 1,
-      "error": null
     }
   ],
   "skipped": [
     {
       "provider": "wikidata",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/wikidata.jsonl"
     },
     {
       "provider": "catalogue_of_life",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/catalogue-of-life.jsonl"
     },
     {
       "provider": "open_tree_of_life",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/open-tree-of-life.jsonl"
     },
     {
       "provider": "eol",
-      "reason": "disabled"
+      "reason": "missing environment: EOL_API_KEY"
     },
     {
       "provider": "iucn_red_list",
-      "reason": "disabled"
+      "reason": "missing environment: IUCN_API_TOKEN"
     },
     {
       "provider": "iucn_green_status",
-      "reason": "disabled"
+      "reason": "missing environment: IUCN_API_TOKEN"
     },
     {
       "provider": "iucn_green_list",
-      "reason": "disabled"
+      "reason": "missing environment: IUCN_API_TOKEN"
     },
     {
       "provider": "ncbi_taxonomy",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/ncbi-taxonomy.jsonl"
     },
     {
       "provider": "world_flora_online",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/world-flora-online.jsonl"
     },
     {
       "provider": "powo",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/powo.jsonl"
     },
     {
       "provider": "ipni",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/ipni.jsonl"
     },
     {
       "provider": "tropicos",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/tropicos.jsonl"
     },
     {
       "provider": "grin_taxonomy",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/grin-taxonomy.jsonl"
     },
     {
       "provider": "usda_plants",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/usda-plants.jsonl"
     },
     {
       "provider": "euro_med_plantbase",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/euro-med-plantbase.jsonl"
     },
     {
       "provider": "zoobank",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/zoobank.jsonl"
     },
     {
       "provider": "index_fungorum",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/index-fungorum.jsonl"
     },
     {
       "provider": "mycobank",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/mycobank.jsonl"
     },
     {
       "provider": "species_fungorum",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/species-fungorum.jsonl"
     },
     {
       "provider": "irmng",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/irmng.jsonl"
     },
     {
       "provider": "fishbase",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/fishbase.jsonl"
     },
     {
       "provider": "sealifebase",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/sealifebase.jsonl"
     },
     {
       "provider": "algaebase",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/algaebase.jsonl"
     },
     {
       "provider": "paleobiology",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/paleobiology.jsonl"
     },
     {
       "provider": "bold",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/bold.jsonl"
     },
     {
       "provider": "global_names",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/global-names.jsonl"
     },
     {
       "provider": "gnub",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/gnub.jsonl"
     },
     {
       "provider": "obis",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/obis.jsonl"
     },
     {
       "provider": "ebird",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/ebird.jsonl"
     },
     {
       "provider": "avibase",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/avibase.jsonl"
     },
     {
       "provider": "ioc_world_bird_list",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/ioc-world-bird-list.jsonl"
     },
     {
       "provider": "mammal_diversity_database",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/mammal-diversity-database.jsonl"
     },
     {
       "provider": "reptile_database",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/reptile-database.jsonl"
     },
     {
       "provider": "amphibiaweb",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/amphibiaweb.jsonl"
     },
     {
       "provider": "amphibian_species_world",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/amphibian-species-world.jsonl"
     },
     {
       "provider": "ala",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/ala.jsonl"
     },
     {
       "provider": "canadensys",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/canadensys.jsonl"
     },
     {
       "provider": "idigbio",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/idigbio.jsonl"
     },
     {
       "provider": "natureserve",
-      "reason": "disabled"
+      "reason": "missing environment: NATURESERVE_API_KEY"
     },
     {
       "provider": "species_plus",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/species-plus.jsonl"
     },
     {
       "provider": "cms_species",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/cms-species.jsonl"
     },
     {
       "provider": "silva",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/silva.jsonl"
     },
     {
       "provider": "unite",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/unite.jsonl"
     },
     {
       "provider": "gtdb",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/gtdb.jsonl"
     },
     {
       "provider": "lpsn",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/lpsn.jsonl"
     },
     {
       "provider": "bacdive",
-      "reason": "disabled"
+      "reason": "missing environment: BACDIVE_USERNAME, BACDIVE_PASSWORD"
     },
     {
       "provider": "ictv",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/ictv.jsonl"
     },
     {
       "provider": "viralzone",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/viralzone.jsonl"
     },
     {
       "provider": "genbank",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/genbank.jsonl"
     },
     {
       "provider": "ena",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/ena.jsonl"
     },
     {
       "provider": "uniprot_taxonomy",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/uniprot-taxonomy.jsonl"
     },
     {
       "provider": "antweb",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/antweb.jsonl"
     },
     {
       "provider": "antcat",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/antcat.jsonl"
     },
     {
       "provider": "orthoptera_species_file",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/orthoptera-species-file.jsonl"
     },
     {
       "provider": "odonata_central",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/odonata-central.jsonl"
     },
     {
       "provider": "world_spider_catalog",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/world-spider-catalog.jsonl"
     },
     {
       "provider": "molluscabase",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/molluscabase.jsonl"
     },
     {
       "provider": "world_echinoderm_database",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/world-echinoderm-database.jsonl"
     },
     {
       "provider": "bryozoa_net",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/bryozoa-net.jsonl"
     },
     {
       "provider": "fao_asfis",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/fao-asfis.jsonl"
     },
     {
       "provider": "plazi_treatmentbank",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/plazi-treatmentbank.jsonl"
     },
     {
       "provider": "biodiversity_heritage_library",
-      "reason": "disabled"
+      "reason": "missing environment: BHL_API_KEY"
     },
     {
       "provider": "crossref",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/crossref.jsonl"
     },
     {
       "provider": "openalex",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/openalex.jsonl"
     },
     {
       "provider": "geonames",
-      "reason": "disabled"
+      "reason": "missing environment: GEONAMES_USERNAME"
     },
     {
       "provider": "marine_regions",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/marine-regions.jsonl"
     },
     {
       "provider": "wdpa",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/wdpa.jsonl"
     },
     {
       "provider": "key_biodiversity_areas",
-      "reason": "disabled"
-    },
-    {
-      "provider": "darwin_core_archive",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/key-biodiversity-areas.jsonl"
     },
     {
       "provider": "generic_jsonl",
-      "reason": "disabled"
+      "reason": "missing dataset: /home/runner/work/speciedex.org-website/speciedex.org-website/static/data/import/generic-jsonl.jsonl"
     }
   ]
 }
