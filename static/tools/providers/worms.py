@@ -5,19 +5,15 @@ static/tools/providers/worms.py
 
 World Register of Marine Species provider plug-in.
 
-Fetches one page of WoRMS Aphia records with one logical API request per
-provider execution. Records are retrieved through bounded modification-date
-windows so the AphiaRecordsByDate endpoint is not given an invalid or
-unreasonably large date range.
+Fetches one page of WoRMS Aphia records through bounded modification-date
+windows. Each provider run performs one logical API request and preserves every
+source field under ``Taxon.extra["raw"]``.
 
-The complete provider record is preserved under Taxon.extra["raw"] while
-principal taxonomic and nomenclatural fields are normalized for Speciedex.
-
-Legacy numeric cursors are accepted. New cursors are deterministic JSON
-objects containing the active date window and WoRMS page offset.
+Legacy numeric cursors are accepted as page offsets for the first configured
+date window. New cursors are deterministic JSON objects containing the active
+window and page offset.
 
 Copyright (c) 2026 ZZX-Laboratories
-
 Licensed under the MIT License.
 """
 
@@ -25,7 +21,7 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, date, datetime, timedelta
-from typing import Any
+from typing import Any, Mapping
 
 from .common import (
     BaseProvider,
@@ -43,24 +39,14 @@ class Provider(BaseProvider):
 
     PROVIDER_NAME = "worms"
 
-    DEFAULT_BASE_URL = (
-        "https://www.marinespecies.org/rest"
-    )
-
+    DEFAULT_BASE_URL = "https://www.marinespecies.org/rest"
     DEFAULT_START_DATE = "2000-01-01"
     DEFAULT_OFFSET = 1
     DEFAULT_WINDOW_DAYS = 31
     MAX_WINDOW_DAYS = 366
 
     def fetch(self) -> Batch:
-        """
-        Fetch one WoRMS AphiaRecordsByDate page.
-
-        Only one call to HTTPClient.get_json is made. The HTTP client may
-        internally retry failed transport attempts according to its retry
-        configuration, but this provider does not issue per-record follow-up
-        requests.
-        """
+        """Fetch one AphiaRecordsByDate page."""
 
         base_url = normalize_space(
             self.definition.get(
@@ -74,9 +60,15 @@ class Provider(BaseProvider):
                 "WoRMS base_url is empty."
             )
 
-        endpoint = (
-            f"{base_url}/AphiaRecordsByDate"
-        )
+        if not (
+            base_url.startswith("https://")
+            or base_url.startswith("http://")
+        ):
+            raise ProviderError(
+                "WoRMS base_url must use HTTP or HTTPS."
+            )
+
+        endpoint = f"{base_url}/AphiaRecordsByDate"
 
         configured_start = self._parse_date(
             self.definition.get(
@@ -93,29 +85,24 @@ class Provider(BaseProvider):
                 "WoRMS end_date is earlier than start_date."
             )
 
-        window_days = max(
-            1,
-            min(
-                safe_int(
-                    self.definition.get(
-                        "window_days",
-                        self.DEFAULT_WINDOW_DAYS,
-                    ),
-                    self.DEFAULT_WINDOW_DAYS,
-                ),
-                self.MAX_WINDOW_DAYS,
+        window_days = self._positive_bounded_int(
+            self.definition.get(
+                "window_days",
+                self.DEFAULT_WINDOW_DAYS,
             ),
+            default=self.DEFAULT_WINDOW_DAYS,
+            maximum=self.MAX_WINDOW_DAYS,
+            field_name="window_days",
         )
 
-        initial_offset = max(
-            1,
-            safe_int(
-                self.definition.get(
-                    "start_offset",
-                    self.DEFAULT_OFFSET,
-                ),
+        initial_offset = self._positive_bounded_int(
+            self.definition.get(
+                "start_offset",
                 self.DEFAULT_OFFSET,
             ),
+            default=self.DEFAULT_OFFSET,
+            maximum=2_147_483_647,
+            field_name="start_offset",
         )
 
         cursor = self._decode_cursor(
@@ -125,7 +112,22 @@ class Provider(BaseProvider):
         window_start = self._cursor_date(
             cursor.get("window_start"),
             configured_start,
+            field_name="window_start",
         )
+
+        if window_start < configured_start:
+            raise ProviderError(
+                "WoRMS cursor window_start precedes configured start_date."
+            )
+
+        if window_start > configured_end:
+            return Batch(
+                records=[],
+                next_cursor=None,
+                exhausted=True,
+                requests=0,
+                raw=0,
+            )
 
         maximum_window_end = min(
             configured_end,
@@ -138,20 +140,22 @@ class Provider(BaseProvider):
         window_end = self._cursor_date(
             cursor.get("window_end"),
             maximum_window_end,
+            field_name="window_end",
         )
 
         if window_end < window_start:
-            window_end = maximum_window_end
+            raise ProviderError(
+                "WoRMS cursor window_end is earlier than window_start."
+            )
 
-        if window_end > configured_end:
-            window_end = configured_end
+        if window_end > maximum_window_end:
+            raise ProviderError(
+                "WoRMS cursor window exceeds configured window_days."
+            )
 
-        offset = max(
+        offset = self._cursor_offset(
+            cursor.get("offset"),
             initial_offset,
-            safe_int(
-                cursor.get("offset"),
-                initial_offset,
-            ),
         )
 
         marine_only = self._boolean_parameter(
@@ -174,9 +178,7 @@ class Provider(BaseProvider):
             "offset": offset,
         }
 
-        request_count_before = (
-            self.http.requests
-        )
+        request_count_before = self.http.requests
 
         payload = self.http.get_json(
             endpoint,
@@ -190,8 +192,7 @@ class Provider(BaseProvider):
 
         if request_count < 1:
             raise ProviderError(
-                "WoRMS provider completed without "
-                "performing an HTTP request."
+                "WoRMS fetch completed without an HTTP request."
             )
 
         raw_records = self._extract_response_records(
@@ -202,17 +203,11 @@ class Provider(BaseProvider):
 
         crawl_metadata = {
             "endpoint": endpoint,
-            "window_start": (
-                window_start.isoformat()
-            ),
-            "window_end": (
-                window_end.isoformat()
-            ),
+            "window_start": window_start.isoformat(),
+            "window_end": window_end.isoformat(),
             "offset": offset,
             "returned": len(raw_records),
-            "marine_only": (
-                marine_only == "true"
-            ),
+            "marine_only": marine_only == "true",
         }
 
         records: list[Taxon] = []
@@ -220,67 +215,40 @@ class Provider(BaseProvider):
         for raw_record in raw_records:
             if not isinstance(
                 raw_record,
-                dict,
+                Mapping,
             ):
                 continue
 
-            record = self._normalize_record(
-                raw_record=raw_record,
-                base_url=base_url,
+            normalized = self._normalize_record(
+                raw_record=dict(raw_record),
                 endpoint=endpoint,
                 retrieved_at=retrieved_at,
                 crawl_metadata=crawl_metadata,
             )
 
-            if record is not None:
-                records.append(record)
-
-        if raw_records:
-            next_cursor = self._encode_cursor(
-                {
-                    "window_start": (
-                        window_start.isoformat()
-                    ),
-                    "window_end": (
-                        window_end.isoformat()
-                    ),
-                    "offset": offset + 1,
-                }
-            )
-
-            exhausted = False
-
-        else:
-            next_window_start = (
-                window_end
-                + timedelta(days=1)
-            )
-
-            if next_window_start > configured_end:
-                next_cursor = None
-                exhausted = True
-            else:
-                next_window_end = min(
-                    configured_end,
-                    next_window_start
-                    + timedelta(
-                        days=window_days - 1
-                    ),
+            if normalized is not None:
+                records.append(
+                    normalized
                 )
 
-                next_cursor = self._encode_cursor(
-                    {
-                        "window_start": (
-                            next_window_start.isoformat()
-                        ),
-                        "window_end": (
-                            next_window_end.isoformat()
-                        ),
-                        "offset": initial_offset,
-                    }
-                )
+        next_cursor, exhausted = self._next_cursor(
+            raw_records=raw_records,
+            offset=offset,
+            initial_offset=initial_offset,
+            window_start=window_start,
+            window_end=window_end,
+            configured_end=configured_end,
+            window_days=window_days,
+        )
 
-                exhausted = False
+        if (
+            not exhausted
+            and self.cursor
+            and next_cursor == self.cursor
+        ):
+            raise ProviderError(
+                "WoRMS returned an unchanged cursor state."
+            )
 
         return Batch(
             records=records,
@@ -290,15 +258,67 @@ class Provider(BaseProvider):
             raw=len(raw_records),
         )
 
+    def _next_cursor(
+        self,
+        *,
+        raw_records: list[Any],
+        offset: int,
+        initial_offset: int,
+        window_start: date,
+        window_end: date,
+        configured_end: date,
+        window_days: int,
+    ) -> tuple[str | None, bool]:
+        """Advance within the page sequence or to the next date window."""
+
+        if raw_records:
+            return (
+                self._encode_cursor(
+                    {
+                        "window_start": window_start.isoformat(),
+                        "window_end": window_end.isoformat(),
+                        "offset": offset + 1,
+                    }
+                ),
+                False,
+            )
+
+        next_window_start = (
+            window_end
+            + timedelta(days=1)
+        )
+
+        if next_window_start > configured_end:
+            return None, True
+
+        next_window_end = min(
+            configured_end,
+            next_window_start
+            + timedelta(
+                days=window_days - 1
+            ),
+        )
+
+        return (
+            self._encode_cursor(
+                {
+                    "window_start": next_window_start.isoformat(),
+                    "window_end": next_window_end.isoformat(),
+                    "offset": initial_offset,
+                }
+            ),
+            False,
+        )
+
     def _normalize_record(
         self,
+        *,
         raw_record: dict[str, Any],
-        base_url: str,
         endpoint: str,
         retrieved_at: str,
-        crawl_metadata: dict[str, Any],
+        crawl_metadata: Mapping[str, Any],
     ) -> Taxon | None:
-        """Normalize one Aphia record without discarding source fields."""
+        """Normalize one Aphia record."""
 
         aphia_id = self._first_value(
             raw_record,
@@ -340,10 +360,7 @@ class Provider(BaseProvider):
                 "valid_name",
                 "validName",
             )
-        )
-
-        if not canonical_name:
-            canonical_name = scientific_name
+        ) or scientific_name
 
         valid_aphia_id = normalize_space(
             self._first_value(
@@ -368,22 +385,13 @@ class Provider(BaseProvider):
             )
         )
 
-        authority = normalize_space(
-            self._first_value(
-                raw_record,
-                "authority",
-                "authorship",
-                "scientificNameAuthorship",
-            )
-        )
-
         rank = normalize_space(
             self._first_value(
                 raw_record,
                 "rank",
                 "taxonRank",
             )
-        ).casefold()
+        ).casefold() or "unknown"
 
         status = self._normalize_status(
             self._first_value(
@@ -394,7 +402,9 @@ class Provider(BaseProvider):
         )
 
         source_url = normalize_space(
-            raw_record.get("url")
+            raw_record.get(
+                "url"
+            )
         )
 
         if not source_url:
@@ -404,39 +414,36 @@ class Provider(BaseProvider):
                 f"{provider_id}"
             )
 
-        source_modified = normalize_space(
-            self._first_value(
-                raw_record,
-                "modified",
-                "lastModified",
-                "updated",
-            )
-        )
-
-        synonyms = self._extract_synonyms(
-            raw_record=raw_record,
-            scientific_name=scientific_name,
-            valid_name=valid_name,
-        )
-
         taxonomy = {
             "kingdom": normalize_space(
-                raw_record.get("kingdom")
+                raw_record.get(
+                    "kingdom"
+                )
             ),
             "phylum": normalize_space(
-                raw_record.get("phylum")
+                raw_record.get(
+                    "phylum"
+                )
             ),
             "class": normalize_space(
-                raw_record.get("class")
+                raw_record.get(
+                    "class"
+                )
             ),
             "order": normalize_space(
-                raw_record.get("order")
+                raw_record.get(
+                    "order"
+                )
             ),
             "family": normalize_space(
-                raw_record.get("family")
+                raw_record.get(
+                    "family"
+                )
             ),
             "genus": normalize_space(
-                raw_record.get("genus")
+                raw_record.get(
+                    "genus"
+                )
             ),
         }
 
@@ -445,9 +452,16 @@ class Provider(BaseProvider):
             provider_id=provider_id,
             scientific_name=scientific_name,
             canonical_name=canonical_name,
-            rank=rank or "unknown",
+            rank=rank,
             status=status,
-            authorship=authority,
+            authorship=normalize_space(
+                self._first_value(
+                    raw_record,
+                    "authority",
+                    "authorship",
+                    "scientificNameAuthorship",
+                )
+            ),
             kingdom=taxonomy["kingdom"],
             phylum=taxonomy["phylum"],
             class_name=taxonomy["class"],
@@ -456,72 +470,69 @@ class Provider(BaseProvider):
             genus=taxonomy["genus"],
             accepted_provider_id=valid_aphia_id,
             source_url=source_url,
-            source_modified=source_modified,
+            source_modified=normalize_space(
+                self._first_value(
+                    raw_record,
+                    "modified",
+                    "lastModified",
+                    "updated",
+                )
+            ),
             retrieved_at=retrieved_at,
-            synonyms=synonyms,
+            synonyms=self._extract_synonyms(
+                raw_record=raw_record,
+                scientific_name=scientific_name,
+                valid_name=valid_name,
+            ),
             extra={
-                "source": (
-                    "World Register of Marine Species"
-                ),
+                "source": "World Register of Marine Species",
                 "endpoint": endpoint,
                 "aphia_id": provider_id,
                 "valid_aphia_id": valid_aphia_id,
                 "valid_name": valid_name,
                 "taxonomy": taxonomy,
                 "environment": {
-                    "marine": (
-                        self._boolean_value(
-                            self._first_value(
-                                raw_record,
-                                "isMarine",
-                                "is_marine",
-                            )
+                    "marine": self._boolean_value(
+                        self._first_value(
+                            raw_record,
+                            "isMarine",
+                            "is_marine",
                         )
                     ),
-                    "brackish": (
-                        self._boolean_value(
-                            self._first_value(
-                                raw_record,
-                                "isBrackish",
-                                "is_brackish",
-                            )
+                    "brackish": self._boolean_value(
+                        self._first_value(
+                            raw_record,
+                            "isBrackish",
+                            "is_brackish",
                         )
                     ),
-                    "freshwater": (
-                        self._boolean_value(
-                            self._first_value(
-                                raw_record,
-                                "isFreshwater",
-                                "is_freshwater",
-                            )
+                    "freshwater": self._boolean_value(
+                        self._first_value(
+                            raw_record,
+                            "isFreshwater",
+                            "is_freshwater",
                         )
                     ),
-                    "terrestrial": (
-                        self._boolean_value(
-                            self._first_value(
-                                raw_record,
-                                "isTerrestrial",
-                                "is_terrestrial",
-                            )
+                    "terrestrial": self._boolean_value(
+                        self._first_value(
+                            raw_record,
+                            "isTerrestrial",
+                            "is_terrestrial",
                         )
                     ),
                 },
-                "is_extinct": (
-                    self._boolean_value(
-                        self._first_value(
-                            raw_record,
-                            "isExtinct",
-                            "is_extinct",
-                        )
+                "is_extinct": self._boolean_value(
+                    self._first_value(
+                        raw_record,
+                        "isExtinct",
+                        "is_extinct",
                     )
                 ),
-                "is_fossil": (
-                    self._boolean_value(
-                        self._first_value(
-                            raw_record,
-                            "isFossil",
-                            "is_fossil",
-                        )
+                "is_fossil": self._boolean_value(
+                    self._first_value(
+                        raw_record,
+                        "isFossil",
+                        "is_fossil",
                     )
                 ),
                 "parent_aphia_id": normalize_space(
@@ -531,20 +542,22 @@ class Provider(BaseProvider):
                         "parentAphiaID",
                     )
                 ),
-                "parent_name_usage": (
-                    normalize_space(
-                        self._first_value(
-                            raw_record,
-                            "parent_name_usage",
-                            "parentNameUsage",
-                        )
+                "parent_name_usage": normalize_space(
+                    self._first_value(
+                        raw_record,
+                        "parent_name_usage",
+                        "parentNameUsage",
                     )
                 ),
                 "lsid": normalize_space(
-                    raw_record.get("lsid")
+                    raw_record.get(
+                        "lsid"
+                    )
                 ),
                 "citation": normalize_space(
-                    raw_record.get("citation")
+                    raw_record.get(
+                        "citation"
+                    )
                 ),
                 "unaccept_reason": normalize_space(
                     self._first_value(
@@ -575,11 +588,10 @@ class Provider(BaseProvider):
 
         if not isinstance(
             payload,
-            dict,
+            Mapping,
         ):
             raise ProviderError(
-                "WoRMS returned an unsupported "
-                "JSON response type."
+                "WoRMS returned an unsupported JSON response type."
             )
 
         api_error = self._extract_api_error(
@@ -610,20 +622,34 @@ class Provider(BaseProvider):
         if not payload:
             return []
 
+        # Some gateways return one record object rather than a list.
+        if self._first_value(
+            dict(payload),
+            "AphiaID",
+            "aphiaID",
+            "scientificname",
+            "scientificName",
+        ) not in (
+            None,
+            "",
+        ):
+            return [
+                dict(payload)
+            ]
+
         raise ProviderError(
-            "WoRMS returned an object response "
-            "without a recognized records list."
+            "WoRMS returned an object response without "
+            "a recognized records list."
         )
 
     @classmethod
     def _extract_synonyms(
         cls,
-        raw_record: dict[str, Any],
+        *,
+        raw_record: Mapping[str, Any],
         scientific_name: str,
         valid_name: str,
     ) -> list[str]:
-        """Extract and deduplicate synonym-like names in the response."""
-
         values: list[str] = []
 
         if (
@@ -667,27 +693,23 @@ class Provider(BaseProvider):
                         item,
                         str,
                     ):
-                        normalized = (
-                            normalize_space(item)
+                        normalized = normalize_space(
+                            item
                         )
-
                     elif isinstance(
                         item,
-                        dict,
+                        Mapping,
                     ):
-                        normalized = (
-                            normalize_space(
-                                cls._first_value(
-                                    item,
-                                    "scientificname",
-                                    "scientificName",
-                                    "valid_name",
-                                    "validName",
-                                    "name",
-                                )
+                        normalized = normalize_space(
+                            cls._first_value(
+                                dict(item),
+                                "scientificname",
+                                "scientificName",
+                                "valid_name",
+                                "validName",
+                                "name",
                             )
                         )
-
                     else:
                         normalized = ""
 
@@ -705,7 +727,6 @@ class Provider(BaseProvider):
             normalized = normalize_space(
                 value
             )
-
             key = normalized.casefold()
 
             if (
@@ -714,7 +735,9 @@ class Provider(BaseProvider):
             ):
                 continue
 
-            seen.add(key)
+            seen.add(
+                key
+            )
             unique.append(
                 normalized
             )
@@ -725,8 +748,6 @@ class Provider(BaseProvider):
     def _normalize_status(
         value: Any,
     ) -> str:
-        """Normalize WoRMS status terminology."""
-
         status = normalize_space(
             value
         ).casefold()
@@ -743,9 +764,7 @@ class Provider(BaseProvider):
         if status in aliases:
             return aliases[status]
 
-        for source, target in (
-            aliases.items()
-        ):
+        for source, target in aliases.items():
             if source in status:
                 return target
 
@@ -753,62 +772,69 @@ class Provider(BaseProvider):
 
     @staticmethod
     def _extract_api_error(
-        payload: dict[str, Any],
+        payload: Mapping[str, Any],
     ) -> str:
-        """Extract a readable error from an object response."""
+        """Extract explicit API errors without treating metadata as errors."""
 
-        for key in (
-            "error",
-            "message",
-            "detail",
-            "description",
+        explicit_error = payload.get(
+            "error"
+        )
+
+        if isinstance(
+            explicit_error,
+            str,
         ):
-            value = payload.get(
-                key
+            return normalize_space(
+                explicit_error
             )
 
-            if isinstance(
-                value,
-                str,
+        if isinstance(
+            explicit_error,
+            Mapping,
+        ):
+            for key in (
+                "message",
+                "detail",
+                "description",
+                "error",
             ):
-                normalized = normalize_space(
-                    value
+                value = normalize_space(
+                    explicit_error.get(
+                        key
+                    )
                 )
 
-                if normalized:
-                    return normalized
+                if value:
+                    return value
 
-            elif isinstance(
-                value,
-                dict,
+        if (
+            "status" in payload
+            and safe_int(
+                payload.get(
+                    "status"
+                ),
+                200,
+            ) >= 400
+        ):
+            for key in (
+                "message",
+                "detail",
+                "description",
             ):
-                for child_key in (
-                    "message",
-                    "detail",
-                    "description",
-                    "error",
-                ):
-                    normalized = normalize_space(
-                        value.get(
-                            child_key
-                        )
+                value = normalize_space(
+                    payload.get(
+                        key
                     )
+                )
 
-                    if normalized:
-                        return normalized
+                if value:
+                    return value
 
         return ""
 
     def _configured_end_date(
         self,
     ) -> date:
-        """
-        Return the configured end date or today's UTC date.
-
-        Values such as "today", "now", and an empty value are treated as the
-        current UTC date.
-        """
-
         value = self.definition.get(
             "end_date"
         )
@@ -837,47 +863,51 @@ class Provider(BaseProvider):
         cls,
         cursor: str | None,
     ) -> dict[str, Any]:
-        """
-        Decode structured state while accepting the legacy numeric cursor.
-
-        A legacy numeric cursor is treated as the page offset for the first
-        configured date window.
-        """
-
         if not cursor:
             return {}
 
         value = cursor.strip()
 
         if value.isdigit():
+            offset = int(
+                value
+            )
+
+            if offset < 1:
+                raise ProviderError(
+                    "WoRMS legacy cursor offset must be positive."
+                )
+
             return {
-                "offset": int(value),
+                "offset": offset,
             }
 
         try:
             decoded = json.loads(
                 value
             )
-        except json.JSONDecodeError:
-            return {}
+        except json.JSONDecodeError as error:
+            raise ProviderError(
+                "WoRMS cursor is neither a positive integer "
+                "nor valid JSON."
+            ) from error
 
-        return (
-            decoded
-            if isinstance(
-                decoded,
-                dict,
+        if not isinstance(
+            decoded,
+            dict,
+        ):
+            raise ProviderError(
+                "WoRMS cursor JSON must decode to an object."
             )
-            else {}
-        )
+
+        return decoded
 
     @staticmethod
     def _encode_cursor(
-        cursor: dict[str, Any],
+        cursor: Mapping[str, Any],
     ) -> str:
-        """Encode deterministic provider state."""
-
         return json.dumps(
-            cursor,
+            dict(cursor),
             ensure_ascii=False,
             sort_keys=True,
             separators=(",", ":"),
@@ -889,8 +919,6 @@ class Provider(BaseProvider):
         value: Any,
         field_name: str,
     ) -> date:
-        """Parse an ISO date or datetime configuration value."""
-
         normalized = normalize_space(
             value
         )
@@ -900,20 +928,17 @@ class Provider(BaseProvider):
                 f"WoRMS {field_name} is empty."
             )
 
-        normalized = normalized.replace(
-            "Z",
-            "+00:00",
-        )
-
         try:
             return date.fromisoformat(
-                normalized[:10]
+                normalized.replace(
+                    "Z",
+                    "+00:00",
+                )[:10]
             )
         except ValueError as error:
             raise ProviderError(
-                f"Invalid WoRMS {field_name}: "
-                f"{value!r}. Expected YYYY-MM-DD "
-                "or an ISO-8601 datetime."
+                f"Invalid WoRMS {field_name}: {value!r}. "
+                "Expected YYYY-MM-DD or ISO-8601 datetime."
             ) from error
 
     @classmethod
@@ -921,9 +946,9 @@ class Provider(BaseProvider):
         cls,
         value: Any,
         fallback: date,
+        *,
+        field_name: str,
     ) -> date:
-        """Parse a cursor date or return its deterministic fallback."""
-
         normalized = normalize_space(
             value
         )
@@ -935,34 +960,89 @@ class Provider(BaseProvider):
             return date.fromisoformat(
                 normalized[:10]
             )
-        except ValueError:
+        except ValueError as error:
+            raise ProviderError(
+                f"Invalid WoRMS cursor {field_name}: {value!r}."
+            ) from error
+
+    @staticmethod
+    def _cursor_offset(
+        value: Any,
+        fallback: int,
+    ) -> int:
+        if value in (
+            None,
+            "",
+        ):
             return fallback
+
+        try:
+            offset = int(
+                value
+            )
+        except (
+            TypeError,
+            ValueError,
+        ) as error:
+            raise ProviderError(
+                f"Invalid WoRMS cursor offset: {value!r}."
+            ) from error
+
+        if offset < 1:
+            raise ProviderError(
+                "WoRMS cursor offset must be positive."
+            )
+
+        return offset
+
+    @staticmethod
+    def _positive_bounded_int(
+        value: Any,
+        *,
+        default: int,
+        maximum: int,
+        field_name: str,
+    ) -> int:
+        try:
+            parsed = int(
+                value
+            )
+        except (
+            TypeError,
+            ValueError,
+        ):
+            parsed = default
+
+        if parsed < 1:
+            raise ProviderError(
+                f"WoRMS {field_name} must be positive."
+            )
+
+        return min(
+            parsed,
+            maximum,
+        )
 
     @staticmethod
     def _api_datetime(
         value: date,
+        *,
         end_of_day: bool,
     ) -> str:
-        """Format the date for the WoRMS API."""
-
-        suffix = (
-            "T23:59:59"
-            if end_of_day
-            else "T00:00:00"
-        )
-
         return (
             value.isoformat()
-            + suffix
+            + (
+                "T23:59:59"
+                if end_of_day
+                else "T00:00:00"
+            )
         )
 
     @staticmethod
     def _first_value(
-        record: dict[str, Any],
+        record: Mapping[str, Any],
         *keys: str,
     ) -> Any:
-        """Return the first nonempty value under the requested keys."""
-
         for key in keys:
             value = record.get(
                 key
@@ -982,8 +1062,6 @@ class Provider(BaseProvider):
     def _boolean_parameter(
         value: Any,
     ) -> str:
-        """Convert a configured boolean to the WoRMS query form."""
-
         if isinstance(
             value,
             bool,
@@ -998,23 +1076,31 @@ class Provider(BaseProvider):
             value
         ).casefold()
 
-        return (
-            "true"
-            if normalized in {
-                "1",
-                "true",
-                "yes",
-                "on",
-            }
-            else "false"
+        if normalized in {
+            "1",
+            "true",
+            "yes",
+            "on",
+        }:
+            return "true"
+
+        if normalized in {
+            "",
+            "0",
+            "false",
+            "no",
+            "off",
+        }:
+            return "false"
+
+        raise ProviderError(
+            f"Invalid WoRMS marine_only value: {value!r}."
         )
 
     @staticmethod
     def _boolean_value(
         value: Any,
     ) -> bool | None:
-        """Normalize a WoRMS boolean-like value."""
-
         if isinstance(
             value,
             bool,
@@ -1025,7 +1111,9 @@ class Provider(BaseProvider):
             value,
             int,
         ):
-            return bool(value)
+            return bool(
+                value
+            )
 
         normalized = normalize_space(
             value
