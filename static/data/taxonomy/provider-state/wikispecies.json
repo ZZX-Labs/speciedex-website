@@ -3,17 +3,17 @@
   "last_attempt": "2026-07-20T22:15:30Z",
   "last_error": null,
   "last_fetch": {
-    "discovered_pages": 19,
-    "enriched_pages": 19,
-    "normalized_records": 19,
-    "requests": 2,
-    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A._A._Svetlova\"}",
+    "discovered_pages": 27,
+    "enriched_pages": 27,
+    "normalized_records": 27,
+    "requests": 3,
+    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A._E._Traaen\"}",
     "exhausted": false
   },
-  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A._A._Svetlova\"}",
+  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A._E._Traaen\"}",
   "bootstrap_complete": false,
-  "last_success": "2026-07-21T17:55:11Z",
-  "last_batch_records": 19,
-  "last_requests": 2,
-  "last_raw_records": 19
+  "last_success": "2026-07-21T19:39:02Z",
+  "last_batch_records": 27,
+  "last_requests": 3,
+  "last_raw_records": 27
 }
