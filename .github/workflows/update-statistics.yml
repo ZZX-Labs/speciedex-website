@@ -21,16 +21,6 @@ jobs:
 
     env:
       PYTHONUNBUFFERED: "1"
-      EOL_API_KEY: ${{ secrets.EOL_API_KEY }}
-      IUCN_API_TOKEN: ${{ secrets.IUCN_API_TOKEN }}
-      NATURESERVE_API_KEY: ${{ secrets.NATURESERVE_API_KEY }}
-      NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
-      BACDIVE_USERNAME: ${{ secrets.BACDIVE_USERNAME }}
-      BACDIVE_PASSWORD: ${{ secrets.BACDIVE_PASSWORD }}
-      BHL_API_KEY: ${{ secrets.BHL_API_KEY }}
-      GEONAMES_USERNAME: ${{ secrets.GEONAMES_USERNAME }}
-      YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
 
     steps:
       - name: Check out repository
@@ -44,6 +34,67 @@ jobs:
         with:
           python-version: "3.13"
           check-latest: true
+
+      - name: Load optional provider credentials
+        id: provider_credentials
+        shell: bash
+        env:
+          SECRET_EOL_API_KEY: ${{ secrets.EOL_API_KEY }}
+          SECRET_IUCN_API_TOKEN: ${{ secrets.IUCN_API_TOKEN }}
+          SECRET_NATURESERVE_API_KEY: ${{ secrets.NATURESERVE_API_KEY }}
+          SECRET_NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
+          SECRET_BACDIVE_USERNAME: ${{ secrets.BACDIVE_USERNAME }}
+          SECRET_BACDIVE_PASSWORD: ${{ secrets.BACDIVE_PASSWORD }}
+          SECRET_BHL_API_KEY: ${{ secrets.BHL_API_KEY }}
+          SECRET_GEONAMES_USERNAME: ${{ secrets.GEONAMES_USERNAME }}
+          SECRET_YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          SECRET_GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          loaded=()
+          missing=()
+
+          export_secret() {
+            local source_name="$1"
+            local target_name="$2"
+            local value="${!source_name:-}"
+
+            if test -n "$value"
+            then
+              printf '%s=%s\n' \
+                "$target_name" \
+                "$value" \
+                >> "$GITHUB_ENV"
+
+              loaded+=("$target_name")
+            else
+              missing+=("$target_name")
+            fi
+          }
+
+          export_secret SECRET_EOL_API_KEY EOL_API_KEY
+          export_secret SECRET_IUCN_API_TOKEN IUCN_API_TOKEN
+          export_secret SECRET_NATURESERVE_API_KEY NATURESERVE_API_KEY
+          export_secret SECRET_NCBI_API_KEY NCBI_API_KEY
+          export_secret SECRET_BACDIVE_USERNAME BACDIVE_USERNAME
+          export_secret SECRET_BACDIVE_PASSWORD BACDIVE_PASSWORD
+          export_secret SECRET_BHL_API_KEY BHL_API_KEY
+          export_secret SECRET_GEONAMES_USERNAME GEONAMES_USERNAME
+          export_secret SECRET_YOUTUBE_API_KEY YOUTUBE_API_KEY
+          export_secret SECRET_GOOGLE_API_KEY GOOGLE_API_KEY
+
+          printf 'loaded_count=%s\n' \
+            "${#loaded[@]}" \
+            >> "$GITHUB_OUTPUT"
+
+          printf 'missing_count=%s\n' \
+            "${#missing[@]}" \
+            >> "$GITHUB_OUTPUT"
+
+          printf 'Loaded optional credentials: %s\n' \
+            "${loaded[*]:-none}"
+
+          printf 'Unavailable optional credentials: %s\n' \
+            "${missing[*]:-none}"
 
       - name: Validate Python source
         run: |
@@ -341,11 +392,12 @@ jobs:
             done
           fi
 
-      - name: Validate scheduler state semantics
+      - name: Validate and normalize scheduler state
         run: |
           python - <<'PY'
           import json
           import os
+          import tempfile
           from pathlib import Path
 
           path = Path(
@@ -369,31 +421,86 @@ jobs:
                   "Scheduler state root must be an object."
               )
 
-          schema_version = state.get(
-              "schema_version"
+          changed = False
+
+          def integer_value(value, *, field, minimum=0):
+              nonlocal_changed = False
+
+              if isinstance(value, bool):
+                  raise SystemExit(
+                      f"Scheduler field {field} cannot be boolean."
+                  )
+
+              if isinstance(value, int):
+                  result = value
+              elif isinstance(value, float) and value.is_integer():
+                  result = int(value)
+                  nonlocal_changed = True
+              elif isinstance(value, str):
+                  stripped = value.strip()
+
+                  if not stripped or not stripped.lstrip("+-").isdigit():
+                      raise SystemExit(
+                          f"Scheduler field {field} must be an integer; "
+                          f"received {value!r}."
+                      )
+
+                  result = int(stripped)
+                  nonlocal_changed = True
+              else:
+                  raise SystemExit(
+                      f"Scheduler field {field} must be an integer; "
+                      f"received {value!r}."
+                  )
+
+              if result < minimum:
+                  raise SystemExit(
+                      f"Scheduler field {field} must be >= {minimum}; "
+                      f"received {result}."
+                  )
+
+              return result, nonlocal_changed
+
+          schema_version, migrated = integer_value(
+              state.get("schema_version", 1),
+              field="schema_version",
+              minimum=1,
           )
+          state["schema_version"] = schema_version
+          changed = changed or migrated
 
-          if not isinstance(schema_version, int):
-              raise SystemExit(
-                  "Scheduler schema_version must be an integer."
-              )
-
-          cursor = state.get("cursor", 0)
-
-          if not isinstance(cursor, int) or cursor < 0:
-              raise SystemExit(
-                  f"Invalid scheduler cursor: {cursor!r}"
-              )
-
-          providers = state.get(
-              "providers",
-              {},
+          cursor, migrated = integer_value(
+              state.get("cursor", 0),
+              field="cursor",
           )
+          state["cursor"] = cursor
+          changed = changed or migrated
+
+          for key in ("registered", "eligible"):
+              value, migrated = integer_value(
+                  state.get(key, 0),
+                  field=key,
+              )
+              state[key] = value
+              changed = changed or migrated
+
+          providers = state.get("providers", {})
 
           if not isinstance(providers, dict):
               raise SystemExit(
                   "Scheduler providers must be an object."
               )
+
+          integer_fields = (
+              "consecutive_failures",
+              "total_runs",
+              "total_successes",
+              "total_failures",
+              "last_records",
+              "total_records",
+              "total_requests",
+              "empty_successes",
+          )
 
           for name, provider in providers.items():
               if not isinstance(provider, dict):
@@ -401,26 +508,62 @@ jobs:
                       f"Invalid scheduler state for {name}."
                   )
 
-              for key in (
-                  "consecutive_failures",
-                  "total_runs",
-                  "total_successes",
-                  "total_failures",
-                  "last_records",
-                  "total_records",
-                  "total_requests",
-              ):
-                  value = provider.get(key, 0)
+              for key in integer_fields:
+                  value, migrated = integer_value(
+                      provider.get(key, 0),
+                      field=f"providers.{name}.{key}",
+                  )
+                  provider[key] = value
+                  changed = changed or migrated
 
-                  if not isinstance(value, int) or value < 0:
-                      raise SystemExit(
-                          f"Invalid scheduler value "
-                          f"{name}.{key}={value!r}"
+          if changed:
+              path.parent.mkdir(
+                  parents=True,
+                  exist_ok=True,
+              )
+
+              descriptor, temporary_name = tempfile.mkstemp(
+                  prefix=f".{path.name}.",
+                  suffix=".tmp",
+                  dir=path.parent,
+                  text=True,
+              )
+
+              try:
+                  with os.fdopen(
+                      descriptor,
+                      "w",
+                      encoding="utf-8",
+                      newline="\n",
+                  ) as handle:
+                      json.dump(
+                          state,
+                          handle,
+                          indent=2,
+                          ensure_ascii=False,
+                          sort_keys=True,
                       )
+                      handle.write("\n")
+                      handle.flush()
+                      os.fsync(handle.fileno())
+
+                  Path(temporary_name).replace(path)
+
+              finally:
+                  temporary = Path(temporary_name)
+
+                  if temporary.exists():
+                      temporary.unlink()
+
+              print(
+                  "Normalized scheduler numeric fields to integers."
+              )
 
           print(
               f"Validated scheduler state for "
-              f"{len(providers)} providers."
+              f"{len(providers)} providers; "
+              f"schema_version={schema_version}; "
+              f"cursor={cursor}."
           )
           PY
 
@@ -638,9 +781,12 @@ jobs:
         if: always()
         env:
           JOB_STATUS: ${{ job.status }}
+          LOADED_CREDENTIAL_COUNT: ${{ steps.provider_credentials.outputs.loaded_count }}
+          MISSING_CREDENTIAL_COUNT: ${{ steps.provider_credentials.outputs.missing_count }}
         run: |
           python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
           import json
+          import os
           from pathlib import Path
 
           stats_path = Path(
@@ -702,6 +848,20 @@ jobs:
               (
                   "Eligible providers",
                   scheduler.get("eligible", 0),
+              ),
+              (
+                  "Optional credentials loaded",
+                  os.environ.get(
+                      "LOADED_CREDENTIAL_COUNT",
+                      "0",
+                  ),
+              ),
+              (
+                  "Optional credentials unavailable",
+                  os.environ.get(
+                      "MISSING_CREDENTIAL_COUNT",
+                      "0",
+                  ),
               ),
           )
 
