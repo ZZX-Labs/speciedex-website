@@ -13,10 +13,13 @@ Loaded by:
 Responsibilities:
 
     • Load statistics.json through the shared Data module
-    • Validate the expected statistics structure
-    • Populate statistics placeholders
-    • Format numbers and dates consistently
-    • Gracefully handle unavailable data
+    • Load statistics-sources.json when available
+    • Populate original and expanded splash statistics
+    • Support HTML partials inserted after module initialization
+    • Bind explicit element IDs and generic [data-stat] elements
+    • Format numeric values consistently
+    • Display timestamps in America/New_York
+    • Gracefully handle unavailable values
     • Dispatch statistics lifecycle events
 
 ==============================================================================
@@ -27,11 +30,16 @@ Responsibilities:
         window.Speciedex =
         window.Speciedex || {};
 
-    if (Speciedex.statisticsModuleLoaded) {
+    if (
+        Speciedex
+            .statisticsModuleLoaded
+    ) {
         return;
     }
 
-    Speciedex.statisticsModuleLoaded = true;
+    Speciedex
+        .statisticsModuleLoaded =
+        true;
 
     /*
     ==========================================================================
@@ -42,24 +50,134 @@ Responsibilities:
     const DATA_FILE =
         "statistics.json";
 
-    const SELECTORS = Object.freeze({
-        species:
-            "#species-count",
+    const SOURCES_FILE =
+        "statistics-sources.json";
 
-        kingdoms:
-            "#kingdom-count",
+    const DISPLAY_TIME_ZONE =
+        "America/New_York";
 
-        genera:
-            "#genus-count",
+    const SELECTORS =
+        Object.freeze({
+            species:
+                "#species-count",
 
-        families:
-            "#family-count",
+            subspecies:
+                "#subspecies-count",
 
-        updated:
-            "#updated-date"
-    });
+            genera:
+                "#genus-count",
 
-    let initialized = false;
+            families:
+                "#family-count",
+
+            orders:
+                "#order-count",
+
+            classes:
+                "#class-count",
+
+            phyla:
+                "#phylum-count",
+
+            kingdoms:
+                "#kingdom-count",
+
+            records_archived:
+                "#records-count",
+
+            source_assertions:
+                "#assertions-count",
+
+            synonyms:
+                "#synonyms-count",
+
+            unresolved_conflicts:
+                "#conflicts-count",
+
+            volumes:
+                "#volumes-count",
+
+            providers:
+                "#providers-count",
+
+            enabled_providers:
+                "#enabled-providers-count",
+
+            eligible_providers:
+                "#eligible-providers-count",
+
+            last_updated:
+                "#updated-date"
+        });
+
+    const ALIASES =
+        Object.freeze({
+            updated:
+                "last_updated",
+
+            species_count:
+                "species",
+
+            subspecies_count:
+                "subspecies",
+
+            genus:
+                "genera",
+
+            family:
+                "families",
+
+            order:
+                "orders",
+
+            class:
+                "classes",
+
+            phylum:
+                "phyla",
+
+            kingdom:
+                "kingdoms",
+
+            records:
+                "records_archived",
+
+            canonical_records:
+                "records_archived",
+
+            assertions:
+                "source_assertions",
+
+            conflicts:
+                "unresolved_conflicts",
+
+            archive_volumes:
+                "volumes",
+
+            provider_count:
+                "providers",
+
+            registered_providers:
+                "providers",
+
+            providers_total:
+                "providers"
+        });
+
+    const DATE_KEYS =
+        new Set([
+            "last_updated",
+            "updated",
+            "generated_at",
+            "created_at",
+            "modified_at"
+        ]);
+
+    let loadingPromise =
+        null;
+
+    let cachedStatistics =
+        null;
 
     /*
     ==========================================================================
@@ -68,60 +186,142 @@ Responsibilities:
     */
 
     function getStatisticElements() {
-        return {
-            species:
-                document.querySelector(
-                    SELECTORS.species
-                ),
+        const bindings =
+            new Map();
 
-            kingdoms:
-                document.querySelector(
-                    SELECTORS.kingdoms
-                ),
+        for (
+            const [
+                key,
+                selector
+            ]
+            of Object.entries(
+                SELECTORS
+            )
+        ) {
+            const element =
+                document
+                    .querySelector(
+                        selector
+                    );
 
-            genera:
-                document.querySelector(
-                    SELECTORS.genera
-                ),
+            if (element) {
+                bindings.set(
+                    element,
+                    key
+                );
+            }
+        }
 
-            families:
-                document.querySelector(
-                    SELECTORS.families
-                ),
+        document
+            .querySelectorAll(
+                "[data-stat]"
+            )
+            .forEach(
+                (
+                    element
+                ) => {
+                    const key =
+                        resolveStatisticKey(
+                            element
+                                .dataset
+                                .stat
+                        );
 
-            updated:
-                document.querySelector(
-                    SELECTORS.updated
-                )
-        };
+                    if (!key) {
+                        return;
+                    }
+
+                    bindings.set(
+                        element,
+                        key
+                    );
+                }
+            );
+
+        return bindings;
+    }
+
+    function resolveStatisticKey(
+        value
+    ) {
+        const key =
+            String(
+                value || ""
+            )
+                .trim()
+                .toLowerCase()
+                .replace(
+                    /[\s-]+/g,
+                    "_"
+                );
+
+        if (!key) {
+            return "";
+        }
+
+        return (
+            ALIASES[key] ||
+            key
+        );
     }
 
     /*
     ==========================================================================
-    Validate Statistics Data
+    Validate Data
     ==========================================================================
     */
+
+    function requireObject(
+        data,
+        label
+    ) {
+        if (
+            Speciedex.Data &&
+            typeof Speciedex.Data
+                .requireObject ===
+                "function"
+        ) {
+            Speciedex.Data
+                .requireObject(
+                    data,
+                    label
+                );
+
+            return true;
+        }
+
+        if (
+            !data ||
+            typeof data !==
+                "object" ||
+            Array.isArray(
+                data
+            )
+        ) {
+            throw new TypeError(
+                `${label} must be an object.`
+            );
+        }
+
+        return true;
+    }
 
     function validateStatisticsData(
         data
     ) {
-        if (
-            !Speciedex.Data ||
-            typeof Speciedex.Data
-                .requireObject !==
-                "function"
-        ) {
-            throw new Error(
-                "Speciedex Data module is unavailable."
-            );
-        }
-
-        Speciedex.Data.requireObject(
+        return requireObject(
             data,
             "Statistics data"
         );
+    }
 
-        return true;
+    function validateSourcesData(
+        data
+    ) {
+        return requireObject(
+            data,
+            "Statistics sources data"
+        );
     }
 
     /*
@@ -130,87 +330,425 @@ Responsibilities:
     ==========================================================================
     */
 
-    async function initializeStatistics() {
-        if (initialized) {
-            return;
-        }
-
-        const elements =
+    async function initializeStatistics(
+        options = {}
+    ) {
+        const bindings =
             getStatisticElements();
 
-        if (
-            !Object.values(elements)
-                .some(Boolean)
-        ) {
-            return;
+        if (!bindings.size) {
+            return null;
         }
 
-        initialized = true;
+        if (
+            cachedStatistics &&
+            !options.force
+        ) {
+            populateStatistics(
+                bindings,
+                cachedStatistics
+            );
+
+            dispatchStatisticsEvent(
+                "speciedex:statistics-loaded",
+                {
+                    elements:
+                        Array.from(
+                            bindings.keys()
+                        ),
+
+                    data:
+                        cachedStatistics,
+
+                    cached:
+                        true
+                }
+            );
+
+            return cachedStatistics;
+        }
+
+        if (loadingPromise) {
+            const data =
+                await loadingPromise;
+
+            populateStatistics(
+                getStatisticElements(),
+                data
+            );
+
+            return data;
+        }
 
         dispatchStatisticsEvent(
             "speciedex:statistics-loading",
             {
-                elements
+                elements:
+                    Array.from(
+                        bindings.keys()
+                    )
             }
         );
 
-        try {
-            if (
-                !Speciedex.Data ||
-                typeof Speciedex.Data
-                    .fetchJSON !==
-                    "function"
-            ) {
-                throw new Error(
-                    "Speciedex Data module is unavailable."
-                );
-            }
+        loadingPromise =
+            loadStatisticsData();
 
+        try {
             const data =
-                await Speciedex.Data
-                    .fetchJSON(
-                        DATA_FILE,
-                        {
-                            cache: true,
-                            requestCache:
-                                "no-cache",
-                            validate:
-                                validateStatisticsData
-                        }
-                    );
+                await loadingPromise;
+
+            cachedStatistics =
+                data;
 
             populateStatistics(
-                elements,
+                getStatisticElements(),
                 data
             );
 
             dispatchStatisticsEvent(
                 "speciedex:statistics-loaded",
                 {
-                    elements,
-                    data
+                    elements:
+                        Array.from(
+                            getStatisticElements()
+                                .keys()
+                        ),
+
+                    data,
+
+                    cached:
+                        false
                 }
             );
-        } catch (error) {
-            initialized = false;
 
+            return data;
+        } catch (error) {
             console.error(
                 `Unable to load ${DATA_FILE}:`,
                 error
             );
 
             setStatisticsUnavailable(
-                elements
+                getStatisticElements()
             );
 
             dispatchStatisticsEvent(
                 "speciedex:statistics-error",
                 {
-                    elements,
+                    elements:
+                        Array.from(
+                            getStatisticElements()
+                                .keys()
+                        ),
+
                     error
                 }
             );
+
+            return null;
+        } finally {
+            loadingPromise =
+                null;
         }
+    }
+
+    /*
+    ==========================================================================
+    Load Data
+    ==========================================================================
+    */
+
+    async function loadStatisticsData() {
+        if (
+            !Speciedex.Data ||
+            typeof Speciedex.Data
+                .fetchJSON !==
+                "function"
+        ) {
+            throw new Error(
+                "Speciedex Data module is unavailable."
+            );
+        }
+
+        const statistics =
+            await Speciedex.Data
+                .fetchJSON(
+                    DATA_FILE,
+                    {
+                        cache:
+                            true,
+
+                        requestCache:
+                            "no-cache",
+
+                        validate:
+                            validateStatisticsData
+                    }
+                );
+
+        let sources =
+            null;
+
+        try {
+            sources =
+                await Speciedex.Data
+                    .fetchJSON(
+                        SOURCES_FILE,
+                        {
+                            cache:
+                                true,
+
+                            requestCache:
+                                "no-cache",
+
+                            validate:
+                                validateSourcesData
+                        }
+                    );
+        } catch (error) {
+            console.warn(
+                `Unable to load optional ${SOURCES_FILE}:`,
+                error
+            );
+        }
+
+        return mergeStatistics(
+            statistics,
+            sources
+        );
+    }
+
+    /*
+    ==========================================================================
+    Merge Statistics
+    ==========================================================================
+    */
+
+    function mergeStatistics(
+        statistics,
+        sources
+    ) {
+        const merged = {
+            ...statistics
+        };
+
+        if (
+            merged
+                .last_updated ===
+                undefined &&
+            merged
+                .updated !==
+                undefined
+        ) {
+            merged
+                .last_updated =
+                merged.updated;
+        }
+
+        const providerMetadata =
+            extractProviderMetadata(
+                sources
+            );
+
+        for (
+            const [
+                key,
+                value
+            ]
+            of Object.entries(
+                providerMetadata
+            )
+        ) {
+            if (
+                merged[key] ===
+                    undefined &&
+                value !== null
+            ) {
+                merged[key] =
+                    value;
+            }
+        }
+
+        return merged;
+    }
+
+    /*
+    ==========================================================================
+    Provider Metadata
+    ==========================================================================
+    */
+
+    function extractProviderMetadata(
+        data
+    ) {
+        const result = {
+            providers:
+                null,
+
+            enabled_providers:
+                null,
+
+            eligible_providers:
+                null
+        };
+
+        if (
+            !data ||
+            typeof data !==
+                "object" ||
+            Array.isArray(
+                data
+            )
+        ) {
+            return result;
+        }
+
+        result.providers =
+            firstNumericValue(
+                data,
+                [
+                    "provider_count",
+                    "providers_total",
+                    "registered_providers",
+                    "providers"
+                ]
+            );
+
+        result.enabled_providers =
+            firstNumericValue(
+                data,
+                [
+                    "enabled_providers",
+                    "providers_enabled"
+                ]
+            );
+
+        result.eligible_providers =
+            firstNumericValue(
+                data,
+                [
+                    "eligible_providers",
+                    "providers_eligible"
+                ]
+            );
+
+        if (
+            result.providers ===
+                null
+        ) {
+            result.providers =
+                countCollection(
+                    data.providers
+                );
+        }
+
+        if (
+            result.providers ===
+                null
+        ) {
+            result.providers =
+                countCollection(
+                    data.sources
+                );
+        }
+
+        if (
+            result.providers ===
+                null
+        ) {
+            result.providers =
+                countCollection(
+                    data.provider_statistics
+                );
+        }
+
+        if (
+            result.providers ===
+                null
+        ) {
+            result.providers =
+                countCollection(
+                    data.provider_counts
+                );
+        }
+
+        return result;
+    }
+
+    function firstNumericValue(
+        data,
+        keys
+    ) {
+        for (
+            const key
+            of keys
+        ) {
+            if (
+                !Object.prototype
+                    .hasOwnProperty
+                    .call(
+                        data,
+                        key
+                    )
+            ) {
+                continue;
+            }
+
+            const value =
+                data[key];
+
+            if (
+                Array.isArray(
+                    value
+                ) ||
+                (
+                    value &&
+                    typeof value ===
+                        "object"
+                )
+            ) {
+                continue;
+            }
+
+            const number =
+                Number(
+                    value
+                );
+
+            if (
+                Number.isFinite(
+                    number
+                )
+            ) {
+                return number;
+            }
+        }
+
+        return null;
+    }
+
+    function countCollection(
+        value
+    ) {
+        if (
+            Array.isArray(
+                value
+            )
+        ) {
+            return value.length;
+        }
+
+        if (
+            value &&
+            typeof value ===
+                "object"
+        ) {
+            return Object.keys(
+                value
+            ).length;
+        }
+
+        return null;
     }
 
     /*
@@ -220,32 +758,41 @@ Responsibilities:
     */
 
     function populateStatistics(
-        elements,
+        bindings,
         data
     ) {
-        setStatistic(
-            elements.species,
-            data.species
-        );
+        if (
+            !(bindings instanceof Map)
+        ) {
+            return;
+        }
 
-        setStatistic(
-            elements.kingdoms,
-            data.kingdoms
-        );
+        bindings.forEach(
+            (
+                key,
+                element
+            ) => {
+                const value =
+                    data[key];
 
-        setStatistic(
-            elements.genera,
-            data.genera
-        );
+                if (
+                    DATE_KEYS.has(
+                        key
+                    )
+                ) {
+                    setStatisticDate(
+                        element,
+                        value
+                    );
 
-        setStatistic(
-            elements.families,
-            data.families
-        );
+                    return;
+                }
 
-        setStatisticDate(
-            elements.updated,
-            data.last_updated
+                setStatistic(
+                    element,
+                    value
+                );
+            }
         );
     }
 
@@ -264,18 +811,109 @@ Responsibilities:
         }
 
         const formatted =
-            Speciedex.Data
-                ?.formatNumber
-            ? Speciedex.Data
-                .formatNumber(
-                    value
-                )
-            : fallbackFormatNumber(
+            formatStatisticValue(
                 value
             );
 
         element.textContent =
             formatted;
+
+        element.dataset
+            .statStatus =
+            formatted ===
+                "Unavailable"
+                ? "unavailable"
+                : "loaded";
+    }
+
+    /*
+    ==========================================================================
+    Format Statistic Value
+    ==========================================================================
+    */
+
+    function formatStatisticValue(
+        value
+    ) {
+        if (
+            value === undefined ||
+            value === null ||
+            value === ""
+        ) {
+            return "Unavailable";
+        }
+
+        if (
+            typeof value ===
+                "boolean"
+        ) {
+            return value
+                ? "Yes"
+                : "No";
+        }
+
+        if (
+            typeof value ===
+                "number"
+        ) {
+            return fallbackFormatNumber(
+                value
+            );
+        }
+
+        if (
+            typeof value ===
+                "string"
+        ) {
+            const trimmed =
+                value.trim();
+
+            if (!trimmed) {
+                return "Unavailable";
+            }
+
+            const numeric =
+                Number(
+                    trimmed
+                );
+
+            if (
+                Number.isFinite(
+                    numeric
+                )
+            ) {
+                return fallbackFormatNumber(
+                    numeric
+                );
+            }
+
+            return trimmed;
+        }
+
+        if (
+            Array.isArray(
+                value
+            )
+        ) {
+            return fallbackFormatNumber(
+                value.length
+            );
+        }
+
+        if (
+            typeof value ===
+                "object"
+        ) {
+            return fallbackFormatNumber(
+                Object.keys(
+                    value
+                ).length
+            );
+        }
+
+        return String(
+            value
+        );
     }
 
     /*
@@ -293,18 +931,95 @@ Responsibilities:
         }
 
         const formatted =
-            Speciedex.Data
-                ?.formatDate
-            ? Speciedex.Data
-                .formatDate(
-                    value
-                )
-            : fallbackFormatDate(
+            formatEasternDate(
                 value
             );
 
         element.textContent =
             formatted;
+
+        element.dataset
+            .statStatus =
+            formatted ===
+                "Unavailable"
+                ? "unavailable"
+                : "loaded";
+    }
+
+    /*
+    ==========================================================================
+    Eastern Time Formatting
+    ==========================================================================
+    */
+
+    function formatEasternDate(
+        value
+    ) {
+        if (!value) {
+            return "Unavailable";
+        }
+
+        const date =
+            value instanceof Date
+                ? value
+                : new Date(
+                    value
+                );
+
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
+            return String(
+                value
+            );
+        }
+
+        try {
+            return new Intl
+                .DateTimeFormat(
+                    "en-US",
+                    {
+                        timeZone:
+                            DISPLAY_TIME_ZONE,
+
+                        year:
+                            "numeric",
+
+                        month:
+                            "short",
+
+                        day:
+                            "2-digit",
+
+                        hour:
+                            "numeric",
+
+                        minute:
+                            "2-digit",
+
+                        second:
+                            "2-digit",
+
+                        timeZoneName:
+                            "short"
+                    }
+                )
+                .format(
+                    date
+                );
+        } catch (error) {
+            console.warn(
+                "Unable to format timestamp "
+                + `using ${DISPLAY_TIME_ZONE}:`,
+                error
+            );
+
+            return fallbackFormatDate(
+                value
+            );
+        }
     }
 
     /*
@@ -313,33 +1028,70 @@ Responsibilities:
     ==========================================================================
     */
 
+    function setStatisticUnavailable(
+        element
+    ) {
+        if (!element) {
+            return;
+        }
+
+        element.textContent =
+            "Unavailable";
+
+        element.dataset
+            .statStatus =
+            "unavailable";
+    }
+
     function setStatisticsUnavailable(
-        elements
+        bindings
     ) {
         if (
-            Speciedex.Data &&
-            typeof Speciedex.Data
-                .setUnavailable ===
-                "function"
+            bindings instanceof Map
         ) {
-            Speciedex.Data
-                .setUnavailable(
-                    elements
-                );
+            bindings.forEach(
+                (
+                    key,
+                    element
+                ) => {
+                    if (!element) {
+                        return;
+                    }
+
+                    element.textContent =
+                        "Unavailable";
+
+                    element.dataset
+                        .statStatus =
+                        "error";
+                }
+            );
 
             return;
         }
 
-        Object.values(
-            elements || {}
-        ).forEach(
-            (element) => {
-                if (element) {
+        if (
+            Array.isArray(
+                bindings
+            )
+        ) {
+            bindings.forEach(
+                (
+                    element
+                ) => {
+                    if (!element) {
+                        return;
+                    }
+
                     element.textContent =
                         "Unavailable";
+
+                    element.dataset
+                        .statStatus =
+                        "error";
                 }
-            }
-        );
+            );
+        }
     }
 
     /*
@@ -355,14 +1107,166 @@ Responsibilities:
                 .clearCache ===
                 "function"
         ) {
-            Speciedex.Data.clearCache(
-                DATA_FILE
-            );
+            Speciedex.Data
+                .clearCache(
+                    DATA_FILE
+                );
+
+            Speciedex.Data
+                .clearCache(
+                    SOURCES_FILE
+                );
         }
 
-        initialized = false;
+        cachedStatistics =
+            null;
 
-        return initializeStatistics();
+        return initializeStatistics({
+            force:
+                true
+        });
+    }
+
+    /*
+    ==========================================================================
+    Partial-Insertion Support
+    ==========================================================================
+    */
+
+    function bindPartialEvents() {
+        const eventNames = [
+            "speciedex:includes-loaded",
+            "speciedex:include-loaded",
+            "speciedex:partials-loaded",
+            "speciedex:partial-loaded",
+            "speciedex:header-loaded",
+            "speciedex:splash-loaded"
+        ];
+
+        eventNames.forEach(
+            (
+                eventName
+            ) => {
+                document.addEventListener(
+                    eventName,
+                    () => {
+                        initializeStatistics()
+                            .catch(
+                                (
+                                    error
+                                ) => {
+                                    console.error(
+                                        "Unable to initialize "
+                                        + "statistics after "
+                                        + `${eventName}:`,
+                                        error
+                                    );
+                                }
+                            );
+                    }
+                );
+            }
+        );
+    }
+
+    /*
+    ==========================================================================
+    DOM Observation
+    ==========================================================================
+    */
+
+    function observeStatisticElements() {
+        if (
+            typeof MutationObserver ===
+                "undefined"
+        ) {
+            return;
+        }
+
+        const observer =
+            new MutationObserver(
+                (
+                    mutations
+                ) => {
+                    let foundStatistics =
+                        false;
+
+                    for (
+                        const mutation
+                        of mutations
+                    ) {
+                        for (
+                            const node
+                            of mutation
+                                .addedNodes
+                        ) {
+                            if (
+                                !(
+                                    node instanceof
+                                    Element
+                                )
+                            ) {
+                                continue;
+                            }
+
+                            if (
+                                node.matches(
+                                    "[data-stat]"
+                                ) ||
+                                node.querySelector(
+                                    "[data-stat]"
+                                )
+                            ) {
+                                foundStatistics =
+                                    true;
+
+                                break;
+                            }
+                        }
+
+                        if (
+                            foundStatistics
+                        ) {
+                            break;
+                        }
+                    }
+
+                    if (
+                        !foundStatistics
+                    ) {
+                        return;
+                    }
+
+                    initializeStatistics()
+                        .catch(
+                            (
+                                error
+                            ) => {
+                                console.error(
+                                    "Unable to initialize "
+                                    + "statistics after "
+                                    + "DOM insertion:",
+                                    error
+                                );
+                            }
+                        );
+                }
+            );
+
+        observer.observe(
+            document.documentElement,
+            {
+                childList:
+                    true,
+
+                subtree:
+                    true
+            }
+        );
+
+        Speciedex
+            .statisticsObserver =
+            observer;
     }
 
     /*
@@ -383,15 +1287,43 @@ Responsibilities:
         }
 
         const number =
-            Number(value);
+            Number(
+                value
+            );
 
-        if (!Number.isFinite(number)) {
-            return String(value);
+        if (
+            !Number.isFinite(
+                number
+            )
+        ) {
+            return String(
+                value
+            );
         }
 
-        return number.toLocaleString(
-            "en-US"
-        );
+        if (
+            Speciedex.Data &&
+            typeof Speciedex.Data
+                .formatNumber ===
+                "function"
+        ) {
+            try {
+                return Speciedex.Data
+                    .formatNumber(
+                        number
+                    );
+            } catch (error) {
+                console.warn(
+                    "Shared number formatter failed:",
+                    error
+                );
+            }
+        }
+
+        return number
+            .toLocaleString(
+                "en-US"
+            );
     }
 
     /*
@@ -408,25 +1340,49 @@ Responsibilities:
         }
 
         const date =
-            new Date(value);
+            new Date(
+                value
+            );
 
         if (
             Number.isNaN(
                 date.getTime()
             )
         ) {
-            return String(value);
+            return String(
+                value
+            );
         }
 
-        return date.toLocaleDateString(
-            "en-US",
-            {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                timeZone: "UTC"
-            }
-        );
+        return date
+            .toLocaleString(
+                "en-US",
+                {
+                    year:
+                        "numeric",
+
+                    month:
+                        "short",
+
+                    day:
+                        "2-digit",
+
+                    hour:
+                        "numeric",
+
+                    minute:
+                        "2-digit",
+
+                    second:
+                        "2-digit",
+
+                    timeZone:
+                        DISPLAY_TIME_ZONE,
+
+                    timeZoneName:
+                        "short"
+                }
+            );
     }
 
     /*
@@ -451,6 +1407,46 @@ Responsibilities:
 
     /*
     ==========================================================================
+    Initial Binding
+    ==========================================================================
+    */
+
+    function bindInitialStatistics() {
+        const initialize =
+            () => {
+                initializeStatistics()
+                    .catch(
+                        (
+                            error
+                        ) => {
+                            console.error(
+                                "Unable to initialize "
+                                + "Speciedex statistics:",
+                                error
+                            );
+                        }
+                    );
+            };
+
+        if (
+            document.readyState ===
+                "loading"
+        ) {
+            document.addEventListener(
+                "DOMContentLoaded",
+                initialize,
+                {
+                    once:
+                        true
+                }
+            );
+        } else {
+            initialize();
+        }
+    }
+
+    /*
+    ==========================================================================
     Public API
     ==========================================================================
     */
@@ -466,4 +1462,35 @@ Responsibilities:
 
     Speciedex.setStatisticDate =
         setStatisticDate;
+
+    Speciedex.formatStatisticDate =
+        formatEasternDate;
+
+    Speciedex.getStatisticElements =
+        getStatisticElements;
+
+    Speciedex.getStatistics =
+        () => {
+            if (
+                !cachedStatistics
+            ) {
+                return null;
+            }
+
+            return {
+                ...cachedStatistics
+            };
+        };
+
+    /*
+    ==========================================================================
+    Module Startup
+    ==========================================================================
+    */
+
+    bindPartialEvents();
+
+    observeStatisticElements();
+
+    bindInitialStatistics();
 })();
