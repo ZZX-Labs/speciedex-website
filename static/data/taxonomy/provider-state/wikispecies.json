@@ -7,12 +7,12 @@
     "enriched_pages": 7,
     "normalized_records": 7,
     "requests": 2,
-    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A.Fernandez\"}",
+    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A.Hamel\"}",
     "exhausted": false
   },
-  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A.Fernandez\"}",
+  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A.Hamel\"}",
   "bootstrap_complete": false,
-  "last_success": "2026-07-21T01:49:43Z",
+  "last_success": "2026-07-21T09:06:07Z",
   "last_batch_records": 7,
   "last_requests": 2,
   "last_raw_records": 7
