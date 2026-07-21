@@ -3,17 +3,17 @@
   "last_attempt": "2026-07-20T22:15:30Z",
   "last_error": null,
   "last_fetch": {
-    "discovered_pages": 13,
-    "enriched_pages": 13,
-    "normalized_records": 13,
+    "discovered_pages": 11,
+    "enriched_pages": 11,
+    "normalized_records": 11,
     "requests": 2,
-    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A.J._de_Boer\"}",
+    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A.Lindstr.\"}",
     "exhausted": false
   },
-  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A.J._de_Boer\"}",
+  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A.Lindstr.\"}",
   "bootstrap_complete": false,
-  "last_success": "2026-07-21T11:18:08Z",
-  "last_batch_records": 13,
+  "last_success": "2026-07-21T12:49:05Z",
+  "last_batch_records": 11,
   "last_requests": 2,
-  "last_raw_records": 13
+  "last_raw_records": 11
 }

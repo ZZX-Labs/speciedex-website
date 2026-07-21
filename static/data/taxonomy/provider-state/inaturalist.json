@@ -1,8 +1,8 @@
 {
   "provider": "inaturalist",
-  "cursor": "{\"page\":26,\"per_page\":200}",
+  "cursor": "{\"page\":27,\"per_page\":200}",
   "bootstrap_complete": false,
-  "last_success": "2026-07-21T11:18:07Z",
+  "last_success": "2026-07-21T12:49:05Z",
   "last_error": null,
   "last_batch_records": 200,
   "last_requests": 1,
