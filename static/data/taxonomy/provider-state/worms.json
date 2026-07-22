@@ -2,10 +2,10 @@
   "provider": "worms",
   "last_attempt": "2026-07-20T22:06:31Z",
   "last_error": null,
-  "cursor": "{\"offset\":18,\"window_end\":\"2000-09-04\",\"window_start\":\"2000-08-05\"}",
+  "cursor": "{\"offset\":19,\"window_end\":\"2000-09-04\",\"window_start\":\"2000-08-05\"}",
   "bootstrap_complete": false,
-  "last_success": "2026-07-22T13:54:29Z",
-  "last_batch_records": 3,
+  "last_success": "2026-07-22T15:04:10Z",
+  "last_batch_records": 2,
   "last_requests": 1,
-  "last_raw_records": 3
+  "last_raw_records": 2
 }
