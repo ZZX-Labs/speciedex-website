@@ -3,17 +3,17 @@
   "last_attempt": "2026-07-20T22:15:30Z",
   "last_error": null,
   "last_fetch": {
-    "discovered_pages": 80,
-    "enriched_pages": 80,
-    "normalized_records": 80,
-    "requests": 9,
-    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Aamunops_yiselae\"}",
+    "discovered_pages": 76,
+    "enriched_pages": 76,
+    "normalized_records": 76,
+    "requests": 8,
+    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Aaron_Seamster\"}",
     "exhausted": false
   },
-  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Aamunops_yiselae\"}",
+  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Aaron_Seamster\"}",
   "bootstrap_complete": false,
-  "last_success": "2026-07-22T09:03:53Z",
-  "last_batch_records": 80,
-  "last_requests": 9,
-  "last_raw_records": 80
+  "last_success": "2026-07-22T11:17:58Z",
+  "last_batch_records": 76,
+  "last_requests": 8,
+  "last_raw_records": 76
 }
