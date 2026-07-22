@@ -4,9 +4,9 @@ Speciedex.org
 Terminal Matrix Renderer
 ========================================================================
 
-Reusable matrix renderer for SpeciedexTerminal.
+Reusable canvas-backed matrix renderer for SpeciedexTerminal.
 
-This module provides the base matrix abstraction used by:
+This module is the shared matrix foundation used by:
 
     • terminal-cmatrix.js
     • terminal-zmatrix.js
@@ -14,19 +14,22 @@ This module provides the base matrix abstraction used by:
     • terminal-heatmap.js
     • terminal-splash.js
 
-Features:
+Capabilities:
 
-    • Canvas-backed matrix rendering
-    • Numeric, categorical, and boolean cells
-    • Automatic value normalization
+    • Numeric, categorical, boolean, and null cells
+    • Automatic normalization and field discovery
     • Row and column labels
-    • Configurable cell sizing and spacing
-    • Responsive resizing
-    • Animated updates
-    • Hover inspection
-    • PNG export
-    • Structured renderer lifecycle
+    • Configurable cell sizing, spacing, padding, and typography
+    • Dark Speciedex tactical rendering with #c0d674 accents
+    • Responsive canvas resizing
+    • Animated entry and value transitions
+    • Hover and keyboard inspection
+    • Cell selection
+    • Viewport panning and wheel zoom
+    • PNG, JSON, and CSV export
+    • Lifecycle and renderer events
     • Terminal commands
+    • Clean teardown
 
 Copyright (c) 2026 Speciedex.org & ZZX-Labs R&D
 Licensed under the MIT License.
@@ -39,6 +42,18 @@ Licensed under the MIT License.
     const MODULE_NAME =
         "Matrix";
 
+    const VERSION =
+        "2.0.0";
+
+    const PRIMARY_COLOR =
+        "#c0d674";
+
+    const ACCENT_COLOR =
+        "#e6a42b";
+
+    const BACKGROUND_COLOR =
+        "#07100a";
+
     const DEFAULT_OPTIONS =
         Object.freeze({
             width:
@@ -47,11 +62,14 @@ Licensed under the MIT License.
             height:
                 540,
 
+            minHeight:
+                320,
+
             minCellSize:
-                8,
+                7,
 
             maxCellSize:
-                48,
+                56,
 
             gap:
                 1,
@@ -59,23 +77,104 @@ Licensed under the MIT License.
             padding:
                 24,
 
+            labelWidth:
+                112,
+
+            labelHeight:
+                32,
+
             showLabels:
                 true,
 
             showValues:
                 false,
 
+            showGrid:
+                true,
+
+            showLegend:
+                false,
+
             animate:
                 true,
 
             animationDuration:
-                240,
+                320,
 
             responsive:
                 true,
 
             autoStart:
-                true
+                true,
+
+            interactive:
+                true,
+
+            selectable:
+                true,
+
+            keyboard:
+                true,
+
+            pan:
+                true,
+
+            zoom:
+                true,
+
+            zoomMinimum:
+                0.4,
+
+            zoomMaximum:
+                4,
+
+            zoomStep:
+                0.12,
+
+            alphaMinimum:
+                0.08,
+
+            alphaMaximum:
+                0.92,
+
+            background:
+                BACKGROUND_COLOR,
+
+            primaryColor:
+                PRIMARY_COLOR,
+
+            accentColor:
+                ACCENT_COLOR,
+
+            nullColor:
+                "rgba(216, 230, 219, 0.055)",
+
+            gridColor:
+                "rgba(192, 214, 116, 0.09)",
+
+            labelColor:
+                "rgba(216, 230, 219, 0.74)",
+
+            valueColor:
+                "rgba(216, 230, 219, 0.86)",
+
+            fontFamily:
+                '"IBM Plex Mono", ui-monospace, SFMono-Regular, Consolas, monospace',
+
+            fontSize:
+                11,
+
+            valueFormatter:
+                null,
+
+            colorResolver:
+                null,
+
+            rowLabels:
+                null,
+
+            columnLabels:
+                null
         });
 
     /*
@@ -98,6 +197,61 @@ Licensed under the MIT License.
         );
     }
 
+    function clampInteger(
+        value,
+        fallback,
+        minimum,
+        maximum
+    ) {
+        const parsed =
+            Number.parseInt(
+                value,
+                10
+            );
+
+        if (!Number.isFinite(parsed)) {
+            return fallback;
+        }
+
+        return Math.min(
+            maximum,
+            Math.max(
+                minimum,
+                parsed
+            )
+        );
+    }
+
+    function parseBoolean(
+        value,
+        fallback = false
+    ) {
+        if (
+            value === undefined ||
+            value === null ||
+            value === ""
+        ) {
+            return fallback;
+        }
+
+        return ![
+            "false",
+            "0",
+            "no",
+            "off"
+        ].includes(
+            String(value)
+                .trim()
+                .toLowerCase()
+        );
+    }
+
+    function normalizeLabel(value) {
+        return String(
+            value ?? ""
+        ).trim();
+    }
+
     function isCanvas(value) {
         return (
             value instanceof
@@ -116,7 +270,7 @@ Licensed under the MIT License.
         ) {
             const existing =
                 target.querySelector(
-                    "canvas"
+                    "canvas[data-terminal-matrix-canvas], canvas"
                 );
 
             if (existing) {
@@ -127,6 +281,9 @@ Licensed under the MIT License.
                 document.createElement(
                     "canvas"
                 );
+
+            canvas.dataset.terminalMatrixCanvas =
+                "";
 
             target.appendChild(
                 canvas
@@ -140,27 +297,66 @@ Licensed under the MIT License.
         );
     }
 
-    function normalizeLabel(value) {
-        return String(
-            value ?? ""
-        ).trim();
-    }
-
-    function flattenRows(data) {
+    function flattenRows(
+        data,
+        options = {}
+    ) {
         if (!Array.isArray(data)) {
-            return [];
+            return {
+                rows:
+                    [],
+
+                columns:
+                    []
+            };
         }
 
         if (
             data.every(
                 row =>
-                    Array.isArray(row)
+                    Array.isArray(
+                        row
+                    )
             )
         ) {
-            return data.map(
-                row =>
-                    [...row]
-            );
+            const maximum =
+                data.reduce(
+                    (
+                        value,
+                        row
+                    ) =>
+                        Math.max(
+                            value,
+                            row.length
+                        ),
+                    0
+                );
+
+            return {
+                rows:
+                    data.map(
+                        row =>
+                            [
+                                ...row
+                            ]
+                    ),
+
+                columns:
+                    Array.from(
+                        {
+                            length:
+                                maximum
+                        },
+                        (
+                            _,
+                            index
+                        ) =>
+                            String(
+                                index +
+                                1
+                            )
+                    )
+            };
         }
 
         if (
@@ -171,26 +367,65 @@ Licensed under the MIT License.
                     "object"
             )
         ) {
-            const columns =
-                [...new Set(
-                    data.flatMap(
-                        row =>
-                            Object.keys(row)
-                    )
-                )];
+            const requested =
+                Array.isArray(
+                    options.columns
+                )
+                    ? options.columns
+                    : [];
 
-            return data.map(
-                row =>
-                    columns.map(
-                        column =>
-                            row[column]
-                    )
-            );
+            const columns =
+                requested.length
+                    ? [
+                        ...requested
+                    ]
+                    : [
+                        ...new Set(
+                            data.flatMap(
+                                row =>
+                                    Object.keys(
+                                        row
+                                    )
+                            )
+                        )
+                    ];
+
+            return {
+                rows:
+                    data.map(
+                        row =>
+                            columns.map(
+                                column =>
+                                    row[
+                                        column
+                                    ]
+                            )
+                    ),
+
+                columns
+            };
         }
 
-        return [
-            [...data]
-        ];
+        return {
+            rows:
+                [
+                    [
+                        ...data
+                    ]
+                ],
+
+            columns:
+                data.map(
+                    (
+                        _,
+                        index
+                    ) =>
+                        String(
+                            index +
+                            1
+                        )
+                )
+        };
     }
 
     function numericValue(value) {
@@ -221,19 +456,58 @@ Licensed under the MIT License.
             : null;
     }
 
+    function hashString(value) {
+        const text =
+            String(
+                value ?? ""
+            );
+
+        let hash =
+            2166136261;
+
+        for (
+            let index = 0;
+            index < text.length;
+            index += 1
+        ) {
+            hash ^=
+                text.charCodeAt(
+                    index
+                );
+
+            hash =
+                Math.imul(
+                    hash,
+                    16777619
+                );
+        }
+
+        return hash >>>
+            0;
+    }
+
     function normalizeMatrix(
         data,
         options = {}
     ) {
+        const flattened =
+            flattenRows(
+                data,
+                options
+            );
+
         const rows =
-            flattenRows(data);
+            flattened.rows;
 
         const rowCount =
             rows.length;
 
         const columnCount =
             rows.reduce(
-                (maximum, row) =>
+                (
+                    maximum,
+                    row
+                ) =>
                     Math.max(
                         maximum,
                         row.length
@@ -251,7 +525,8 @@ Licensed under the MIT License.
                 )
                 .filter(
                     value =>
-                        value !== null
+                        value !==
+                        null
                 );
 
         const minimum =
@@ -269,17 +544,49 @@ Licensed under the MIT License.
                 : 1;
 
         const range =
-            maximum - minimum || 1;
+            maximum -
+            minimum ||
+            1;
+
+        const categorical =
+            [
+                ...new Set(
+                    values
+                        .filter(
+                            value =>
+                                value !==
+                                    null &&
+                                value !==
+                                    undefined &&
+                                numericValue(
+                                    value
+                                ) ===
+                                    null
+                        )
+                        .map(
+                            value =>
+                                normalizeLabel(
+                                    value
+                                )
+                        )
+                )
+            ];
 
         const rowLabels =
             Array.isArray(
                 options.rowLabels
             )
-                ? options.rowLabels
+                ? options.rowLabels.map(
+                    normalizeLabel
+                )
                 : rows.map(
-                    (_, index) =>
+                    (
+                        _,
+                        index
+                    ) =>
                         String(
-                            index + 1
+                            index +
+                            1
                         )
                 );
 
@@ -287,17 +594,27 @@ Licensed under the MIT License.
             Array.isArray(
                 options.columnLabels
             )
-                ? options.columnLabels
-                : Array.from(
-                    {
-                        length:
-                            columnCount
-                    },
-                    (_, index) =>
-                        String(
-                            index + 1
-                        )
-                );
+                ? options.columnLabels.map(
+                    normalizeLabel
+                )
+                : flattened.columns.length
+                    ? flattened.columns.map(
+                        normalizeLabel
+                    )
+                    : Array.from(
+                        {
+                            length:
+                                columnCount
+                        },
+                        (
+                            _,
+                            index
+                        ) =>
+                            String(
+                                index +
+                                1
+                            )
+                    );
 
         return {
             rows,
@@ -306,6 +623,9 @@ Licensed under the MIT License.
             minimum,
             maximum,
             range,
+            numericCount:
+                numeric.length,
+            categorical,
             rowLabels,
             columnLabels
         };
@@ -315,10 +635,23 @@ Licensed under the MIT License.
         value,
         matrix
     ) {
-        const numeric =
-            numericValue(value);
+        if (
+            value === null ||
+            value === undefined ||
+            value === ""
+        ) {
+            return 0;
+        }
 
-        if (numeric !== null) {
+        const numeric =
+            numericValue(
+                value
+            );
+
+        if (
+            numeric !==
+            null
+        ) {
             return clamp(
                 (
                     numeric -
@@ -330,34 +663,215 @@ Licensed under the MIT License.
             );
         }
 
+        return (
+            hashString(
+                value
+            ) %
+            1000
+        ) /
+        1000;
+    }
+
+    function rgbaFromHex(
+        hex,
+        alpha
+    ) {
+        const normalized =
+            String(
+                hex ||
+                PRIMARY_COLOR
+            )
+                .replace(
+                    "#",
+                    ""
+                )
+                .trim();
+
         if (
-            typeof value ===
-            "string"
+            !/^[0-9a-f]{6}$/i.test(
+                normalized
+            )
         ) {
-            let hash = 0;
-
-            for (
-                let index = 0;
-                index < value.length;
-                index += 1
-            ) {
-                hash =
-                    (
-                        hash * 31 +
-                        value.charCodeAt(
-                            index
-                        )
-                    ) >>> 0;
-            }
-
-            return (
-                hash % 1000
-            ) / 1000;
+            return `rgba(192, 214, 116, ${alpha})`;
         }
 
-        return value
-            ? 1
-            : 0;
+        const integer =
+            Number.parseInt(
+                normalized,
+                16
+            );
+
+        const red =
+            (
+                integer >>
+                16
+            ) &
+            255;
+
+        const green =
+            (
+                integer >>
+                8
+            ) &
+            255;
+
+        const blue =
+            integer &
+            255;
+
+        return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+    }
+
+    function escapeCSV(value) {
+        const text =
+            String(
+                value ?? ""
+            );
+
+        if (
+            /[",\n\r]/.test(
+                text
+            )
+        ) {
+            return `"${text.replace(/"/g, '""')}"`;
+        }
+
+        return text;
+    }
+
+    function injectMatrixStyles() {
+        if (
+            document.getElementById(
+                "speciedex-terminal-matrix-styles"
+            )
+        ) {
+            return;
+        }
+
+        const style =
+            document.createElement(
+                "style"
+            );
+
+        style.id =
+            "speciedex-terminal-matrix-styles";
+
+        style.textContent = `
+            .terminal-renderer-matrix {
+                position: relative;
+                display: grid;
+                grid-template-rows: auto minmax(20rem, 1fr) auto;
+                min-height: 24rem;
+                overflow: hidden;
+                border: 1px solid rgba(192, 214, 116, 0.22);
+                background: ${BACKGROUND_COLOR};
+                color: ${PRIMARY_COLOR};
+                font-family:
+                    "IBM Plex Mono",
+                    ui-monospace,
+                    SFMono-Regular,
+                    Consolas,
+                    monospace;
+            }
+
+            .terminal-matrix-header,
+            .terminal-matrix-footer {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                padding: 0.65rem 0.8rem;
+                background: rgba(4, 10, 6, 0.94);
+            }
+
+            .terminal-matrix-header {
+                border-bottom: 1px solid rgba(192, 214, 116, 0.16);
+            }
+
+            .terminal-matrix-footer {
+                border-top: 1px solid rgba(192, 214, 116, 0.16);
+                color: rgba(216, 230, 219, 0.7);
+                font-size: 0.7rem;
+            }
+
+            .terminal-matrix-title {
+                margin: 0;
+                color: ${PRIMARY_COLOR};
+                font-size: 0.9rem;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+            }
+
+            .terminal-matrix-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.4rem;
+            }
+
+            .terminal-matrix-actions button {
+                border: 1px solid rgba(192, 214, 116, 0.28);
+                background: rgba(4, 10, 6, 0.88);
+                color: ${PRIMARY_COLOR};
+                padding: 0.28rem 0.46rem;
+                font: inherit;
+                font-size: 0.68rem;
+                cursor: pointer;
+            }
+
+            .terminal-matrix-actions button:hover,
+            .terminal-matrix-actions button:focus-visible {
+                background: rgba(192, 214, 116, 0.12);
+                outline: none;
+            }
+
+            .terminal-matrix-stage {
+                position: relative;
+                min-height: 20rem;
+                overflow: hidden;
+                background:
+                    radial-gradient(
+                        circle at 50% 50%,
+                        rgba(192, 214, 116, 0.04),
+                        transparent 58%
+                    ),
+                    ${BACKGROUND_COLOR};
+            }
+
+            .terminal-matrix-canvas {
+                display: block;
+                width: 100%;
+                height: 100%;
+                min-height: 20rem;
+                outline: none;
+                touch-action: none;
+            }
+
+            .terminal-matrix-tooltip {
+                position: absolute;
+                z-index: 20;
+                max-width: 22rem;
+                padding: 0.5rem 0.6rem;
+                border: 1px solid rgba(230, 164, 43, 0.62);
+                background: rgba(4, 10, 6, 0.97);
+                color: rgba(216, 230, 219, 0.92);
+                font-size: 0.68rem;
+                line-height: 1.45;
+                pointer-events: none;
+                box-shadow: 0 0 1rem rgba(0, 0, 0, 0.48);
+            }
+
+            .terminal-matrix-tooltip strong {
+                color: ${PRIMARY_COLOR};
+            }
+
+            .terminal-matrix-tooltip[hidden] {
+                display: none;
+            }
+        `;
+
+        document.head.appendChild(
+            style
+        );
     }
 
     /*
@@ -374,6 +888,8 @@ Licensed under the MIT License.
             options = {}
         ) {
             super();
+
+            injectMatrixStyles();
 
             this.canvas =
                 resolveCanvas(
@@ -406,13 +922,58 @@ Licensed under the MIT License.
             this.data =
                 data;
 
+            this.previousMatrix =
+                null;
+
             this.matrix =
                 normalizeMatrix(
                     data,
                     this.options
                 );
 
+            this.viewport = {
+                width:
+                    Number(
+                        this.options.width
+                    ) ||
+                    DEFAULT_OPTIONS.width,
+
+                height:
+                    Number(
+                        this.options.height
+                    ) ||
+                    DEFAULT_OPTIONS.height
+            };
+
+            this.view = {
+                offsetX:
+                    0,
+
+                offsetY:
+                    0,
+
+                scale:
+                    1
+            };
+
             this.hoveredCell =
+                null;
+
+            this.selectedCell =
+                null;
+
+            this.focusedCell = {
+                row:
+                    0,
+
+                column:
+                    0
+            };
+
+            this.dragging =
+                false;
+
+            this.dragStart =
                 null;
 
             this.running =
@@ -425,10 +986,14 @@ Licensed under the MIT License.
                 0;
 
             this.animationStart =
-                0;
+                performance.now();
 
             this.resizeObserver =
                 null;
+
+            this.boundWindowResize =
+                () =>
+                    this.resize();
 
             this.boundPointerMove =
                 event =>
@@ -439,6 +1004,30 @@ Licensed under the MIT License.
             this.boundPointerLeave =
                 () =>
                     this.handlePointerLeave();
+
+            this.boundPointerDown =
+                event =>
+                    this.handlePointerDown(
+                        event
+                    );
+
+            this.boundPointerUp =
+                event =>
+                    this.handlePointerUp(
+                        event
+                    );
+
+            this.boundWheel =
+                event =>
+                    this.handleWheel(
+                        event
+                    );
+
+            this.boundKeydown =
+                event =>
+                    this.handleKeydown(
+                        event
+                    );
 
             this.installEvents();
             this.installResize();
@@ -452,7 +1041,33 @@ Licensed under the MIT License.
             }
         }
 
+        /*
+        ======================================================================
+        Setup
+        ======================================================================
+        */
+
         installEvents() {
+            if (
+                !this.options.interactive
+            ) {
+                return;
+            }
+
+            this.canvas.tabIndex =
+                0;
+
+            this.canvas.setAttribute(
+                "role",
+                "grid"
+            );
+
+            this.canvas.setAttribute(
+                "aria-label",
+                this.options.title ||
+                "Speciedex data matrix"
+            );
+
             this.canvas.addEventListener(
                 "pointermove",
                 this.boundPointerMove
@@ -462,6 +1077,35 @@ Licensed under the MIT License.
                 "pointerleave",
                 this.boundPointerLeave
             );
+
+            this.canvas.addEventListener(
+                "pointerdown",
+                this.boundPointerDown
+            );
+
+            this.canvas.addEventListener(
+                "pointerup",
+                this.boundPointerUp
+            );
+
+            this.canvas.addEventListener(
+                "pointercancel",
+                this.boundPointerUp
+            );
+
+            this.canvas.addEventListener(
+                "wheel",
+                this.boundWheel,
+                {
+                    passive:
+                        false
+                }
+            );
+
+            this.canvas.addEventListener(
+                "keydown",
+                this.boundKeydown
+            );
         }
 
         installResize() {
@@ -470,6 +1114,10 @@ Licensed under the MIT License.
             ) {
                 return;
             }
+
+            const observed =
+                this.canvas.parentElement ||
+                this.canvas;
 
             if (
                 "ResizeObserver" in
@@ -482,7 +1130,7 @@ Licensed under the MIT License.
                     );
 
                 this.resizeObserver.observe(
-                    this.canvas
+                    observed
                 );
 
                 return;
@@ -490,18 +1138,27 @@ Licensed under the MIT License.
 
             window.addEventListener(
                 "resize",
-                () =>
-                    this.resize()
+                this.boundWindowResize
             );
         }
+
+        /*
+        ======================================================================
+        Layout and Resize
+        ======================================================================
+        */
 
         resize() {
             if (this.destroyed) {
                 return;
             }
 
+            const host =
+                this.canvas.parentElement ||
+                this.canvas;
+
             const rect =
-                this.canvas.getBoundingClientRect();
+                host.getBoundingClientRect();
 
             const cssWidth =
                 Math.max(
@@ -510,17 +1167,20 @@ Licensed under the MIT License.
                     Number(
                         this.options.width
                     ) ||
-                    960
+                    DEFAULT_OPTIONS.width
                 );
 
             const cssHeight =
                 Math.max(
-                    1,
+                    Number(
+                        this.options.minHeight
+                    ) ||
+                    DEFAULT_OPTIONS.minHeight,
                     rect.height ||
                     Number(
                         this.options.height
                     ) ||
-                    540
+                    DEFAULT_OPTIONS.height
                 );
 
             const ratio =
@@ -529,6 +1189,12 @@ Licensed under the MIT License.
                     1,
                     2
                 );
+
+            this.canvas.style.width =
+                `${cssWidth}px`;
+
+            this.canvas.style.height =
+                `${cssHeight}px`;
 
             this.canvas.width =
                 Math.floor(
@@ -556,13 +1222,34 @@ Licensed under the MIT License.
                     cssWidth,
 
                 height:
-                    cssHeight
+                    cssHeight,
+
+                ratio
             };
 
             this.layout =
                 this.calculateLayout();
 
             this.draw();
+
+            this.dispatchEvent(
+                new CustomEvent(
+                    "resize",
+                    {
+                        detail: {
+                            viewport:
+                                {
+                                    ...this.viewport
+                                },
+
+                            layout:
+                                {
+                                    ...this.layout
+                                }
+                        }
+                    }
+                )
+            );
         }
 
         calculateLayout() {
@@ -574,23 +1261,31 @@ Licensed under the MIT License.
             const padding =
                 Number(
                     this.options.padding
-                ) || 0;
+                ) ||
+                0;
 
             const labelWidth =
                 this.options.showLabels
-                    ? 96
+                    ? Number(
+                        this.options.labelWidth
+                    ) ||
+                    DEFAULT_OPTIONS.labelWidth
                     : 0;
 
             const labelHeight =
                 this.options.showLabels
-                    ? 28
+                    ? Number(
+                        this.options.labelHeight
+                    ) ||
+                    DEFAULT_OPTIONS.labelHeight
                     : 0;
 
             const availableWidth =
                 Math.max(
                     1,
                     width -
-                    padding * 2 -
+                    padding *
+                    2 -
                     labelWidth
                 );
 
@@ -598,7 +1293,8 @@ Licensed under the MIT License.
                 Math.max(
                     1,
                     height -
-                    padding * 2 -
+                    padding *
+                    2 -
                     labelHeight
                 );
 
@@ -622,7 +1318,7 @@ Licensed under the MIT License.
                 availableHeight /
                 rows;
 
-            const cellSize =
+            const baseCellSize =
                 clamp(
                     Math.min(
                         rawCellWidth,
@@ -630,43 +1326,80 @@ Licensed under the MIT License.
                     ),
                     Number(
                         this.options.minCellSize
-                    ) || 1,
+                    ) ||
+                    1,
                     Number(
                         this.options.maxCellSize
-                    ) || 48
+                    ) ||
+                    DEFAULT_OPTIONS.maxCellSize
                 );
 
-            const matrixWidth =
-                cellSize *
-                columns;
-
-            const matrixHeight =
-                cellSize *
-                rows;
+            const cellSize =
+                baseCellSize *
+                this.view.scale;
 
             return {
                 x:
                     padding +
-                    labelWidth,
+                    labelWidth +
+                    this.view.offsetX,
 
                 y:
                     padding +
-                    labelHeight,
+                    labelHeight +
+                    this.view.offsetY,
 
                 cellSize,
-                matrixWidth,
-                matrixHeight,
+                baseCellSize,
+
+                matrixWidth:
+                    cellSize *
+                    columns,
+
+                matrixHeight:
+                    cellSize *
+                    rows,
+
                 labelWidth,
-                labelHeight
+                labelHeight,
+                padding
             };
         }
+
+        resetView() {
+            this.view = {
+                offsetX:
+                    0,
+
+                offsetY:
+                    0,
+
+                scale:
+                    1
+            };
+
+            this.layout =
+                this.calculateLayout();
+
+            this.draw();
+
+            return {
+                ...this.view
+            };
+        }
+
+        /*
+        ======================================================================
+        Animation
+        ======================================================================
+        */
 
         start() {
             if (
                 this.running ||
                 this.destroyed
             ) {
-                return;
+                return false;
             }
 
             this.running =
@@ -676,6 +1409,8 @@ Licensed under the MIT License.
                 performance.now();
 
             this.animate();
+
+            return true;
         }
 
         stop() {
@@ -688,10 +1423,18 @@ Licensed under the MIT License.
                 window.cancelAnimationFrame(
                     this.animationFrame
                 );
+
+                this.animationFrame =
+                    0;
             }
+
+            return true;
         }
 
-        animate(timestamp = performance.now()) {
+        animate(
+            timestamp =
+                performance.now()
+        ) {
             if (
                 !this.running ||
                 this.destroyed
@@ -712,7 +1455,16 @@ Licensed under the MIT License.
                 );
         }
 
-        draw(timestamp = performance.now()) {
+        /*
+        ======================================================================
+        Drawing
+        ======================================================================
+        */
+
+        draw(
+            timestamp =
+                performance.now()
+        ) {
             if (this.destroyed) {
                 return;
             }
@@ -722,7 +1474,28 @@ Licensed under the MIT License.
                 height
             } = this.viewport;
 
+            this.context.save();
+
+            this.context.setTransform(
+                this.viewport.ratio,
+                0,
+                0,
+                this.viewport.ratio,
+                0,
+                0
+            );
+
             this.context.clearRect(
+                0,
+                0,
+                width,
+                height
+            );
+
+            this.context.fillStyle =
+                this.options.background;
+
+            this.context.fillRect(
                 0,
                 0,
                 width,
@@ -740,23 +1513,100 @@ Licensed under the MIT License.
                             1,
                             Number(
                                 this.options.animationDuration
-                            ) || 240
+                            ) ||
+                            DEFAULT_OPTIONS.animationDuration
                         ),
                         0,
                         1
                     )
                     : 1;
 
+            if (
+                this.options.showGrid
+            ) {
+                this.drawBackgroundGrid();
+            }
+
             this.drawLabels();
             this.drawCells(
                 progress
             );
+            this.drawSelection();
             this.drawHover();
+
+            this.context.restore();
+        }
+
+        drawBackgroundGrid() {
+            const {
+                width,
+                height
+            } = this.viewport;
+
+            const size =
+                Math.max(
+                    24,
+                    Math.round(
+                        this.layout.baseCellSize *
+                        4
+                    )
+                );
+
+            this.context.save();
+
+            this.context.strokeStyle =
+                this.options.gridColor;
+
+            this.context.lineWidth =
+                1;
+
+            this.context.beginPath();
+
+            for (
+                let x = 0;
+                x <= width;
+                x += size
+            ) {
+                this.context.moveTo(
+                    x +
+                    0.5,
+                    0
+                );
+
+                this.context.lineTo(
+                    x +
+                    0.5,
+                    height
+                );
+            }
+
+            for (
+                let y = 0;
+                y <= height;
+                y += size
+            ) {
+                this.context.moveTo(
+                    0,
+                    y +
+                    0.5
+                );
+
+                this.context.lineTo(
+                    width,
+                    y +
+                    0.5
+                );
+            }
+
+            this.context.stroke();
+            this.context.restore();
         }
 
         drawLabels() {
             if (
-                !this.options.showLabels
+                !this.options.showLabels ||
+                !this.matrix.rowCount ||
+                !this.matrix.columnCount
             ) {
                 return;
             }
@@ -770,10 +1620,10 @@ Licensed under the MIT License.
             this.context.save();
 
             this.context.font =
-                "11px monospace";
+                `${this.options.fontSize}px ${this.options.fontFamily}`;
 
             this.context.fillStyle =
-                "rgba(216, 230, 219, 0.72)";
+                this.options.labelColor;
 
             this.context.textBaseline =
                 "middle";
@@ -781,20 +1631,40 @@ Licensed under the MIT License.
             this.context.textAlign =
                 "right";
 
-            this.matrix.rowLabels.forEach(
-                (label, row) => {
-                    this.context.fillText(
-                        normalizeLabel(
-                            label
-                        ),
-                        x - 8,
-                        y +
-                        row *
-                        cellSize +
-                        cellSize / 2
-                    );
+            for (
+                let row = 0;
+                row <
+                this.matrix.rowCount;
+                row += 1
+            ) {
+                const center =
+                    y +
+                    row *
+                    cellSize +
+                    cellSize /
+                    2;
+
+                if (
+                    center <
+                        -cellSize ||
+                    center >
+                        this.viewport.height +
+                        cellSize
+                ) {
+                    continue;
                 }
-            );
+
+                this.context.fillText(
+                    normalizeLabel(
+                        this.matrix.rowLabels[
+                            row
+                        ]
+                    ),
+                    x -
+                    8,
+                    center
+                );
+            }
 
             this.context.textAlign =
                 "center";
@@ -802,25 +1672,90 @@ Licensed under the MIT License.
             this.context.textBaseline =
                 "bottom";
 
-            this.matrix.columnLabels.forEach(
-                (label, column) => {
-                    this.context.fillText(
-                        normalizeLabel(
-                            label
-                        ),
-                        x +
-                        column *
-                        cellSize +
-                        cellSize / 2,
-                        y - 6
-                    );
+            for (
+                let column = 0;
+                column <
+                this.matrix.columnCount;
+                column += 1
+            ) {
+                const center =
+                    x +
+                    column *
+                    cellSize +
+                    cellSize /
+                    2;
+
+                if (
+                    center <
+                        -cellSize ||
+                    center >
+                        this.viewport.width +
+                        cellSize
+                ) {
+                    continue;
                 }
-            );
+
+                this.context.fillText(
+                    normalizeLabel(
+                        this.matrix.columnLabels[
+                            column
+                        ]
+                    ),
+                    center,
+                    y -
+                    6
+                );
+            }
 
             this.context.restore();
         }
 
-        drawCells(progress) {
+        resolveCellColor(
+            value,
+            row,
+            column,
+            intensity,
+            alpha
+        ) {
+            if (
+                typeof this.options.colorResolver ===
+                "function"
+            ) {
+                const resolved =
+                    this.options.colorResolver({
+                        value,
+                        row,
+                        column,
+                        intensity,
+                        alpha,
+                        matrix:
+                            this.matrix,
+                        controller:
+                            this
+                    });
+
+                if (resolved) {
+                    return resolved;
+                }
+            }
+
+            if (
+                value === null ||
+                value === undefined ||
+                value === ""
+            ) {
+                return this.options.nullColor;
+            }
+
+            return rgbaFromHex(
+                this.options.primaryColor,
+                alpha
+            );
+        }
+
+        drawCells(
+            progress
+        ) {
             const {
                 x,
                 y,
@@ -832,7 +1767,8 @@ Licensed under the MIT License.
                     0,
                     Number(
                         this.options.gap
-                    ) || 0
+                    ) ||
+                    0
                 );
 
             for (
@@ -841,12 +1777,46 @@ Licensed under the MIT License.
                 this.matrix.rowCount;
                 row += 1
             ) {
+                const cellY =
+                    y +
+                    row *
+                    cellSize +
+                    gap /
+                    2;
+
+                if (
+                    cellY +
+                        cellSize <
+                        0 ||
+                    cellY >
+                        this.viewport.height
+                ) {
+                    continue;
+                }
+
                 for (
                     let column = 0;
                     column <
                     this.matrix.columnCount;
                     column += 1
                 ) {
+                    const cellX =
+                        x +
+                        column *
+                        cellSize +
+                        gap /
+                        2;
+
+                    if (
+                        cellX +
+                            cellSize <
+                            0 ||
+                        cellX >
+                            this.viewport.width
+                    ) {
+                        continue;
+                    }
+
                     const value =
                         this.matrix.rows[
                             row
@@ -862,23 +1832,20 @@ Licensed under the MIT License.
 
                     const alpha =
                         (
-                            0.08 +
+                            Number(
+                                this.options.alphaMinimum
+                            ) +
                             intensity *
-                            0.82
+                            (
+                                Number(
+                                    this.options.alphaMaximum
+                                ) -
+                                Number(
+                                    this.options.alphaMinimum
+                                )
+                            )
                         ) *
                         progress;
-
-                    const cellX =
-                        x +
-                        column *
-                        cellSize +
-                        gap / 2;
-
-                    const cellY =
-                        y +
-                        row *
-                        cellSize +
-                        gap / 2;
 
                     const size =
                         Math.max(
@@ -888,7 +1855,13 @@ Licensed under the MIT License.
                         );
 
                     this.context.fillStyle =
-                        `rgba(192, 214, 116, ${alpha})`;
+                        this.resolveCellColor(
+                            value,
+                            row,
+                            column,
+                            intensity,
+                            alpha
+                        );
 
                     this.context.fillRect(
                         cellX,
@@ -899,40 +1872,88 @@ Licensed under the MIT License.
 
                     if (
                         this.options.showValues &&
-                        cellSize >= 18
+                        cellSize >=
+                            18
                     ) {
-                        this.context.font =
-                            `${Math.max(
-                                8,
-                                Math.floor(
-                                    cellSize *
-                                    0.28
-                                )
-                            )}px monospace`;
-
-                        this.context.textAlign =
-                            "center";
-
-                        this.context.textBaseline =
-                            "middle";
-
-                        this.context.fillStyle =
-                            intensity > 0.52
-                                ? "rgba(5, 12, 7, 0.88)"
-                                : "rgba(216, 230, 219, 0.82)";
-
-                        this.context.fillText(
-                            normalizeLabel(
-                                value
-                            ),
-                            cellX +
-                            size / 2,
-                            cellY +
-                            size / 2
+                        this.drawCellValue(
+                            value,
+                            cellX,
+                            cellY,
+                            size,
+                            intensity
                         );
                     }
                 }
             }
+        }
+
+        drawCellValue(
+            value,
+            x,
+            y,
+            size,
+            intensity
+        ) {
+            const formatter =
+                typeof this.options.valueFormatter ===
+                "function"
+                    ? this.options.valueFormatter
+                    : normalizeLabel;
+
+            this.context.save();
+
+            this.context.font =
+                `${Math.max(
+                    8,
+                    Math.floor(
+                        size *
+                        0.28
+                    )
+                )}px ${this.options.fontFamily}`;
+
+            this.context.textAlign =
+                "center";
+
+            this.context.textBaseline =
+                "middle";
+
+            this.context.fillStyle =
+                intensity >
+                    0.52
+                    ? "rgba(4, 10, 6, 0.88)"
+                    : this.options.valueColor;
+
+            const text =
+                formatter(
+                    value
+                );
+
+            this.context.fillText(
+                String(text).slice(
+                    0,
+                    18
+                ),
+                x +
+                size /
+                2,
+                y +
+                size /
+                2
+            );
+
+            this.context.restore();
+        }
+
+        drawSelection() {
+            if (!this.selectedCell) {
+                return;
+            }
+
+            this.drawCellOutline(
+                this.selectedCell,
+                this.options.accentColor,
+                3
+            );
         }
 
         drawHover() {
@@ -940,11 +1961,18 @@ Licensed under the MIT License.
                 return;
             }
 
-            const {
-                row,
-                column
-            } = this.hoveredCell;
+            this.drawCellOutline(
+                this.hoveredCell,
+                "rgba(255, 255, 255, 0.92)",
+                1.5
+            );
+        }
 
+        drawCellOutline(
+            cell,
+            color,
+            width
+        ) {
             const {
                 x,
                 y,
@@ -954,39 +1982,60 @@ Licensed under the MIT License.
             this.context.save();
 
             this.context.strokeStyle =
-                "rgba(230, 164, 43, 0.96)";
+                color;
 
             this.context.lineWidth =
-                2;
+                width;
 
             this.context.strokeRect(
                 x +
-                column *
+                cell.column *
                 cellSize +
                 1,
                 y +
-                row *
+                cell.row *
                 cellSize +
                 1,
-                cellSize - 2,
-                cellSize - 2
+                Math.max(
+                    1,
+                    cellSize -
+                    2
+                ),
+                Math.max(
+                    1,
+                    cellSize -
+                    2
+                )
             );
 
             this.context.restore();
         }
 
-        handlePointerMove(event) {
+        /*
+        ======================================================================
+        Interaction
+        ======================================================================
+        */
+
+        eventPoint(event) {
             const rect =
                 this.canvas.getBoundingClientRect();
 
-            const x =
-                event.clientX -
-                rect.left;
+            return {
+                x:
+                    event.clientX -
+                    rect.left,
 
-            const y =
-                event.clientY -
-                rect.top;
+                y:
+                    event.clientY -
+                    rect.top
+            };
+        }
 
+        cellAtPoint(
+            x,
+            y
+        ) {
             const column =
                 Math.floor(
                     (
@@ -1006,52 +2055,121 @@ Licensed under the MIT License.
                 );
 
             if (
-                row < 0 ||
-                column < 0 ||
+                row <
+                    0 ||
+                column <
+                    0 ||
                 row >=
                     this.matrix.rowCount ||
                 column >=
                     this.matrix.columnCount
             ) {
-                this.handlePointerLeave();
-                return;
+                return null;
             }
 
-            const value =
-                this.matrix.rows[
-                    row
-                ]?.[
-                    column
-                ];
-
-            this.hoveredCell = {
+            return {
                 row,
                 column,
-                value,
+
+                value:
+                    this.matrix.rows[
+                        row
+                    ]?.[
+                        column
+                    ],
+
                 rowLabel:
                     this.matrix.rowLabels[
                         row
                     ],
+
                 columnLabel:
                     this.matrix.columnLabels[
                         column
                     ]
             };
+        }
 
-            this.canvas.title =
-                `${this.hoveredCell.rowLabel} / ` +
-                `${this.hoveredCell.columnLabel}: ` +
-                `${normalizeLabel(value)}`;
+        handlePointerMove(event) {
+            const point =
+                this.eventPoint(
+                    event
+                );
 
-            this.dispatchEvent(
-                new CustomEvent(
-                    "cell-hover",
-                    {
-                        detail:
-                            this.hoveredCell
-                    }
-                )
-            );
+            if (
+                this.dragging &&
+                this.dragStart &&
+                this.options.pan
+            ) {
+                this.view.offsetX =
+                    this.dragStart.offsetX +
+                    (
+                        point.x -
+                        this.dragStart.x
+                    );
+
+                this.view.offsetY =
+                    this.dragStart.offsetY +
+                    (
+                        point.y -
+                        this.dragStart.y
+                    );
+
+                this.layout =
+                    this.calculateLayout();
+
+                this.draw();
+
+                return;
+            }
+
+            const cell =
+                this.cellAtPoint(
+                    point.x,
+                    point.y
+                );
+
+            const changed =
+                (
+                    !cell &&
+                    this.hoveredCell
+                ) ||
+                (
+                    cell &&
+                    (
+                        !this.hoveredCell ||
+                        cell.row !==
+                            this.hoveredCell.row ||
+                        cell.column !==
+                            this.hoveredCell.column
+                    )
+                );
+
+            this.hoveredCell =
+                cell;
+
+            if (cell) {
+                this.canvas.title =
+                    `${normalizeLabel(cell.rowLabel)} / ` +
+                    `${normalizeLabel(cell.columnLabel)}: ` +
+                    `${normalizeLabel(cell.value)}`;
+            } else {
+                this.canvas.removeAttribute(
+                    "title"
+                );
+            }
+
+            if (changed) {
+                this.dispatchEvent(
+                    new CustomEvent(
+                        "cell-hover",
+                        {
+                            detail:
+                                cell
+                        }
+                    )
+                );
+            }
 
             if (!this.running) {
                 this.draw();
@@ -1059,6 +2177,10 @@ Licensed under the MIT License.
         }
 
         handlePointerLeave() {
+            if (this.dragging) {
+                return;
+            }
+
             this.hoveredCell =
                 null;
 
@@ -1071,10 +2193,424 @@ Licensed under the MIT License.
             }
         }
 
+        handlePointerDown(event) {
+            this.canvas.focus({
+                preventScroll:
+                    true
+            });
+
+            const point =
+                this.eventPoint(
+                    event
+                );
+
+            const cell =
+                this.cellAtPoint(
+                    point.x,
+                    point.y
+                );
+
+            if (
+                cell &&
+                this.options.selectable
+            ) {
+                this.selectCell(
+                    cell.row,
+                    cell.column
+                );
+            }
+
+            if (
+                this.options.pan &&
+                (
+                    event.button ===
+                        1 ||
+                    event.shiftKey
+                )
+            ) {
+                this.dragging =
+                    true;
+
+                this.dragStart = {
+                    x:
+                        point.x,
+
+                    y:
+                        point.y,
+
+                    offsetX:
+                        this.view.offsetX,
+
+                    offsetY:
+                        this.view.offsetY
+                };
+
+                this.canvas.setPointerCapture?.(
+                    event.pointerId
+                );
+            }
+        }
+
+        handlePointerUp(event) {
+            if (
+                this.dragging
+            ) {
+                this.canvas.releasePointerCapture?.(
+                    event.pointerId
+                );
+            }
+
+            this.dragging =
+                false;
+
+            this.dragStart =
+                null;
+        }
+
+        handleWheel(event) {
+            if (
+                !this.options.zoom
+            ) {
+                return;
+            }
+
+            event.preventDefault();
+
+            const point =
+                this.eventPoint(
+                    event
+                );
+
+            const beforeScale =
+                this.view.scale;
+
+            const direction =
+                event.deltaY <
+                    0
+                    ? 1
+                    : -1;
+
+            const nextScale =
+                clamp(
+                    beforeScale +
+                    direction *
+                    Number(
+                        this.options.zoomStep
+                    ),
+                    Number(
+                        this.options.zoomMinimum
+                    ),
+                    Number(
+                        this.options.zoomMaximum
+                    )
+                );
+
+            if (
+                nextScale ===
+                beforeScale
+            ) {
+                return;
+            }
+
+            const matrixX =
+                (
+                    point.x -
+                    this.layout.x
+                ) /
+                beforeScale;
+
+            const matrixY =
+                (
+                    point.y -
+                    this.layout.y
+                ) /
+                beforeScale;
+
+            this.view.scale =
+                nextScale;
+
+            this.layout =
+                this.calculateLayout();
+
+            this.view.offsetX +=
+                point.x -
+                (
+                    this.layout.x +
+                    matrixX *
+                    nextScale
+                );
+
+            this.view.offsetY +=
+                point.y -
+                (
+                    this.layout.y +
+                    matrixY *
+                    nextScale
+                );
+
+            this.layout =
+                this.calculateLayout();
+
+            this.draw();
+
+            this.dispatchEvent(
+                new CustomEvent(
+                    "zoom",
+                    {
+                        detail: {
+                            scale:
+                                this.view.scale
+                        }
+                    }
+                )
+            );
+        }
+
+        handleKeydown(event) {
+            if (
+                !this.options.keyboard
+            ) {
+                return;
+            }
+
+            let handled =
+                true;
+
+            switch (event.key) {
+                case "ArrowUp":
+                    this.moveFocus(
+                        -1,
+                        0
+                    );
+                    break;
+
+                case "ArrowDown":
+                    this.moveFocus(
+                        1,
+                        0
+                    );
+                    break;
+
+                case "ArrowLeft":
+                    this.moveFocus(
+                        0,
+                        -1
+                    );
+                    break;
+
+                case "ArrowRight":
+                    this.moveFocus(
+                        0,
+                        1
+                    );
+                    break;
+
+                case "Enter":
+                case " ":
+                    this.selectCell(
+                        this.focusedCell.row,
+                        this.focusedCell.column
+                    );
+                    break;
+
+                case "+":
+                case "=":
+                    this.setZoom(
+                        this.view.scale +
+                        Number(
+                            this.options.zoomStep
+                        )
+                    );
+                    break;
+
+                case "-":
+                case "_":
+                    this.setZoom(
+                        this.view.scale -
+                        Number(
+                            this.options.zoomStep
+                        )
+                    );
+                    break;
+
+                case "0":
+                    this.resetView();
+                    break;
+
+                default:
+                    handled =
+                        false;
+            }
+
+            if (handled) {
+                event.preventDefault();
+            }
+        }
+
+        moveFocus(
+            rowDelta,
+            columnDelta
+        ) {
+            this.focusedCell = {
+                row:
+                    clampInteger(
+                        this.focusedCell.row +
+                        rowDelta,
+                        0,
+                        0,
+                        Math.max(
+                            0,
+                            this.matrix.rowCount -
+                            1
+                        )
+                    ),
+
+                column:
+                    clampInteger(
+                        this.focusedCell.column +
+                        columnDelta,
+                        0,
+                        0,
+                        Math.max(
+                            0,
+                            this.matrix.columnCount -
+                            1
+                        )
+                    )
+            };
+
+            this.hoveredCell =
+                this.cell(
+                    this.focusedCell.row,
+                    this.focusedCell.column
+                );
+
+            this.draw();
+
+            return {
+                ...this.focusedCell
+            };
+        }
+
+        setZoom(value) {
+            this.view.scale =
+                clamp(
+                    Number(value) ||
+                    1,
+                    Number(
+                        this.options.zoomMinimum
+                    ),
+                    Number(
+                        this.options.zoomMaximum
+                    )
+                );
+
+            this.layout =
+                this.calculateLayout();
+
+            this.draw();
+
+            return this.view.scale;
+        }
+
+        cell(
+            row,
+            column
+        ) {
+            if (
+                row <
+                    0 ||
+                column <
+                    0 ||
+                row >=
+                    this.matrix.rowCount ||
+                column >=
+                    this.matrix.columnCount
+            ) {
+                return null;
+            }
+
+            return {
+                row,
+                column,
+
+                value:
+                    this.matrix.rows[
+                        row
+                    ]?.[
+                        column
+                    ],
+
+                rowLabel:
+                    this.matrix.rowLabels[
+                        row
+                    ],
+
+                columnLabel:
+                    this.matrix.columnLabels[
+                        column
+                    ]
+            };
+        }
+
+        selectCell(
+            row,
+            column
+        ) {
+            const cell =
+                this.cell(
+                    row,
+                    column
+                );
+
+            if (!cell) {
+                return null;
+            }
+
+            this.selectedCell =
+                cell;
+
+            this.focusedCell = {
+                row,
+                column
+            };
+
+            this.draw();
+
+            this.dispatchEvent(
+                new CustomEvent(
+                    "cell-select",
+                    {
+                        detail:
+                            cell
+                    }
+                )
+            );
+
+            return cell;
+        }
+
+        clearSelection() {
+            this.selectedCell =
+                null;
+
+            this.draw();
+        }
+
+        /*
+        ======================================================================
+        Data Updates
+        ======================================================================
+        */
+
         update(
-            data = this.data,
+            data =
+                this.data,
             options = {}
         ) {
+            this.previousMatrix =
+                this.matrix;
+
             this.data =
                 data;
 
@@ -1095,6 +2631,20 @@ Licensed under the MIT License.
             this.layout =
                 this.calculateLayout();
 
+            this.hoveredCell =
+                null;
+
+            this.selectedCell =
+                null;
+
+            this.focusedCell = {
+                row:
+                    0,
+
+                column:
+                    0
+            };
+
             this.draw();
 
             this.dispatchEvent(
@@ -1104,7 +2654,10 @@ Licensed under the MIT License.
                         detail: {
                             data,
                             options:
-                                this.options,
+                                {
+                                    ...this.options
+                                },
+
                             matrix:
                                 this.matrix
                         }
@@ -1115,30 +2668,200 @@ Licensed under the MIT License.
             return this;
         }
 
+        appendRow(
+            row,
+            label = null
+        ) {
+            const next =
+                [
+                    ...this.matrix.rows.map(
+                        item =>
+                            [
+                                ...item
+                            ]
+                    ),
+                    Array.isArray(row)
+                        ? [
+                            ...row
+                        ]
+                        : [
+                            row
+                        ]
+                ];
+
+            const labels =
+                [
+                    ...this.matrix.rowLabels,
+                    label ||
+                    String(
+                        next.length
+                    )
+                ];
+
+            return this.update(
+                next,
+                {
+                    rowLabels:
+                        labels,
+
+                    columnLabels:
+                        this.matrix.columnLabels
+                }
+            );
+        }
+
+        /*
+        ======================================================================
+        Export
+        ======================================================================
+        */
+
         exportPNG(
             filename =
                 "speciedex-matrix.png"
         ) {
-            const link =
+            const anchor =
                 document.createElement(
                     "a"
                 );
 
-            link.href =
+            anchor.href =
                 this.canvas.toDataURL(
                     "image/png"
                 );
 
-            link.download =
+            anchor.download =
                 filename;
 
-            link.click();
+            anchor.click();
 
             return filename;
         }
 
+        exportJSON(
+            filename =
+                "speciedex-matrix.json"
+        ) {
+            const payload =
+                JSON.stringify(
+                    {
+                        version:
+                            VERSION,
+
+                        generatedAt:
+                            new Date().toISOString(),
+
+                        matrix:
+                            this.snapshot(),
+
+                        rows:
+                            this.matrix.rows
+                    },
+                    null,
+                    2
+                );
+
+            this.downloadText(
+                payload,
+                filename,
+                "application/json"
+            );
+
+            return filename;
+        }
+
+        exportCSV(
+            filename =
+                "speciedex-matrix.csv"
+        ) {
+            const header = [
+                "",
+                ...this.matrix.columnLabels
+            ]
+                .map(
+                    escapeCSV
+                )
+                .join(",");
+
+            const rows =
+                this.matrix.rows.map(
+                    (
+                        row,
+                        index
+                    ) => [
+                        this.matrix.rowLabels[
+                            index
+                        ],
+                        ...row
+                    ]
+                        .map(
+                            escapeCSV
+                        )
+                        .join(",")
+                );
+
+            const payload =
+                [
+                    header,
+                    ...rows
+                ].join("\n");
+
+            this.downloadText(
+                payload,
+                filename,
+                "text/csv"
+            );
+
+            return filename;
+        }
+
+        downloadText(
+            content,
+            filename,
+            type
+        ) {
+            const blob =
+                new Blob(
+                    [
+                        content
+                    ],
+                    {
+                        type
+                    }
+                );
+
+            const url =
+                URL.createObjectURL(
+                    blob
+                );
+
+            const anchor =
+                document.createElement(
+                    "a"
+                );
+
+            anchor.href =
+                url;
+
+            anchor.download =
+                filename;
+
+            anchor.click();
+
+            window.setTimeout(
+                () =>
+                    URL.revokeObjectURL(
+                        url
+                    ),
+                1000
+            );
+        }
+
         snapshot() {
             return {
+                version:
+                    VERSION,
+
                 rows:
                     this.matrix.rowCount,
 
@@ -1151,13 +2874,53 @@ Licensed under the MIT License.
                 maximum:
                     this.matrix.maximum,
 
+                numericCount:
+                    this.matrix.numericCount,
+
+                categoricalValues:
+                    this.matrix.categorical.length,
+
                 running:
                     this.running,
 
+                selectedCell:
+                    this.selectedCell,
+
+                hoveredCell:
+                    this.hoveredCell,
+
+                view:
+                    {
+                        ...this.view
+                    },
+
+                viewport:
+                    {
+                        ...this.viewport
+                    },
+
                 options:
-                    { ...this.options }
+                    {
+                        ...this.options,
+
+                        valueFormatter:
+                            Boolean(
+                                this.options.valueFormatter
+                            ),
+
+                        colorResolver:
+                            Boolean(
+                                this.options.colorResolver
+                            )
+                    }
             };
         }
+
+        /*
+        ======================================================================
+        Teardown
+        ======================================================================
+        */
 
         destroy() {
             if (this.destroyed) {
@@ -1176,8 +2939,38 @@ Licensed under the MIT License.
                 this.boundPointerLeave
             );
 
+            this.canvas.removeEventListener(
+                "pointerdown",
+                this.boundPointerDown
+            );
+
+            this.canvas.removeEventListener(
+                "pointerup",
+                this.boundPointerUp
+            );
+
+            this.canvas.removeEventListener(
+                "pointercancel",
+                this.boundPointerUp
+            );
+
+            this.canvas.removeEventListener(
+                "wheel",
+                this.boundWheel
+            );
+
+            this.canvas.removeEventListener(
+                "keydown",
+                this.boundKeydown
+            );
+
             this.resizeObserver?.
                 disconnect();
+
+            window.removeEventListener(
+                "resize",
+                this.boundWindowResize
+            );
 
             this.destroyed =
                 true;
@@ -1212,6 +3005,8 @@ Licensed under the MIT License.
         data,
         options = {}
     ) {
+        injectMatrixStyles();
+
         const container =
             document.createElement(
                 "section"
@@ -1223,19 +3018,46 @@ Licensed under the MIT License.
         container.dataset.renderer =
             "matrix";
 
-        if (options.title) {
-            const heading =
-                document.createElement(
-                    "h3"
-                );
-
-            heading.textContent =
-                options.title;
-
-            container.appendChild(
-                heading
+        const header =
+            document.createElement(
+                "header"
             );
-        }
+
+        header.className =
+            "terminal-matrix-header";
+
+        const heading =
+            document.createElement(
+                "h3"
+            );
+
+        heading.className =
+            "terminal-matrix-title";
+
+        heading.textContent =
+            options.title ||
+            "Speciedex Matrix";
+
+        const actions =
+            document.createElement(
+                "div"
+            );
+
+        actions.className =
+            "terminal-matrix-actions";
+
+        header.append(
+            heading,
+            actions
+        );
+
+        const stage =
+            document.createElement(
+                "div"
+            );
+
+        stage.className =
+            "terminal-matrix-stage";
 
         const canvas =
             document.createElement(
@@ -1245,26 +3067,133 @@ Licensed under the MIT License.
         canvas.className =
             "terminal-matrix-canvas";
 
-        canvas.width =
-            Number(
-                options.width
-            ) || DEFAULT_OPTIONS.width;
+        canvas.dataset.terminalMatrixCanvas =
+            "";
 
-        canvas.height =
-            Number(
-                options.height
-            ) || DEFAULT_OPTIONS.height;
-
-        container.appendChild(
+        stage.appendChild(
             canvas
+        );
+
+        const footer =
+            document.createElement(
+                "footer"
+            );
+
+        footer.className =
+            "terminal-matrix-footer";
+
+        const dimensions =
+            document.createElement(
+                "span"
+            );
+
+        const selection =
+            document.createElement(
+                "span"
+            );
+
+        selection.textContent =
+            "No cell selected";
+
+        footer.append(
+            dimensions,
+            selection
+        );
+
+        container.append(
+            header,
+            stage,
+            footer
         );
 
         const controller =
             mount(
                 canvas,
                 data,
-                options
+                {
+                    ...options,
+
+                    width:
+                        options.width ||
+                        DEFAULT_OPTIONS.width,
+
+                    height:
+                        options.height ||
+                        DEFAULT_OPTIONS.height
+                }
             );
+
+        dimensions.textContent =
+            `${controller.matrix.rowCount} × ${controller.matrix.columnCount}`;
+
+        controller.addEventListener(
+            "cell-select",
+            event => {
+                const cell =
+                    event.detail;
+
+                selection.textContent =
+                    `${cell.rowLabel} / ${cell.columnLabel}: ${normalizeLabel(cell.value)}`;
+            }
+        );
+
+        const makeAction =
+            (
+                label,
+                handler,
+                title
+            ) => {
+                const button =
+                    document.createElement(
+                        "button"
+                    );
+
+                button.type =
+                    "button";
+
+                button.textContent =
+                    label;
+
+                button.title =
+                    title ||
+                    label;
+
+                button.addEventListener(
+                    "click",
+                    handler
+                );
+
+                actions.appendChild(
+                    button
+                );
+
+                return button;
+            };
+
+        makeAction(
+            "Reset",
+            () =>
+                controller.resetView(),
+            "Reset matrix viewport"
+        );
+
+        makeAction(
+            "Values",
+            () => {
+                controller.options.showValues =
+                    !controller.options.showValues;
+
+                controller.draw();
+            },
+            "Toggle cell values"
+        );
+
+        makeAction(
+            "PNG",
+            () =>
+                controller.exportPNG(),
+            "Export matrix as PNG"
+        );
 
         container.controller =
             controller;
@@ -1273,11 +3202,17 @@ Licensed under the MIT License.
             (
                 nextData,
                 nextOptions
-            ) =>
+            ) => {
                 controller.update(
                     nextData,
                     nextOptions
                 );
+
+                dimensions.textContent =
+                    `${controller.matrix.rowCount} × ${controller.matrix.columnCount}`;
+
+                return container;
+            };
 
         container.destroy =
             () =>
@@ -1288,18 +3223,32 @@ Licensed under the MIT License.
 
     /*
     ==========================================================================
-    Initialize
+    Initialization
     ==========================================================================
     */
 
     function initialize(context) {
+        if (
+            context.matrixRenderer?.
+                Controller ===
+            MatrixController
+        ) {
+            return context.matrixRenderer;
+        }
+
         const renderer = {
+            version:
+                VERSION,
+
             mount,
             render,
+
             Controller:
                 MatrixController,
+
             normalizeMatrix,
-            cellIntensity
+            cellIntensity,
+            flattenRows
         };
 
         context.registerRenderer?.(
@@ -1322,144 +3271,309 @@ Licensed under the MIT License.
     ==========================================================================
     */
 
-    const commands = [
-        {
-            name:
-                "matrix",
+    function activeMatrix(context) {
+        return (
+            context.root?.
+                querySelector?.(
+                    ".terminal-renderer-matrix"
+                )?.
+                controller ||
+            context.terminalSplash?.
+                matrixController ||
+            null
+        );
+    }
 
-            category:
-                "visualization",
+    const commands =
+        [
+            {
+                name:
+                    "matrix",
 
-            description:
-                "Render a matrix from a terminal library collection.",
+                category:
+                    "visualization",
 
-            usage:
-                "matrix [collection] [--values] [--no-labels]",
+                description:
+                    "Render a matrix from a terminal library collection.",
 
-            handler: ({
-                args,
-                parsed,
-                context
-            }) => {
-                const collection =
-                    args[0] ||
-                    "records";
+                usage:
+                    "matrix [collection] [--values] [--no-labels] [--columns a,b,c]",
 
-                const data =
-                    context.library?.
-                        get?.(
-                            collection
-                        ) ||
-                    [];
+                handler: ({
+                    args,
+                    parsed,
+                    context
+                }) => {
+                    const collection =
+                        args[0] ||
+                        "records";
 
-                return render(
-                    data,
-                    {
-                        title:
-                            `Matrix: ${collection}`,
+                    const data =
+                        context.library?.
+                            get?.(
+                                collection
+                            ) ||
+                        [];
 
-                        showValues:
-                            parsed.flags.values ===
-                            true,
+                    return render(
+                        data,
+                        {
+                            title:
+                                `Matrix: ${collection}`,
 
-                        showLabels:
-                            parsed.flags[
-                                "no-labels"
-                            ] !== true
-                    }
-                );
-            }
-        },
+                            showValues:
+                                parsed.flags.values ===
+                                true,
 
-        {
-            name:
-                "matrix-status",
+                            showLabels:
+                                parsed.flags[
+                                    "no-labels"
+                                ] !==
+                                true,
 
-            category:
-                "visualization",
-
-            description:
-                "Display matrix renderer availability and active splash state.",
-
-            usage:
-                "matrix-status",
-
-            handler: ({
-                context,
-                writeJSON
-            }) => {
-                const controller =
-                    context.terminalSplash?.
-                        matrixController ||
-                    null;
-
-                return writeJSON({
-                    available:
-                        true,
-
-                    controller:
-                        controller?.
-                            constructor?.
-                            name ||
-                        null,
-
-                    active:
-                        Boolean(
-                            controller
-                        ),
-
-                    snapshot:
-                        controller?.
-                            snapshot?.() ||
-                        null
-                });
-            }
-        },
-
-        {
-            name:
-                "matrix-export",
-
-            category:
-                "visualization",
-
-            description:
-                "Export the active matrix canvas as PNG.",
-
-            usage:
-                "matrix-export [filename]",
-
-            handler: ({
-                args,
-                context,
-                write
-            }) => {
-                const controller =
-                    context.terminalSplash?.
-                        matrixController;
-
-                if (
-                    !controller?.
-                        exportPNG
-                ) {
-                    throw new Error(
-                        "No exportable matrix visualization is active."
+                            columns:
+                                parsed.options.columns
+                                    ? String(
+                                        parsed.options.columns
+                                    )
+                                        .split(",")
+                                        .map(
+                                            field =>
+                                                field.trim()
+                                        )
+                                        .filter(Boolean)
+                                    : null
+                        }
                     );
                 }
+            },
 
-                const filename =
-                    controller.exportPNG(
-                        args[0] ||
-                        "speciedex-matrix.png"
+            {
+                name:
+                    "matrix-status",
+
+                category:
+                    "visualization",
+
+                description:
+                    "Display active matrix status.",
+
+                usage:
+                    "matrix-status",
+
+                handler: ({
+                    context,
+                    writeJSON
+                }) => {
+                    const controller =
+                        activeMatrix(
+                            context
+                        );
+
+                    return writeJSON({
+                        version:
+                            VERSION,
+
+                        available:
+                            true,
+
+                        active:
+                            Boolean(
+                                controller
+                            ),
+
+                        snapshot:
+                            controller?.
+                                snapshot?.() ||
+                            null
+                    });
+                }
+            },
+
+            {
+                name:
+                    "matrix-cell",
+
+                category:
+                    "visualization",
+
+                description:
+                    "Inspect one matrix cell by row and column index.",
+
+                usage:
+                    "matrix-cell <row> <column>",
+
+                handler: ({
+                    args,
+                    context,
+                    writeJSON
+                }) => {
+                    const controller =
+                        activeMatrix(
+                            context
+                        );
+
+                    if (!controller) {
+                        throw new Error(
+                            "No active matrix visualization is available."
+                        );
+                    }
+
+                    const row =
+                        Number.parseInt(
+                            args[0],
+                            10
+                        );
+
+                    const column =
+                        Number.parseInt(
+                            args[1],
+                            10
+                        );
+
+                    if (
+                        !Number.isInteger(
+                            row
+                        ) ||
+                        !Number.isInteger(
+                            column
+                        )
+                    ) {
+                        throw new Error(
+                            "Usage: matrix-cell <row> <column>"
+                        );
+                    }
+
+                    const cell =
+                        controller.cell(
+                            row,
+                            column
+                        );
+
+                    if (!cell) {
+                        throw new Error(
+                            "Matrix cell is outside the current matrix bounds."
+                        );
+                    }
+
+                    controller.selectCell(
+                        row,
+                        column
                     );
 
-                return write(
-                    `Matrix exported to ${filename}.`,
-                    "success"
-                );
+                    return writeJSON(
+                        cell
+                    );
+                }
+            },
+
+            {
+                name:
+                    "matrix-reset",
+
+                category:
+                    "visualization",
+
+                description:
+                    "Reset the active matrix viewport.",
+
+                usage:
+                    "matrix-reset",
+
+                handler: ({
+                    context,
+                    write
+                }) => {
+                    const controller =
+                        activeMatrix(
+                            context
+                        );
+
+                    if (!controller) {
+                        throw new Error(
+                            "No active matrix visualization is available."
+                        );
+                    }
+
+                    controller.resetView();
+
+                    return write(
+                        "Matrix viewport reset.",
+                        "success"
+                    );
+                }
+            },
+
+            {
+                name:
+                    "matrix-export",
+
+                category:
+                    "visualization",
+
+                description:
+                    "Export the active matrix as PNG, JSON, or CSV.",
+
+                usage:
+                    "matrix-export [png|json|csv] [filename]",
+
+                handler: ({
+                    args,
+                    context,
+                    write
+                }) => {
+                    const controller =
+                        activeMatrix(
+                            context
+                        );
+
+                    if (!controller) {
+                        throw new Error(
+                            "No exportable matrix visualization is active."
+                        );
+                    }
+
+                    const format =
+                        String(
+                            args[0] ||
+                            "png"
+                        ).toLowerCase();
+
+                    let filename;
+
+                    if (
+                        format ===
+                        "json"
+                    ) {
+                        filename =
+                            controller.exportJSON(
+                                args[1] ||
+                                "speciedex-matrix.json"
+                            );
+                    } else if (
+                        format ===
+                        "csv"
+                    ) {
+                        filename =
+                            controller.exportCSV(
+                                args[1] ||
+                                "speciedex-matrix.csv"
+                            );
+                    } else {
+                        filename =
+                            controller.exportPNG(
+                                args[1] ||
+                                "speciedex-matrix.png"
+                            );
+                    }
+
+                    return write(
+                        `Matrix exported to ${filename}.`,
+                        "success"
+                    );
+                }
             }
-        }
-    ];
+        ];
 
     /*
     ==========================================================================
@@ -1472,16 +3586,37 @@ Licensed under the MIT License.
             name:
                 MODULE_NAME,
 
+            version:
+                VERSION,
+
+            PRIMARY_COLOR,
+            ACCENT_COLOR,
+            BACKGROUND_COLOR,
+            DEFAULT_OPTIONS,
+
             MatrixController,
+
+            clamp,
+            clampInteger,
+            parseBoolean,
+            normalizeLabel,
+            flattenRows,
             normalizeMatrix,
+            numericValue,
             cellIntensity,
+            hashString,
+            rgbaFromHex,
+            injectMatrixStyles,
+
             mount,
             render,
+
             initialize,
             init:
                 initialize,
             setup:
                 initialize,
+
             commands
         });
 
@@ -1494,7 +3629,8 @@ Licensed under the MIT License.
 
     window.SpeciedexTerminalModules[
         MODULE_NAME
-    ] = api;
+    ] =
+        api;
 
     document.dispatchEvent(
         new CustomEvent(
