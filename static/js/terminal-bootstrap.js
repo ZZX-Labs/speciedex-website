@@ -43,7 +43,7 @@ Licensed under the MIT License.
         "SpeciedexTerminalBootstrap";
 
     const VERSION =
-        "2.0.0";
+        "2.2.0";
 
     const TERMINAL_SELECTOR =
         "[data-speciedex-terminal], [data-terminal]";
@@ -77,6 +77,9 @@ Licensed under the MIT License.
     let bound =
         false;
 
+    let dependencyPromise =
+        null;
+
     const pendingContexts =
         new Set();
 
@@ -85,6 +88,20 @@ Licensed under the MIT License.
 
     const failedRoots =
         new WeakMap();
+
+    const initializingRoots =
+        new WeakMap();
+
+    const metrics = {
+        starts: 0,
+        stops: 0,
+        initializeCalls: 0,
+        rootsInitialized: 0,
+        rootsFailed: 0,
+        rootsRemoved: 0,
+        dependencyLoads: 0,
+        mutationBatches: 0
+    };
 
     /*
     ==========================================================================
@@ -107,16 +124,17 @@ Licensed under the MIT License.
     }
 
     function isNode(value) {
-        return (
-            value instanceof
-            Node
+        return Boolean(
+            value &&
+            typeof value.nodeType === "number"
         );
     }
 
     function isElement(value) {
-        return (
-            value instanceof
-            Element
+        return Boolean(
+            value &&
+            value.nodeType === 1 &&
+            typeof value.matches === "function"
         );
     }
 
@@ -132,10 +150,8 @@ Licensed under the MIT License.
 
         if (
             context === document ||
-            context instanceof
-            Document ||
-            context instanceof
-            DocumentFragment ||
+            context?.nodeType === 9 ||
+            context?.nodeType === 11 ||
             isElement(context)
         ) {
             return context;
@@ -174,6 +190,8 @@ Licensed under the MIT License.
     function findTerminals(
         context = document
     ) {
+        metrics.initializeCalls += 1;
+
         const normalizedContext =
             normalizeContext(
                 context
@@ -348,11 +366,26 @@ Licensed under the MIT License.
             );
         }
 
+        if (!dependencyPromise || options.reload === true) {
+            metrics.dependencyLoads += 1;
+
+            dependencyPromise = Promise.resolve(
+                loader.load(
+                    {
+                        ...(options.loader || {}),
+                        reload:
+                            options.reload === true ||
+                            options.loader?.reload === true
+                    }
+                )
+            ).catch(error => {
+                dependencyPromise = null;
+                throw error;
+            });
+        }
+
         const result =
-            await loader.load(
-                options.loader ||
-                {}
-            );
+            await dependencyPromise;
 
         emit(
             "speciedex:terminal-dependencies-ready",
@@ -437,19 +470,27 @@ Licensed under the MIT License.
             );
         }
 
-        try {
-            setRootState(
-                root,
-                "initializing",
-                "Initializing"
-            );
+        const existingInitialization =
+            initializingRoots.get(root);
 
-            const instance =
-                await application.create(
+        if (existingInitialization) {
+            return existingInitialization;
+        }
+
+        const initialization = (async () => {
+            try {
+                setRootState(
                     root,
-                    options.application ||
-                    {}
+                    "initializing",
+                    "Initializing"
                 );
+
+                const instance =
+                    await application.create(
+                        root,
+                        options.application ||
+                        {}
+                    );
 
             if (!instance) {
                 throw new Error(
@@ -485,24 +526,37 @@ Licensed under the MIT License.
                 }
             );
 
-            return instance;
-        } catch (error) {
-            setErrorState(
-                root,
-                error
-            );
+                metrics.rootsInitialized += 1;
+                return instance;
+            } catch (error) {
+                metrics.rootsFailed += 1;
 
-            emit(
-                "speciedex:terminal-initialization-error",
-                {
+                setErrorState(
                     root,
-                    error,
-                    application
-                }
-            );
+                    error
+                );
 
-            throw error;
-        }
+                emit(
+                    "speciedex:terminal-initialization-error",
+                    {
+                        root,
+                        error,
+                        application
+                    }
+                );
+
+                throw error;
+            } finally {
+                initializingRoots.delete(root);
+            }
+        })();
+
+        initializingRoots.set(
+            root,
+            initialization
+        );
+
+        return initialization;
     }
 
     async function initialize(
@@ -697,28 +751,38 @@ Licensed under the MIT License.
         observer =
             new MutationObserver(
                 mutations => {
-                    for (
-                        const mutation of
-                        mutations
-                    ) {
-                        for (
-                            const node of
-                            mutation.addedNodes
-                        ) {
+                    metrics.mutationBatches += 1;
+
+                    for (const mutation of mutations) {
+                        for (const node of mutation.addedNodes) {
                             if (
-                                !isNode(node)
+                                isNode(node) &&
+                                containsTerminal(node)
                             ) {
+                                queueInitialize(node);
+                            }
+                        }
+
+                        for (const node of mutation.removedNodes) {
+                            if (!isNode(node)) {
                                 continue;
                             }
 
-                            if (
-                                containsTerminal(
-                                    node
-                                )
-                            ) {
-                                queueInitialize(
-                                    node
-                                );
+                            for (const root of findTerminals(node)) {
+                                const instance =
+                                    getApplication()?.getInstance?.(root) ||
+                                    getFacade()?.getInstance?.(root);
+
+                                try {
+                                    instance?.destroy?.();
+                                    metrics.rootsRemoved += 1;
+                                } catch (error) {
+                                    console.warn(
+                                        "[SpeciedexTerminalBootstrap] " +
+                                        "Unable to destroy removed terminal:",
+                                        error
+                                    );
+                                }
                             }
                         }
                     }
@@ -928,6 +992,8 @@ Licensed under the MIT License.
         started =
             true;
 
+        metrics.starts += 1;
+
         bindLifecycleEvents();
         observeDynamicTerminals();
 
@@ -1028,6 +1094,8 @@ Licensed under the MIT License.
         started =
             false;
 
+        metrics.stops += 1;
+
         startPromise =
             null;
 
@@ -1046,6 +1114,74 @@ Licensed under the MIT License.
     Diagnostics
     ==========================================================================
     */
+
+    async function retry(
+        root,
+        options = {}
+    ) {
+        if (!isElement(root)) {
+            throw new TypeError(
+                "retry() requires a terminal root Element."
+            );
+        }
+
+        failedRoots.delete(root);
+        delete root.dataset.terminalError;
+        delete root.dataset.terminalReady;
+
+        const application =
+            await requireApplication({
+                ...options,
+                reload:
+                    options.reload === true
+            });
+
+        return initializeRoot(
+            application,
+            root,
+            options
+        );
+    }
+
+    async function restart(
+        options = {}
+    ) {
+        stop({
+            destroyInstances:
+                options.destroyInstances !== false
+        });
+
+        if (options.reload === true) {
+            dependencyPromise = null;
+        }
+
+        return start(options);
+    }
+
+    function diagnostics() {
+        return {
+            ...status(),
+            metrics: {
+                ...metrics
+            },
+            terminals:
+                findTerminals(document).map(root => ({
+                    id:
+                        root.id || null,
+                    state:
+                        root.dataset.terminalState || null,
+                    ready:
+                        root.dataset.terminalReady || null,
+                    error:
+                        root.dataset.terminalError || null,
+                    connected:
+                        root.isConnected
+                })),
+            loaderSnapshot:
+                getLoader()?.snapshot?.() ||
+                null
+        };
+    }
 
     function status() {
         return {
@@ -1109,6 +1245,9 @@ Licensed under the MIT License.
             containsTerminal,
             prepareDependencies,
             status,
+            diagnostics,
+            retry,
+            restart,
 
             get started() {
                 return started;
