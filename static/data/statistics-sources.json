@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-22T03:39:26Z",
+  "generated_at": "2026-07-22T06:15:46Z",
   "providers": [
     {
       "provider": "itis",
@@ -14,10 +14,10 @@
     },
     {
       "provider": "worms",
-      "fetched": 10,
+      "fetched": 9,
       "created": 0,
-      "matched": 10,
-      "revised": 10,
+      "matched": 9,
+      "revised": 9,
       "conflicted": 0,
       "rejected": 0,
       "requests": 1,
@@ -58,13 +58,13 @@
     },
     {
       "provider": "wikispecies",
-      "fetched": 83,
-      "created": 83,
+      "fetched": 74,
+      "created": 74,
       "matched": 0,
       "revised": 0,
       "conflicted": 0,
       "rejected": 0,
-      "requests": 3,
+      "requests": 6,
       "error": null
     },
     {
