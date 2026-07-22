@@ -177,6 +177,215 @@ Licensed under the MIT License.
         ].join("|");
     }
 
+
+    /*
+    ==========================================================================
+    Terminal Region Visibility
+    ==========================================================================
+    */
+
+    class TerminalRegionVisibility {
+        constructor(context) {
+            this.context = context;
+            this.root = context.root;
+            this.storageKey =
+                `speciedex-terminal:visibility:` +
+                `${this.root.dataset.terminalInstance || "default"}`;
+
+            this.regions = {
+                terminal:
+                    this.root.querySelector(
+                        "[data-terminal-regions]"
+                    ),
+
+                splash:
+                    this.root.querySelector(
+                        "[data-terminal-splash]"
+                    ),
+
+                console:
+                    this.root.querySelector(
+                        "[data-terminal-console-region]"
+                    )
+            };
+
+            this.buttons = {
+                terminal:
+                    this.root.querySelector(
+                        "[data-terminal-toggle-terminal]"
+                    ),
+
+                splash:
+                    this.root.querySelector(
+                        "[data-terminal-toggle-splash]"
+                    ),
+
+                console:
+                    this.root.querySelector(
+                        "[data-terminal-toggle-console]"
+                    )
+            };
+
+            this.state = {
+                terminal: true,
+                splash: true,
+                console: true,
+                ...this.restore()
+            };
+
+            this.bind();
+            this.applyAll();
+        }
+
+        restore() {
+            try {
+                return JSON.parse(
+                    window.localStorage.getItem(
+                        this.storageKey
+                    ) || "{}"
+                );
+            } catch (error) {
+                return {};
+            }
+        }
+
+        persist() {
+            try {
+                window.localStorage.setItem(
+                    this.storageKey,
+                    JSON.stringify(
+                        this.state
+                    )
+                );
+            } catch (error) {}
+        }
+
+        bind() {
+            for (
+                const [
+                    name,
+                    button
+                ] of Object.entries(
+                    this.buttons
+                )
+            ) {
+                button?.addEventListener(
+                    "click",
+                    event => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.toggle(name);
+                    },
+                    {
+                        signal:
+                            this.context.signal
+                    }
+                );
+            }
+        }
+
+        toggle(name) {
+            this.set(
+                name,
+                !this.state[name]
+            );
+        }
+
+        set(name, visible) {
+            if (!(name in this.state)) {
+                throw new Error(
+                    `Unknown terminal region: ${name}`
+                );
+            }
+
+            this.state[name] =
+                Boolean(visible);
+
+            this.apply(name);
+            this.persist();
+
+            this.context.events?.emit?.(
+                "terminal:visibility",
+                {
+                    name,
+                    visible:
+                        this.state[name]
+                }
+            );
+        }
+
+        apply(name) {
+            const region =
+                this.regions[name];
+
+            const button =
+                this.buttons[name];
+
+            if (region) {
+                region.hidden =
+                    !this.state[name];
+
+                region.dataset.collapsed =
+                    this.state[name]
+                        ? "false"
+                        : "true";
+            }
+
+            if (button) {
+                button.setAttribute(
+                    "aria-expanded",
+                    String(
+                        this.state[name]
+                    )
+                );
+
+                button.classList.toggle(
+                    "is-collapsed",
+                    !this.state[name]
+                );
+            }
+
+            this.root.classList.toggle(
+                `terminal-${name}-collapsed`,
+                !this.state[name]
+            );
+        }
+
+        applyAll() {
+            for (
+                const name of Object.keys(
+                    this.state
+                )
+            ) {
+                this.apply(name);
+            }
+        }
+
+        showAll() {
+            this.state = {
+                terminal: true,
+                splash: true,
+                console: true
+            };
+
+            this.applyAll();
+            this.persist();
+        }
+
+        collapseAll() {
+            this.state = {
+                terminal: false,
+                splash:
+                    this.state.splash,
+                console:
+                    this.state.console
+            };
+
+            this.applyAll();
+            this.persist();
+        }
+    }
+
     class TerminalSplashController {
         constructor(context, options = {}) {
             this.context = context;
@@ -667,6 +876,19 @@ Licensed under the MIT License.
     }
 
     function initialize(context) {
+        const visibility =
+            new TerminalRegionVisibility(
+                context
+            );
+
+        context.terminalVisibility =
+            visibility;
+
+        context.registerService?.(
+            "terminal-visibility",
+            visibility
+        );
+
         const controller =
             new TerminalSplashController(
                 context,
@@ -785,6 +1007,7 @@ Licensed under the MIT License.
     const api = Object.freeze({
         name: MODULE_NAME,
         TerminalSplashController,
+        TerminalRegionVisibility,
         initialize,
         mount: initialize,
         init: initialize,
