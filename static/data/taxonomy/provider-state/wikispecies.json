@@ -3,17 +3,17 @@
   "last_attempt": "2026-07-20T22:15:30Z",
   "last_error": null,
   "last_fetch": {
-    "discovered_pages": 20,
-    "enriched_pages": 20,
-    "normalized_records": 20,
+    "discovered_pages": 37,
+    "enriched_pages": 37,
+    "normalized_records": 37,
     "requests": 2,
-    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A._Thammathaworn\"}",
+    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"AHU\"}",
     "exhausted": false
   },
-  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"A._Thammathaworn\"}",
+  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"AHU\"}",
   "bootstrap_complete": false,
-  "last_success": "2026-07-21T22:59:43Z",
-  "last_batch_records": 20,
+  "last_success": "2026-07-22T00:02:30Z",
+  "last_batch_records": 37,
   "last_requests": 2,
-  "last_raw_records": 20
+  "last_raw_records": 37
 }
