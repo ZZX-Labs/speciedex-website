@@ -55,18 +55,11 @@ Licensed under the MIT License.
     const VERSION =
         "3.0.0";
 
-    const LOADER_SCRIPT_URL =
-        document.currentScript?.src ||
-        new URL("/static/js/terminal-loader.js", window.location.origin).href;
-
-    const BASE_URL =
-        new URL("terminal/", LOADER_SCRIPT_URL);
-
     const BASE_PATH =
-        BASE_URL.pathname;
+        "/static/js/terminal/";
 
     const MANIFEST_URL =
-        new URL("manifest.json", BASE_URL).href;
+        `${BASE_PATH}manifest.json`;
 
     /*
     ==========================================================================
@@ -1563,17 +1556,12 @@ Licensed under the MIT License.
             ).href;
         }
 
-        const resolvedBase =
-            basePath === BASE_PATH
-                ? BASE_URL
-                : new URL(
-                    basePath,
-                    window.location.origin
-                );
-
         return new URL(
             value,
-            resolvedBase
+            new URL(
+                basePath,
+                window.location.origin
+            )
         ).href;
     }
 
@@ -1860,11 +1848,59 @@ Licensed under the MIT License.
             );
         }
 
-        return orderedPaths.map(
-            path =>
+        /*
+        ----------------------------------------------------------------------
+        Repository manifests may use descriptive names such as
+        "terminal-api" while the built-in graph uses canonical runtime names
+        such as "api". Entries are merged by path and retain the canonical
+        name, so dependency references must be canonicalized as well.
+        ----------------------------------------------------------------------
+        */
+
+        const dependencyAliases =
+            new Map();
+
+        for (
+            const entry of
+            overrides
+        ) {
+            const normalized =
+                normalizeModule(
+                    entry,
+                    dependencyAliases.size
+                );
+
+            const canonical =
                 byPath.get(
-                    path
-                )
+                    normalized.path
+                );
+
+            if (canonical) {
+                dependencyAliases.set(
+                    normalized.name,
+                    canonical.name
+                );
+            }
+        }
+
+        return orderedPaths.map(
+            path => {
+                const module =
+                    byPath.get(
+                        path
+                    );
+
+                return {
+                    ...module,
+                    dependencies:
+                        module.dependencies.map(
+                            dependency =>
+                                dependencyAliases.get(
+                                    dependency
+                                ) || dependency
+                        )
+                };
+            }
         );
     }
 
