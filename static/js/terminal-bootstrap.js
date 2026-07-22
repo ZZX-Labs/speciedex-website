@@ -339,8 +339,23 @@ Licensed under the MIT License.
         setRootState(
             root,
             "error",
-            "Initialization failed"
+            `Initialization failed: ${message}`
         );
+
+        root.removeAttribute("aria-busy");
+
+        const output = root.querySelector(
+            "[data-terminal-output]"
+        );
+
+        if (output) {
+            const entry = document.createElement("div");
+            entry.className =
+                "terminal-entry terminal-entry-error";
+            entry.textContent =
+                `Initialization failed: ${message}`;
+            output.appendChild(entry);
+        }
     }
 
     /*
