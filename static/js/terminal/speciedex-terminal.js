@@ -25,7 +25,7 @@ Licensed under the MIT License.
     "use strict";
 
     const APP_NAME = "SpeciedexTerminalApp";
-    const VERSION = "1.0.0";
+    const VERSION = "2.0.0";
     const ROOT_SELECTOR = "[data-speciedex-terminal], [data-terminal]";
     const INSTANCE_SYMBOL = Symbol.for("speciedex.terminal.instance");
 
@@ -138,7 +138,8 @@ Licensed under the MIT License.
             "TaxonomyTree",
             "TimeSlider",
             "WordCloud",
-            "ZMatrix"
+            "ZMatrix",
+            "Splash"
         ],
         help: [
             "Help"
@@ -152,7 +153,10 @@ Licensed under the MIT License.
         providers: "provider",
         taxa: "taxonomy",
         viz: "visualize",
-        ls: "list"
+        ls: "list",
+        find: "search",
+        lookup: "search",
+        query: "search"
     });
 
     const instances = new Set();
@@ -185,6 +189,37 @@ Licensed under the MIT License.
             .replace(/[^a-zA-Z0-9]+/g, "-")
             .replace(/^-+|-+$/g, "")
             .toLowerCase();
+    }
+
+    function parseBoolean(value, fallback = false) {
+        if (value === undefined || value === null || value === "") {
+            return fallback;
+        }
+
+        return !["false", "0", "no", "off"].includes(
+            String(value).toLowerCase()
+        );
+    }
+
+    function clampInteger(value, fallback, minimum, maximum) {
+        const parsed = Number.parseInt(value, 10);
+
+        if (!Number.isFinite(parsed)) {
+            return fallback;
+        }
+
+        return Math.min(maximum, Math.max(minimum, parsed));
+    }
+
+    function safeStorage() {
+        try {
+            const key = "__speciedex_terminal_probe__";
+            window.localStorage.setItem(key, key);
+            window.localStorage.removeItem(key);
+            return window.localStorage;
+        } catch (error) {
+            return null;
+        }
     }
 
     function tokenize(input) {
@@ -519,6 +554,14 @@ Licensed under the MIT License.
             return Boolean(this.loader?.WORKERS?.[name]);
         }
 
+        status() {
+            return {
+                available: Object.keys(this.loader?.WORKERS || {}),
+                running: [...this.workers.keys()],
+                pending: this.pending.size
+            };
+        }
+
         get(name) {
             if (this.workers.has(name)) {
                 return this.workers.get(name);
@@ -635,14 +678,52 @@ Licensed under the MIT License.
 
             this.root = root;
             this.options = {
-                promptUser: root.dataset.terminalPromptUser || "public",
-                promptHost: root.dataset.terminalPromptHost || "speciedex",
-                promptPath: root.dataset.terminalPromptPath || "~",
-                promptSymbol: root.dataset.terminalPromptSymbol || "$",
-                maxOutputEntries: Number(root.dataset.terminalMaxLines) || 1000,
-                historyLimit: Number(root.dataset.terminalMaxHistory) || 250,
-                persistHistory: root.dataset.terminalPersistHistory !== "false",
-                autofocus: root.dataset.terminalAutofocus === "true",
+                promptUser:
+                    options.promptUser ||
+                    root.dataset.terminalPromptUser ||
+                    "public",
+                promptHost:
+                    options.promptHost ||
+                    root.dataset.terminalPromptHost ||
+                    "speciedex",
+                promptPath:
+                    options.promptPath ||
+                    root.dataset.terminalPromptPath ||
+                    "~",
+                promptSymbol:
+                    options.promptSymbol ||
+                    root.dataset.terminalPromptSymbol ||
+                    "$",
+                maxOutputEntries:
+                    clampInteger(
+                        options.maxOutputEntries ??
+                        root.dataset.terminalMaxLines,
+                        1000,
+                        25,
+                        10000
+                    ),
+                historyLimit:
+                    clampInteger(
+                        options.historyLimit ??
+                        root.dataset.terminalMaxHistory,
+                        250,
+                        10,
+                        5000
+                    ),
+                persistHistory:
+                    options.persistHistory ??
+                    parseBoolean(
+                        root.dataset.terminalPersistHistory,
+                        true
+                    ),
+                autofocus:
+                    options.autofocus ??
+                    parseBoolean(
+                        root.dataset.terminalAutofocus,
+                        false
+                    ),
+                welcome:
+                    options.welcome !== false,
                 ...options
             };
 
@@ -653,6 +734,7 @@ Licensed under the MIT License.
             this.moduleInstances = new Map();
             this.commandRegistry = new CommandRegistry(this);
             this.workers = new WorkerPool(this);
+            this.storage = safeStorage();
             this.history = [];
             this.historyIndex = 0;
             this.busy = false;
@@ -699,6 +781,18 @@ Licensed under the MIT License.
                 find("[data-terminal-record-count]");
             this.elements.networkStatus =
                 find("[data-terminal-network-status]");
+            this.elements.regions =
+                find("[data-terminal-regions]");
+            this.elements.splash =
+                find("[data-terminal-splash]");
+            this.elements.consoleRegion =
+                find("[data-terminal-console-region]");
+            this.elements.toggleTerminal =
+                find("[data-terminal-toggle-terminal]");
+            this.elements.toggleSplash =
+                find("[data-terminal-toggle-splash]");
+            this.elements.toggleConsole =
+                find("[data-terminal-toggle-console]");
 
             if (
                 !this.elements.output ||
@@ -727,6 +821,9 @@ Licensed under the MIT License.
                 taxa: new Map(),
                 visualizations: new Map(),
                 archive: new Map(),
+                events: null,
+                terminalSplash: null,
+                terminalVisibility: null,
                 registerCommand: definition =>
                     this.commandRegistry.register(definition),
                 unregisterCommand: name =>
@@ -752,6 +849,9 @@ Licensed under the MIT License.
                 execute: this.execute.bind(this),
                 setStatus: this.setStatus.bind(this),
                 focus: this.focus.bind(this),
+                toggleRegion: this.toggleRegion.bind(this),
+                setRegionVisibility: this.setRegionVisibility.bind(this),
+                getRegionVisibility: this.getRegionVisibility.bind(this),
                 emit: (name, detail) => emit(this.root, name, detail),
                 signal: this.abortController.signal
             };
@@ -774,9 +874,14 @@ Licensed under the MIT License.
             await this.installModuleCommands();
             await this.installPlugins();
 
+            this.verifyRuntime();
             this.updateMetadata();
             this.removeBootstrapMessage();
-            this.printWelcome();
+
+            if (this.options.welcome) {
+                this.printWelcome();
+            }
+
             this.setStatus("Ready", "ready");
 
             this.root.dataset.terminalReady = "true";
@@ -814,7 +919,17 @@ Licensed under the MIT License.
 
                 try {
                     const instance = await this.initializeModule(record);
-                    this.moduleInstances.set(name, instance ?? record.value);
+                    const mounted = instance ?? record.value;
+
+                    this.moduleInstances.set(name, mounted);
+
+                    if (name === "Events") {
+                        this.context.events = mounted;
+                    }
+
+                    if (name === "Splash") {
+                        this.context.terminalSplash = mounted;
+                    }
 
                     emit(this.root, "speciedex:terminal-module-mounted", {
                         app: this,
@@ -863,10 +978,10 @@ Licensed under the MIT License.
 
         async installModuleCommands() {
             for (const [name, record] of this.modules.entries()) {
-                const targets = [
+                const targets = [...new Set([
                     this.moduleInstances.get(name),
                     record.value
-                ].filter(Boolean);
+                ].filter(Boolean))];
 
                 for (const target of targets) {
                     const commandSources = [
@@ -1026,6 +1141,15 @@ Licensed under the MIT License.
                     break;
                 case "fullscreen":
                     this.toggleFullscreen(action);
+                    break;
+                case "toggle-terminal":
+                    this.toggleRegion("terminal");
+                    break;
+                case "toggle-splash":
+                    this.toggleRegion("splash");
+                    break;
+                case "toggle-console":
+                    this.toggleRegion("console");
                     break;
                 default:
                     emit(this.root, "speciedex:terminal-action", {
@@ -1192,6 +1316,139 @@ Licensed under the MIT License.
                     this.restart();
                 }
             });
+        }
+
+        verifyRuntime() {
+            const requiredCommands = [
+                "search",
+                "search-help",
+                "search-fields",
+                "search-explain",
+                "splash"
+            ];
+
+            const missingCommands = requiredCommands.filter(
+                name => !this.commandRegistry.get(name)
+            );
+
+            const splashModule =
+                this.moduleInstances.get("Splash") ||
+                this.context.terminalSplash ||
+                null;
+
+            const report = {
+                modules: this.modules.size,
+                mountedModules: this.moduleInstances.size,
+                missingModules: this.missingModules.length,
+                commands: this.commandRegistry.list({
+                    includeHidden: true
+                }).length,
+                missingCommands,
+                splashModule: Boolean(splashModule),
+                splashElement: Boolean(this.elements.splash),
+                workers: this.workers.status()
+            };
+
+            if (missingCommands.length) {
+                this.write(
+                    `Runtime warning: missing commands: ${missingCommands.join(", ")}`,
+                    "warning"
+                );
+            }
+
+            if (this.elements.splash && !splashModule) {
+                this.write(
+                    "Runtime warning: terminal splash markup exists, but the Splash module did not mount.",
+                    "warning"
+                );
+            }
+
+            emit(
+                this.root,
+                "speciedex:terminal-runtime-verification",
+                {
+                    app: this,
+                    report
+                }
+            );
+
+            return report;
+        }
+
+        getRegionElement(name) {
+            switch (String(name || "").toLowerCase()) {
+                case "terminal":
+                    return this.elements.regions;
+                case "splash":
+                    return this.elements.splash;
+                case "console":
+                    return this.elements.consoleRegion;
+                default:
+                    return null;
+            }
+        }
+
+        getRegionButton(name) {
+            switch (String(name || "").toLowerCase()) {
+                case "terminal":
+                    return this.elements.toggleTerminal;
+                case "splash":
+                    return this.elements.toggleSplash;
+                case "console":
+                    return this.elements.toggleConsole;
+                default:
+                    return null;
+            }
+        }
+
+        getRegionVisibility(name) {
+            const region = this.getRegionElement(name);
+            return region ? !region.hidden : false;
+        }
+
+        setRegionVisibility(name, visible) {
+            const normalized = String(name || "").toLowerCase();
+            const region = this.getRegionElement(normalized);
+
+            if (!region) {
+                return false;
+            }
+
+            const nextVisible = Boolean(visible);
+            region.hidden = !nextVisible;
+            region.dataset.collapsed = nextVisible ? "false" : "true";
+            region.setAttribute("aria-hidden", String(!nextVisible));
+
+            const button = this.getRegionButton(normalized);
+
+            if (button) {
+                button.setAttribute("aria-expanded", String(nextVisible));
+                button.classList.toggle("is-collapsed", !nextVisible);
+            }
+
+            this.root.classList.toggle(
+                `terminal-${normalized}-collapsed`,
+                !nextVisible
+            );
+
+            emit(
+                this.root,
+                "speciedex:terminal-region-visibility",
+                {
+                    app: this,
+                    region: normalized,
+                    visible: nextVisible
+                }
+            );
+
+            return true;
+        }
+
+        toggleRegion(name) {
+            return this.setRegionVisibility(
+                name,
+                !this.getRegionVisibility(name)
+            );
         }
 
         commandHelp(args) {
@@ -1443,10 +1700,11 @@ Licensed under the MIT License.
 
         printWelcome() {
             this.write([
-                `SpeciedexTerminal ${VERSION}`,
+                `SpeciedexTerminal Application ${VERSION}`,
                 "Open biodiversity research and data infrastructure.",
                 `${this.modules.size} modules discovered; ` +
-                `${this.commandRegistry.list({ includeHidden: true }).length} commands registered.`,
+                `${this.commandRegistry.list({ includeHidden: true }).length} commands registered; ` +
+                `${this.missingModules.length} modules unavailable.`,
                 'Enter "help" to list available commands.'
             ].join("\n"), "system", { preformatted: true });
         }
@@ -1540,8 +1798,12 @@ Licensed under the MIT License.
             }
 
             try {
+                if (!this.storage) {
+                    return;
+                }
+
                 const parsed = JSON.parse(
-                    window.localStorage.getItem(this.storageKey) || "[]"
+                    this.storage.getItem(this.storageKey) || "[]"
                 );
 
                 if (Array.isArray(parsed)) {
@@ -1562,7 +1824,11 @@ Licensed under the MIT License.
             }
 
             try {
-                window.localStorage.setItem(
+                if (!this.storage) {
+                    return;
+                }
+
+                this.storage.setItem(
                     this.storageKey,
                     JSON.stringify(this.history)
                 );
@@ -1699,8 +1965,14 @@ Licensed under the MIT License.
                     button.setAttribute("aria-pressed", "true");
                 }
             } catch (error) {
-                this.elements.shell.classList.toggle(
-                    "terminal-fullscreen-fallback"
+                const enabled =
+                    this.elements.shell.classList.toggle(
+                        "terminal-fullscreen-fallback"
+                    );
+
+                button.setAttribute(
+                    "aria-pressed",
+                    String(enabled)
                 );
             }
         }
@@ -1814,6 +2086,56 @@ Licensed under the MIT License.
         return () => plugins.delete(plugin);
     }
 
+    function getInstance(root) {
+        if (!isElement(root)) {
+            return null;
+        }
+
+        return root[INSTANCE_SYMBOL] || null;
+    }
+
+    function registerCommand(definition) {
+        const registered = [];
+
+        for (const app of instances) {
+            registered.push(
+                app.commandRegistry.register(definition)
+            );
+        }
+
+        return registered[0] || null;
+    }
+
+    function unregisterCommand(name) {
+        let removed = false;
+
+        for (const app of instances) {
+            removed =
+                app.commandRegistry.unregister(name) ||
+                removed;
+        }
+
+        return removed;
+    }
+
+    function status() {
+        return {
+            version: VERSION,
+            instances: instances.size,
+            plugins: plugins.size,
+            applications: [...instances].map(app => ({
+                mounted: app.mounted,
+                destroyed: app.destroyed,
+                modules: app.modules.size,
+                mountedModules: app.moduleInstances.size,
+                commands: app.commandRegistry.list({
+                    includeHidden: true
+                }).length,
+                workers: app.workers.status()
+            }))
+        };
+    }
+
     window[APP_NAME] = Object.freeze({
         VERSION,
         Application: SpeciedexTerminalApplication,
@@ -1825,6 +2147,10 @@ Licensed under the MIT License.
         initialize,
         initializeAll,
         use,
+        registerCommand,
+        unregisterCommand,
+        getInstance,
+        status,
         parseCommand,
         tokenize,
         discoverModule,
