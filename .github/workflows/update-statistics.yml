@@ -342,8 +342,8 @@ jobs:
         run: |
           python static/tools/stat-grabber.py \
             scan \
-            --batch-size 500 \
-            --provider-budget 8 \
+            --all-providers \
+            --batch-size 5000 \
             --timeout 40 \
             --retries 5 \
             --backoff 2 \
