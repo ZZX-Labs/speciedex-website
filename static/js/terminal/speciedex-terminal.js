@@ -162,6 +162,18 @@ Licensed under the MIT License.
     const instances = new Set();
     const plugins = new Set();
 
+    function iso(value = Date.now()) {
+        const date = value instanceof Date
+            ? value
+            : new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+            return new Date().toISOString();
+        }
+
+        return date.toISOString();
+    }
+
     function emit(target, name, detail = {}) {
         if (!target || typeof target.dispatchEvent !== "function") {
             return false;
