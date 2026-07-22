@@ -921,6 +921,8 @@ Licensed under the MIT License.
             this.busy = false;
             this.mounted = false;
             this.mounting = false;
+            this.mountPromise = null;
+            this.initializationErrors = [];
             this.destroyed = false;
             this.executionAbortController = null;
             this.abortController = new AbortController();
@@ -1067,66 +1069,132 @@ Licensed under the MIT License.
                 return this;
             }
 
-            if (this.mounting) {
-                await new Promise(resolve => {
-                    const onReady = () => {
-                        this.root.removeEventListener(
-                            "speciedex:terminal-application-ready",
-                            onReady
-                        );
-                        resolve();
-                    };
-
-                    this.root.addEventListener(
-                        "speciedex:terminal-application-ready",
-                        onReady,
-                        { once: true }
-                    );
-                });
-
-                return this;
+            if (this.mountPromise) {
+                return this.mountPromise;
             }
 
-            this.mounting = true;
-            this.startedAt = iso();
-            this.setStatus("Loading modules", "loading");
-            this.restoreHistory();
-            this.bindEvents();
-
-            const discovery = discoverAllModules();
-            this.modules = discovery.discovered;
-            this.missingModules = discovery.missing;
-
-            await this.initializeModuleGroups();
-            await this.installModuleCommands();
-            await this.installPlugins();
-
-            this.verifyRuntime();
-            this.updateMetadata();
-            this.removeBootstrapMessage();
-
-            if (this.options.welcome) {
-                this.printWelcome();
-            }
-
-            this.setStatus("Ready", "ready");
-
-            this.root.dataset.terminalReady = "true";
-            this.root.dataset.terminalState = "ready";
-            this.mounted = true;
-            this.mounting = false;
-
-            emit(this.root, "speciedex:terminal-application-ready", {
-                app: this,
-                modules: [...this.modules.keys()],
-                missingModules: [...this.missingModules]
+            this.mountPromise = this.performMount().catch(error => {
+                this.mountPromise = null;
+                throw error;
             });
 
-            if (this.options.autofocus) {
-                window.requestAnimationFrame(() => this.focus());
-            }
+            return this.mountPromise;
+        }
 
-            return this;
+        async performMount() {
+            this.mounting = true;
+            this.startedAt = iso();
+            this.initializationErrors = [];
+
+            try {
+                this.setStatus("Loading modules", "loading");
+                this.restoreHistory();
+                this.bindEvents();
+
+                const discovery = discoverAllModules();
+                this.modules = discovery.discovered;
+                this.missingModules = discovery.missing;
+
+                await this.runInitializationPhase(
+                    "module initialization",
+                    () => this.initializeModuleGroups()
+                );
+
+                await this.runInitializationPhase(
+                    "command registration",
+                    () => this.installModuleCommands()
+                );
+
+                await this.runInitializationPhase(
+                    "plugin installation",
+                    () => this.installPlugins()
+                );
+
+                this.verifyRuntime();
+                this.updateMetadata();
+                this.removeBootstrapMessage();
+
+                if (this.options.welcome) {
+                    this.printWelcome();
+                }
+
+                if (this.initializationErrors.length) {
+                    this.write(
+                        `Terminal initialized in degraded mode with ${this.initializationErrors.length} warning(s).`,
+                        "warning"
+                    );
+
+                    for (const failure of this.initializationErrors) {
+                        this.write(
+                            `${failure.phase}: ${errorMessage(failure.error)}`,
+                            "warning"
+                        );
+                    }
+
+                    this.setStatus("Ready (degraded)", "warning");
+                    this.root.dataset.terminalState = "degraded";
+                } else {
+                    this.setStatus("Ready", "ready");
+                    this.root.dataset.terminalState = "ready";
+                }
+
+                this.root.dataset.terminalReady = "true";
+                this.root.removeAttribute("aria-busy");
+                delete this.root.dataset.terminalError;
+                this.mounted = true;
+
+                emit(this.root, "speciedex:terminal-application-ready", {
+                    app: this,
+                    modules: [...this.modules.keys()],
+                    missingModules: [...this.missingModules],
+                    initializationErrors: this.initializationErrors.slice()
+                });
+
+                if (this.options.autofocus) {
+                    window.requestAnimationFrame(() => this.focus());
+                }
+
+                return this;
+            } catch (error) {
+                const message = errorMessage(error);
+
+                this.root.dataset.terminalReady = "error";
+                this.root.dataset.terminalState = "error";
+                this.root.dataset.terminalError = message;
+                this.root.removeAttribute("aria-busy");
+                this.setStatus(`Initialization failed: ${message}`, "error");
+
+                try {
+                    this.write(`Initialization failed: ${message}`, "error");
+                } catch (writeError) {
+                    console.error(
+                        "[SpeciedexTerminal] Unable to render initialization error:",
+                        writeError
+                    );
+                }
+
+                emit(this.root, "speciedex:terminal-application-error", {
+                    app: this,
+                    error
+                });
+
+                throw error;
+            } finally {
+                this.mounting = false;
+            }
+        }
+
+        async runInitializationPhase(phase, callback) {
+            try {
+                return await callback();
+            } catch (error) {
+                this.initializationErrors.push({ phase, error });
+                console.error(
+                    `[SpeciedexTerminal] ${phase} failed:`,
+                    error
+                );
+                return null;
+            }
         }
 
         async initializeModuleGroups() {
@@ -1214,22 +1282,34 @@ Licensed under the MIT License.
                 ].filter(Boolean))];
 
                 for (const target of targets) {
-                    const commandSources = [
-                        target.commands,
-                        target.command,
-                        typeof target.getCommands === "function"
-                            ? await target.getCommands(this.context)
-                            : null
-                    ];
+                    try {
+                        const commandSources = [
+                            target.commands,
+                            target.command,
+                            typeof target.getCommands === "function"
+                                ? await target.getCommands(this.context)
+                                : null
+                        ];
 
-                    for (const source of commandSources) {
-                        this.registerCommandSource(source, name);
-                    }
+                        for (const source of commandSources) {
+                            this.registerCommandSource(source, name);
+                        }
 
-                    if (typeof target.registerCommands === "function") {
-                        await target.registerCommands(
-                            this.commandRegistry,
-                            this.context
+                        if (typeof target.registerCommands === "function") {
+                            await target.registerCommands(
+                                this.commandRegistry,
+                                this.context
+                            );
+                        }
+                    } catch (error) {
+                        this.metrics.moduleErrors += 1;
+                        this.initializationErrors.push({
+                            phase: `command registration (${name})`,
+                            error
+                        });
+                        console.error(
+                            `[SpeciedexTerminal] Command registration failed for "${name}":`,
+                            error
                         );
                     }
                 }
@@ -1273,11 +1353,22 @@ Licensed under the MIT License.
 
         async installPlugins() {
             for (const plugin of plugins) {
-                await invokeCompatible(
-                    plugin,
-                    ["mount", "install", "initialize", "init", "use"],
-                    this.context
-                );
+                try {
+                    await invokeCompatible(
+                        plugin,
+                        ["mount", "install", "initialize", "init", "use"],
+                        this.context
+                    );
+                } catch (error) {
+                    this.initializationErrors.push({
+                        phase: "plugin installation",
+                        error
+                    });
+                    console.error(
+                        "[SpeciedexTerminal] Plugin installation failed:",
+                        error
+                    );
+                }
             }
         }
 
