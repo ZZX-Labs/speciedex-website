@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-23T06:25:26Z",
+  "generated_at": "2026-07-23T09:06:58Z",
   "providers": [
     {
       "provider": "wikipedia",
@@ -14,13 +14,13 @@
     },
     {
       "provider": "wikispecies",
-      "fetched": 14,
-      "created": 14,
+      "fetched": 22,
+      "created": 22,
       "matched": 0,
       "revised": 0,
       "conflicted": 0,
       "rejected": 0,
-      "requests": 3,
+      "requests": 4,
       "error": null
     },
     {
@@ -47,14 +47,14 @@
     },
     {
       "provider": "worms",
-      "fetched": 0,
+      "fetched": 10,
       "created": 0,
-      "matched": 0,
-      "revised": 0,
+      "matched": 10,
+      "revised": 10,
       "conflicted": 0,
       "rejected": 0,
-      "requests": 0,
-      "error": "https://www.marinespecies.org/rest/AphiaRecordsByDate?startdate=2000-09-05T00%3A00%3A00&enddate=2000-10-05T23%3A59%3A59&marine_only=false&offset=7: The read operation timed out"
+      "requests": 1,
+      "error": null
     },
     {
       "provider": "inaturalist",
