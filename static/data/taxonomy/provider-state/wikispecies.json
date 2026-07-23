@@ -3,17 +3,17 @@
   "last_attempt": "2026-07-20T22:15:30Z",
   "last_error": null,
   "last_fetch": {
-    "discovered_pages": 31,
-    "enriched_pages": 31,
-    "normalized_records": 31,
-    "requests": 6,
-    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Abies_koreana_f._prostrata\"}",
+    "discovered_pages": 18,
+    "enriched_pages": 18,
+    "normalized_records": 18,
+    "requests": 4,
+    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Abies_peloponnesiaca\"}",
     "exhausted": false
   },
-  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Abies_koreana_f._prostrata\"}",
+  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Abies_peloponnesiaca\"}",
   "bootstrap_complete": false,
-  "last_success": "2026-07-23T18:11:04Z",
-  "last_batch_records": 31,
-  "last_requests": 6,
-  "last_raw_records": 31
+  "last_success": "2026-07-23T19:48:17Z",
+  "last_batch_records": 18,
+  "last_requests": 4,
+  "last_raw_records": 18
 }
