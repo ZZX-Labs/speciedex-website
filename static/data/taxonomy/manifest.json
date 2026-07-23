@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-23T00:09:01Z",
+  "generated_at": "2026-07-23T03:45:38Z",
   "record_format": "jsonl",
   "target_volume_bytes": 50331648,
   "maximum_volume_bytes": 94371840,
-  "total_primary_records": 38608,
-  "total_revisions": 225,
+  "total_primary_records": 39162,
+  "total_revisions": 236,
   "volumes": [
     {
       "file": "volumes/species-000001.jsonl",
-      "record_count": 38608,
-      "size_bytes": 22480591,
+      "record_count": 39162,
+      "size_bytes": 22830067,
       "sha256": null,
       "sealed": false,
       "created_at": "2026-07-19T00:07:05Z",
