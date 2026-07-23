@@ -3,17 +3,17 @@
   "last_attempt": "2026-07-20T22:15:30Z",
   "last_error": null,
   "last_fetch": {
-    "discovered_pages": 30,
-    "enriched_pages": 30,
-    "normalized_records": 30,
-    "requests": 5,
-    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Abies_veitchii_var._sachalinensis\"}",
+    "discovered_pages": 44,
+    "enriched_pages": 44,
+    "normalized_records": 44,
+    "requests": 6,
+    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Abirus_vaksovi\"}",
     "exhausted": false
   },
-  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Abies_veitchii_var._sachalinensis\"}",
+  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Abirus_vaksovi\"}",
   "bootstrap_complete": false,
-  "last_success": "2026-07-23T20:48:04Z",
-  "last_batch_records": 30,
-  "last_requests": 5,
-  "last_raw_records": 30
+  "last_success": "2026-07-23T21:51:42Z",
+  "last_batch_records": 44,
+  "last_requests": 6,
+  "last_raw_records": 44
 }
