@@ -3,17 +3,17 @@
   "last_attempt": "2026-07-20T22:15:30Z",
   "last_error": null,
   "last_fetch": {
-    "discovered_pages": 84,
-    "enriched_pages": 84,
-    "normalized_records": 84,
-    "requests": 12,
-    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Ablepharus_grayanus\"}",
+    "discovered_pages": 86,
+    "enriched_pages": 86,
+    "normalized_records": 86,
+    "requests": 13,
+    "next_cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Ablerus_promacchiae\"}",
     "exhausted": false
   },
-  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Ablepharus_grayanus\"}",
+  "cursor": "{\"continue\":\"gapcontinue||\",\"gapcontinue\":\"Ablerus_promacchiae\"}",
   "bootstrap_complete": false,
-  "last_success": "2026-07-24T03:36:06Z",
-  "last_batch_records": 84,
-  "last_requests": 12,
-  "last_raw_records": 84
+  "last_success": "2026-07-24T06:13:28Z",
+  "last_batch_records": 86,
+  "last_requests": 13,
+  "last_raw_records": 86
 }
